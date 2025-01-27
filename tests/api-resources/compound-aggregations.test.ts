@@ -15,7 +15,7 @@ describe('resource compoundAggregations', () => {
     const responsePromise = client.compoundAggregations.create('orgId', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
     });
@@ -32,7 +32,7 @@ describe('resource compoundAggregations', () => {
     const response = await client.compoundAggregations.create('orgId', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
       code: '{1{}}_',
@@ -65,7 +65,7 @@ describe('resource compoundAggregations', () => {
     const responsePromise = client.compoundAggregations.update('orgId', 'id', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
     });
@@ -82,7 +82,7 @@ describe('resource compoundAggregations', () => {
     const response = await client.compoundAggregations.update('orgId', 'id', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
       code: '{1{}}_',
