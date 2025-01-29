@@ -118,6 +118,29 @@ export interface Counter {
 
 export interface CounterCreateParams {
   /**
+   * Descriptive name for the Counter.
+   */
+  name: string;
+
+  /**
+   * User defined label for units shown on Bill line items, and indicating to your
+   * customers what they are being charged for.
+   */
+  unit: string;
+
+  /**
+   * Code for the Counter. A unique short code to identify the Counter.
+   */
+  code?: string;
+
+  /**
+   * UUID of the product the Counter belongs to. _(Optional)_ - if left blank, the
+   * Counter is Global. A Global Counter can be used to price Plans or Plan Templates
+   * belonging to any Product.
+   */
+  productId?: string;
+
+  /**
    * The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
@@ -131,6 +154,29 @@ export interface CounterCreateParams {
 }
 
 export interface CounterUpdateParams {
+  /**
+   * Descriptive name for the Counter.
+   */
+  name: string;
+
+  /**
+   * User defined label for units shown on Bill line items, and indicating to your
+   * customers what they are being charged for.
+   */
+  unit: string;
+
+  /**
+   * Code for the Counter. A unique short code to identify the Counter.
+   */
+  code?: string;
+
+  /**
+   * UUID of the product the Counter belongs to. _(Optional)_ - if left blank, the
+   * Counter is Global. A Global Counter can be used to price Plans or Plan Templates
+   * belonging to any Product.
+   */
+  productId?: string;
+
   /**
    * The version number of the entity:
    *
