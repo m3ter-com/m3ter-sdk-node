@@ -204,6 +204,13 @@ export namespace Meter {
 
   export interface DerivedField {
     /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
+    /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
     category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
@@ -331,6 +338,13 @@ export namespace MeterCreateParams {
 
   export interface DerivedField {
     /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
+    /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
     category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
@@ -457,6 +471,13 @@ export namespace MeterUpdateParams {
   }
 
   export interface DerivedField {
+    /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
     /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
