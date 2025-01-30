@@ -64,8 +64,7 @@ export class Meters extends APIResource {
   }
 
   /**
-   * Retrieve a list of Meters that can be filtered by Product, Meter ID, or Meter
-   * short code.
+   * Retrieve a list of Meter entities
    */
   list(
     orgId: string,
@@ -91,17 +90,7 @@ export interface Meter {
   /**
    * The UUID of the entity.
    */
-  id: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version: number;
+  id?: string;
 
   /**
    * Code of the Meter - unique short code used to identify the Meter.
@@ -172,6 +161,16 @@ export interface Meter {
    * global.
    */
   productId?: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version?: number;
 }
 
 export namespace Meter {
@@ -507,20 +506,19 @@ export namespace MeterUpdateParams {
 
 export interface MeterListParams extends CursorParams {
   /**
-   * List of Meter codes to retrieve. These are the unique short codes that identify
-   * each Meter.
+   * list of codes to retrieve
    */
   codes?: Array<string>;
 
   /**
-   * List of Meter IDs to retrieve.
+   * list of ids to retrieve
    */
   ids?: Array<string>;
 
   /**
-   * The UUIDs of the Products to retrieve Meters for.
+   * The UUIDs of the products to retrieve meters for
    */
-  productId?: Array<unknown>;
+  productId?: Array<string>;
 }
 
 Meters.MetersCursor = MetersCursor;
