@@ -72,17 +72,7 @@ export interface Aggregation {
   /**
    * The UUID of the entity.
    */
-  id: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version: number;
+  id?: string;
 
   /**
    * Specifies the computation method applied to usage data collected in
@@ -100,11 +90,13 @@ export interface Aggregation {
    * - **MAX**. Uses the maximum value. Can be applied to a **Measure**, **Income**,
    *   or **Cost** `targetField`.
    *
-   * - **COUNT**. Counts the number of values. Can be applied to a **Who**, **What**,
-   *   **Where**, **Measure**, **Income**, **Cost** or **Other** `targetField`.
+   * - **COUNT**. Counts the number of values. Can be applied to a **Measure**,
+   *   **Income**, or **Cost** `targetField`.
    *
    * - **LATEST**. Uses the most recent value. Can be applied to a **Measure**,
-   *   **Income**, or **Cost** `targetField`.
+   *   **Income**, or **Cost** `targetField`. Note: Based on the timestamp (`ts`)
+   *   value of usage data measurement submissions. If using this method, please
+   *   ensure _distinct_ `ts` values are used for usage data measurment submissions.
    *
    * - **MEAN**. Uses the arithmetic mean of the values. Can be applied to a
    *   **Measure**, **Income**, or **Cost** `targetField`.
@@ -190,7 +182,7 @@ export interface Aggregation {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding?: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -228,6 +220,16 @@ export interface Aggregation {
    * charged for.
    */
   unit?: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version?: number;
 }
 
 export interface AggregationCreateParams {
@@ -247,11 +249,13 @@ export interface AggregationCreateParams {
    * - **MAX**. Uses the maximum value. Can be applied to a **Measure**, **Income**,
    *   or **Cost** `targetField`.
    *
-   * - **COUNT**. Counts the number of values. Can be applied to a **Who**, **What**,
-   *   **Where**, **Measure**, **Income**, **Cost** or **Other** `targetField`.
+   * - **COUNT**. Counts the number of values. Can be applied to a **Measure**,
+   *   **Income**, or **Cost** `targetField`.
    *
    * - **LATEST**. Uses the most recent value. Can be applied to a **Measure**,
-   *   **Income**, or **Cost** `targetField`.
+   *   **Income**, or **Cost** `targetField`. Note: Based on the timestamp (`ts`)
+   *   value of usage data measurement submissions. If using this method, please
+   *   ensure _distinct_ `ts` values are used for usage data measurment submissions.
    *
    * - **MEAN**. Uses the arithmetic mean of the values. Can be applied to a
    *   **Measure**, **Income**, or **Cost** `targetField`.
@@ -300,7 +304,7 @@ export interface AggregationCreateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -390,11 +394,13 @@ export interface AggregationUpdateParams {
    * - **MAX**. Uses the maximum value. Can be applied to a **Measure**, **Income**,
    *   or **Cost** `targetField`.
    *
-   * - **COUNT**. Counts the number of values. Can be applied to a **Who**, **What**,
-   *   **Where**, **Measure**, **Income**, **Cost** or **Other** `targetField`.
+   * - **COUNT**. Counts the number of values. Can be applied to a **Measure**,
+   *   **Income**, or **Cost** `targetField`.
    *
    * - **LATEST**. Uses the most recent value. Can be applied to a **Measure**,
-   *   **Income**, or **Cost** `targetField`.
+   *   **Income**, or **Cost** `targetField`. Note: Based on the timestamp (`ts`)
+   *   value of usage data measurement submissions. If using this method, please
+   *   ensure _distinct_ `ts` values are used for usage data measurment submissions.
    *
    * - **MEAN**. Uses the arithmetic mean of the values. Can be applied to a
    *   **Measure**, **Income**, or **Cost** `targetField`.
@@ -443,7 +449,7 @@ export interface AggregationUpdateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -531,7 +537,7 @@ export interface AggregationListParams extends CursorParams {
   /**
    * The UUIDs of the Products to retrieve Aggregations for.
    */
-  productId?: Array<unknown>;
+  productId?: Array<string>;
 }
 
 Aggregations.AggregationsCursor = AggregationsCursor;

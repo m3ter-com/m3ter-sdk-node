@@ -110,7 +110,7 @@ describe('resource meters', () => {
     await expect(
       client.meters.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: [{}] },
+        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);

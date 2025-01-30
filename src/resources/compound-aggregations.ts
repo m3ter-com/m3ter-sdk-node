@@ -93,17 +93,7 @@ export interface CompoundAggregation {
   /**
    * The UUID of the entity.
    */
-  id: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version: number;
+  id?: string;
 
   /**
    * This field is a string that represents the formula for the calculation. This
@@ -188,7 +178,7 @@ export interface CompoundAggregation {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding?: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -208,6 +198,16 @@ export interface CompoundAggregation {
    * charged for.
    */
   unit?: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version?: number;
 }
 
 export interface CompoundAggregationCreateParams {
@@ -258,7 +258,7 @@ export interface CompoundAggregationCreateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -360,7 +360,7 @@ export interface CompoundAggregationUpdateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -431,7 +431,7 @@ export interface CompoundAggregationListParams extends CursorParams {
    * An optional parameter to filter the CompoundAggregations based on specific
    * Product unique identifiers (UUIDs).
    */
-  productId?: Array<unknown>;
+  productId?: Array<string>;
 }
 
 CompoundAggregations.CompoundAggregationsCursor = CompoundAggregationsCursor;

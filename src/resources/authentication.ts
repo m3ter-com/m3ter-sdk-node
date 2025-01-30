@@ -29,7 +29,7 @@ export interface AuthenticationGetBearerTokenResponse {
   /**
    * Not used.
    */
-  scope: string;
+  scope?: string;
 
   /**
    * The token type, which in this case is "bearer".
