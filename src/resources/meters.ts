@@ -90,7 +90,17 @@ export interface Meter {
   /**
    * The UUID of the entity.
    */
-  id?: string;
+  id: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version: number;
 
   /**
    * Code of the Meter - unique short code used to identify the Meter.
@@ -161,16 +171,6 @@ export interface Meter {
    * global.
    */
   productId?: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version?: number;
 }
 
 export namespace Meter {
