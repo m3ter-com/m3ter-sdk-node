@@ -60,7 +60,17 @@ export interface Counter {
   /**
    * The UUID of the entity.
    */
-  id?: string;
+  id: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version: number;
 
   /**
    * Code of the Counter. A unique short code to identify the Counter.
@@ -104,16 +114,6 @@ export interface Counter {
    * are being charged for.
    */
   unit?: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version?: number;
 }
 
 export interface CounterCreateParams {
@@ -205,7 +205,7 @@ export interface CounterListParams extends CursorParams {
   /**
    * List of Products UUIDs to retrieve Counters for.
    */
-  productId?: Array<string> | null;
+  productId?: Array<string>;
 }
 
 Counters.CountersCursor = CountersCursor;
