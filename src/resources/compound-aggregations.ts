@@ -93,7 +93,17 @@ export interface CompoundAggregation {
   /**
    * The UUID of the entity.
    */
-  id?: string;
+  id: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version: number;
 
   /**
    * This field is a string that represents the formula for the calculation. This
@@ -198,16 +208,6 @@ export interface CompoundAggregation {
    * charged for.
    */
   unit?: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version?: number;
 }
 
 export interface CompoundAggregationCreateParams {

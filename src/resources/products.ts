@@ -78,7 +78,17 @@ export interface Product {
   /**
    * The UUID of the entity.
    */
-  id?: string;
+  id: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version: number;
 
   /**
    * A unique short code to identify the Product. It should not contain control
@@ -124,16 +134,6 @@ export interface Product {
    * Descriptive name for the Product providing context and information.
    */
   name?: string;
-
-  /**
-   * The version number:
-   *
-   * - **Create:** On initial Create to insert a new entity, the version is set at 1
-   *   in the response.
-   * - **Update:** On successful Update, the version is incremented by 1 in the
-   *   response.
-   */
-  version?: number;
 }
 
 export interface ProductCreateParams {
