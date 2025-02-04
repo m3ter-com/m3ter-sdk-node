@@ -64,8 +64,7 @@ export class Meters extends APIResource {
   }
 
   /**
-   * Retrieve a list of Meters that can be filtered by Product, Meter ID, or Meter
-   * short code.
+   * Retrieve a list of Meter entities
    */
   list(
     orgId: string,
@@ -204,6 +203,13 @@ export namespace Meter {
 
   export interface DerivedField {
     /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
+    /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
     category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
@@ -330,6 +336,13 @@ export namespace MeterCreateParams {
   }
 
   export interface DerivedField {
+    /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
     /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
@@ -458,6 +471,13 @@ export namespace MeterUpdateParams {
 
   export interface DerivedField {
     /**
+     * The calculation used to transform the value of submitted `dataFields` in usage
+     * data. Calculation can reference `dataFields`, `customFields`, or system
+     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+     */
+    calculation: string;
+
+    /**
      * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
      */
     category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
@@ -486,20 +506,19 @@ export namespace MeterUpdateParams {
 
 export interface MeterListParams extends CursorParams {
   /**
-   * List of Meter codes to retrieve. These are the unique short codes that identify
-   * each Meter.
+   * list of codes to retrieve
    */
   codes?: Array<string>;
 
   /**
-   * List of Meter IDs to retrieve.
+   * list of ids to retrieve
    */
   ids?: Array<string>;
 
   /**
-   * The UUIDs of the Products to retrieve Meters for.
+   * The UUIDs of the products to retrieve meters for
    */
-  productId?: Array<unknown>;
+  productId?: Array<string>;
 }
 
 Meters.MetersCursor = MetersCursor;

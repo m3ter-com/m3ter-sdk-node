@@ -15,7 +15,7 @@ describe('resource compoundAggregations', () => {
     const responsePromise = client.compoundAggregations.create('orgId', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
     });
@@ -32,10 +32,10 @@ describe('resource compoundAggregations', () => {
     const response = await client.compoundAggregations.create('orgId', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
-      code: '{1{}}_',
+      code: 'example_code',
       customFields: { foo: 'bar' },
       evaluateNullAggregations: true,
       productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -65,7 +65,7 @@ describe('resource compoundAggregations', () => {
     const responsePromise = client.compoundAggregations.update('orgId', 'id', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
     });
@@ -82,10 +82,10 @@ describe('resource compoundAggregations', () => {
     const response = await client.compoundAggregations.update('orgId', 'id', {
       calculation: 'x',
       name: 'x',
-      quantityPerUnit: 0,
+      quantityPerUnit: 1,
       rounding: 'UP',
       unit: 'x',
-      code: '{1{}}_',
+      code: 'example_code',
       customFields: { foo: 'bar' },
       evaluateNullAggregations: true,
       productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -116,7 +116,7 @@ describe('resource compoundAggregations', () => {
     await expect(
       client.compoundAggregations.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: [{}] },
+        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);

@@ -188,7 +188,7 @@ export interface CompoundAggregation {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding?: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -258,7 +258,7 @@ export interface CompoundAggregationCreateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -360,7 +360,7 @@ export interface CompoundAggregationUpdateParams {
    *   KiBy/s in a billing period, the charge would be 48,900 / 500 = 97.8 rounded up
    *   to 98 \* 0.25 = $2.45.
    *
-   * Enum: “UP” “DOWN” “NEAREST” “NONE”
+   * Enum: ???UP??? ???DOWN??? ???NEAREST??? ???NONE???
    */
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
@@ -431,7 +431,7 @@ export interface CompoundAggregationListParams extends CursorParams {
    * An optional parameter to filter the CompoundAggregations based on specific
    * Product unique identifiers (UUIDs).
    */
-  productId?: Array<unknown>;
+  productId?: Array<string>;
 }
 
 CompoundAggregations.CompoundAggregationsCursor = CompoundAggregationsCursor;

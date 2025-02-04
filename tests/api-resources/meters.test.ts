@@ -15,7 +15,7 @@ describe('resource meters', () => {
     const responsePromise = client.meters.create('orgId', {
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
-      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
+      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x' }],
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -31,7 +31,7 @@ describe('resource meters', () => {
     const response = await client.meters.create('orgId', {
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
-      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
+      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
       name: 'x',
       customFields: { foo: 'bar' },
       groupId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -62,7 +62,7 @@ describe('resource meters', () => {
     const responsePromise = client.meters.update('orgId', 'id', {
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
-      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
+      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x' }],
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -78,7 +78,7 @@ describe('resource meters', () => {
     const response = await client.meters.update('orgId', 'id', {
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
-      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
+      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
       name: 'x',
       customFields: { foo: 'bar' },
       groupId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -110,7 +110,7 @@ describe('resource meters', () => {
     await expect(
       client.meters.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: [{}] },
+        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
