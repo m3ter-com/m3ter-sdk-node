@@ -124,7 +124,7 @@ export interface Meter {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Used to submit categorized raw usage data values for ingest into the platform -
@@ -281,7 +281,7 @@ export interface MeterCreateParams {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * UUID of the group the Meter belongs to. _(Optional)_.
@@ -415,7 +415,7 @@ export interface MeterUpdateParams {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * UUID of the group the Meter belongs to. _(Optional)_.

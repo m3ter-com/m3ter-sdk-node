@@ -26,7 +26,7 @@ describe('resource products', () => {
     const response = await client.products.create('orgId', {
       code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      customFields: { foo: 'bar' },
+      customFields: { foo: 'string' },
       version: 0,
     });
   });
@@ -64,7 +64,7 @@ describe('resource products', () => {
     const response = await client.products.update('orgId', 'id', {
       code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      customFields: { foo: 'bar' },
+      customFields: { foo: 'string' },
       version: 0,
     });
   });

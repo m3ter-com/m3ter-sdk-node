@@ -126,7 +126,7 @@ export interface Aggregation {
    */
   createdBy?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
@@ -325,7 +325,7 @@ export interface AggregationCreateParams {
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
@@ -470,7 +470,7 @@ export interface AggregationUpdateParams {
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
