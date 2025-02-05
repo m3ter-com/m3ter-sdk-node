@@ -122,7 +122,7 @@ export interface CompoundAggregation {
    */
   createdBy?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * The date and time _(in ISO-8601 format)_ when the CompoundAggregation was
@@ -273,7 +273,7 @@ export interface CompoundAggregationCreateParams {
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Boolean True / False flag:
@@ -375,7 +375,7 @@ export interface CompoundAggregationUpdateParams {
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Boolean True / False flag:
