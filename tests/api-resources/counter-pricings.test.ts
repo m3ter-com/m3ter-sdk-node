@@ -10,14 +10,12 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource compoundAggregations', () => {
+describe('resource counterPricings', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.compoundAggregations.create('orgId', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+    const responsePromise = client.counterPricings.create('orgId', {
+      counterId: 'x',
+      pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0 }],
+      startDate: '2019-12-27T18:11:19.117Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,22 +27,26 @@ describe('resource compoundAggregations', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.compoundAggregations.create('orgId', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    const response = await client.counterPricings.create('orgId', {
+      counterId: 'x',
+      pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0, id: 'id', creditTypeId: 'creditTypeId' }],
+      startDate: '2019-12-27T18:11:19.117Z',
+      code: 'JS!?Q0]r] ]$]',
+      cumulative: true,
+      description: 'description',
+      endDate: '2019-12-27T18:11:19.117Z',
+      planId: 'planId',
+      planTemplateId: 'planTemplateId',
+      proRateAdjustmentCredit: true,
+      proRateAdjustmentDebit: true,
+      proRateRunningTotal: true,
+      runningTotalBillInAdvance: true,
       version: 0,
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.compoundAggregations.retrieve('orgId', 'id');
+    const responsePromise = client.counterPricings.retrieve('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,17 +59,15 @@ describe('resource compoundAggregations', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.counterPricings.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+    const responsePromise = client.counterPricings.update('orgId', 'id', {
+      counterId: 'x',
+      pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0 }],
+      startDate: '2019-12-27T18:11:19.117Z',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -79,22 +79,26 @@ describe('resource compoundAggregations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    const response = await client.counterPricings.update('orgId', 'id', {
+      counterId: 'x',
+      pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0, id: 'id', creditTypeId: 'creditTypeId' }],
+      startDate: '2019-12-27T18:11:19.117Z',
+      code: 'JS!?Q0]r] ]$]',
+      cumulative: true,
+      description: 'description',
+      endDate: '2019-12-27T18:11:19.117Z',
+      planId: 'planId',
+      planTemplateId: 'planTemplateId',
+      proRateAdjustmentCredit: true,
+      proRateAdjustmentDebit: true,
+      proRateRunningTotal: true,
+      runningTotalBillInAdvance: true,
       version: 0,
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.compoundAggregations.list('orgId');
+    const responsePromise = client.counterPricings.list('orgId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -106,24 +110,31 @@ describe('resource compoundAggregations', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.list('orgId', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.counterPricings.list('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.list(
+      client.counterPricings.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
+        {
+          date: 'date',
+          ids: ['string'],
+          nextToken: 'nextToken',
+          pageSize: 1,
+          planId: 'planId',
+          planTemplateId: 'planTemplateId',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.compoundAggregations.delete('orgId', 'id');
+    const responsePromise = client.counterPricings.delete('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -136,7 +147,7 @@ describe('resource compoundAggregations', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.counterPricings.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

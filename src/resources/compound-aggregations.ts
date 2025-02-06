@@ -85,6 +85,18 @@ export class CompoundAggregations extends APIResource {
       { query, ...options },
     );
   }
+
+  /**
+   * Delete a CompoundAggregation with the given UUID.
+   *
+   * This endpoint enables deletion of a specific CompoundAggregation associated with
+   * a specific Organization. Useful when you need to remove an existing
+   * CompoundAggregation that is no longer required, such as when changing pricing or
+   * planning models.
+   */
+  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation> {
+    return this._client.delete(`/organizations/${orgId}/compoundaggregations/${id}`, options);
+  }
 }
 
 export class CompoundAggregationsCursor extends Cursor<CompoundAggregation> {}

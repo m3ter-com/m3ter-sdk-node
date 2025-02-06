@@ -10,14 +10,13 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource compoundAggregations', () => {
+describe('resource counterAdjustments', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.compoundAggregations.create('orgId', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+    const responsePromise = client.counterAdjustments.create('orgId', {
+      accountId: 'x',
+      counterId: 'x',
+      date: '2022-01-04',
+      value: 0,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,22 +28,18 @@ describe('resource compoundAggregations', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.compoundAggregations.create('orgId', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    const response = await client.counterAdjustments.create('orgId', {
+      accountId: 'x',
+      counterId: 'x',
+      date: '2022-01-04',
+      value: 0,
+      purchaseOrderNumber: 'purchaseOrderNumber',
       version: 0,
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.compoundAggregations.retrieve('orgId', 'id');
+    const responsePromise = client.counterAdjustments.retrieve('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,17 +52,16 @@ describe('resource compoundAggregations', () => {
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.counterAdjustments.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+    const responsePromise = client.counterAdjustments.update('orgId', 'id', {
+      accountId: 'x',
+      counterId: 'x',
+      date: '2022-01-04',
+      value: 0,
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -79,22 +73,18 @@ describe('resource compoundAggregations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    const response = await client.counterAdjustments.update('orgId', 'id', {
+      accountId: 'x',
+      counterId: 'x',
+      date: '2022-01-04',
+      value: 0,
+      purchaseOrderNumber: 'purchaseOrderNumber',
       version: 0,
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.compoundAggregations.list('orgId');
+    const responsePromise = client.counterAdjustments.list('orgId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -107,23 +97,33 @@ describe('resource compoundAggregations', () => {
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.list('orgId', { path: '/_stainless_unknown_path' }),
+      client.counterAdjustments.list('orgId', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.list(
+      client.counterAdjustments.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
+        {
+          accountId: 'accountId',
+          counterId: 'counterId',
+          date: 'date',
+          dateEnd: 'dateEnd',
+          dateStart: 'dateStart',
+          endDateEnd: 'endDateEnd',
+          endDateStart: 'endDateStart',
+          nextToken: 'nextToken',
+          pageSize: 1,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.compoundAggregations.delete('orgId', 'id');
+    const responsePromise = client.counterAdjustments.delete('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -136,7 +136,7 @@ describe('resource compoundAggregations', () => {
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.counterAdjustments.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 });
