@@ -70,6 +70,16 @@ export class Products extends APIResource {
     }
     return this._client.getAPIList(`/organizations/${orgId}/products`, ProductsCursor, { query, ...options });
   }
+
+  /**
+   * Delete a Product with the given UUID.
+   *
+   * This endpoint deletes a specific Product within a specified Organization, using
+   * the Product UUID.
+   */
+  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Product> {
+    return this._client.delete(`/organizations/${orgId}/products/${id}`, options);
+  }
 }
 
 export class ProductsCursor extends Cursor<Product> {}

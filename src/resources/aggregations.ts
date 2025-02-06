@@ -64,6 +64,13 @@ export class Aggregations extends APIResource {
       ...options,
     });
   }
+
+  /**
+   * Delete the Aggregation with the given UUID.
+   */
+  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation> {
+    return this._client.delete(`/organizations/${orgId}/aggregations/${id}`, options);
+  }
 }
 
 export class AggregationsCursor extends Cursor<Aggregation> {}

@@ -10,14 +10,12 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource compoundAggregations', () => {
+describe('resource plans', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.compoundAggregations.create('orgId', {
-      calculation: 'x',
+    const responsePromise = client.plans.create('orgId', {
+      code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+      planTemplateId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,22 +27,26 @@ describe('resource compoundAggregations', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.compoundAggregations.create('orgId', {
-      calculation: 'x',
+    const response = await client.plans.create('orgId', {
+      code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
+      planTemplateId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      bespoke: true,
       customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      minimumSpend: 0,
+      minimumSpendBillInAdvance: true,
+      minimumSpendDescription: 'minimumSpendDescription',
+      ordinal: 0,
+      standingCharge: 0,
+      standingChargeBillInAdvance: true,
+      standingChargeDescription: 'standingChargeDescription',
       version: 0,
     });
   });
 
   test('retrieve', async () => {
-    const responsePromise = client.compoundAggregations.retrieve('orgId', 'id');
+    const responsePromise = client.plans.retrieve('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,18 +58,16 @@ describe('resource compoundAggregations', () => {
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.plans.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
+    const responsePromise = client.plans.update('orgId', 'id', {
+      code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
+      planTemplateId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -79,22 +79,26 @@ describe('resource compoundAggregations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.compoundAggregations.update('orgId', 'id', {
-      calculation: 'x',
+    const response = await client.plans.update('orgId', 'id', {
+      code: 'JS!?Q0]r] ]$]',
       name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      code: 'example_code',
+      planTemplateId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      bespoke: true,
       customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      minimumSpend: 0,
+      minimumSpendBillInAdvance: true,
+      minimumSpendDescription: 'minimumSpendDescription',
+      ordinal: 0,
+      standingCharge: 0,
+      standingChargeBillInAdvance: true,
+      standingChargeDescription: 'standingChargeDescription',
       version: 0,
     });
   });
 
   test('list', async () => {
-    const responsePromise = client.compoundAggregations.list('orgId');
+    const responsePromise = client.plans.list('orgId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -106,24 +110,30 @@ describe('resource compoundAggregations', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.list('orgId', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.plans.list('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.list(
+      client.plans.list(
         'orgId',
-        { codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1, productId: ['string'] },
+        {
+          accountId: ['string'],
+          ids: ['string'],
+          nextToken: 'nextToken',
+          pageSize: 1,
+          productId: 'productId',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete', async () => {
-    const responsePromise = client.compoundAggregations.delete('orgId', 'id');
+    const responsePromise = client.plans.delete('orgId', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -135,8 +145,8 @@ describe('resource compoundAggregations', () => {
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.plans.delete('orgId', 'id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 });

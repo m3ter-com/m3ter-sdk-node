@@ -11,8 +11,7 @@ const client = new M3ter({
 });
 
 describe('resource authentication', () => {
-  // example missing required scope property
-  test.skip('getBearerToken: only required params', async () => {
+  test('getBearerToken: only required params', async () => {
     const responsePromise = client.authentication.getBearerToken({ grant_type: 'client_credentials' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,8 +22,7 @@ describe('resource authentication', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // example missing required scope property
-  test.skip('getBearerToken: required and optional params', async () => {
+  test('getBearerToken: required and optional params', async () => {
     const response = await client.authentication.getBearerToken({
       grant_type: 'client_credentials',
       scope: 'scope',
