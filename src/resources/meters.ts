@@ -82,6 +82,13 @@ export class Meters extends APIResource {
     }
     return this._client.getAPIList(`/organizations/${orgId}/meters`, MetersCursor, { query, ...options });
   }
+
+  /**
+   * Delete the Meter with the given UUID.
+   */
+  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+    return this._client.delete(`/organizations/${orgId}/meters/${id}`, options);
+  }
 }
 
 export class MetersCursor extends Cursor<Meter> {}

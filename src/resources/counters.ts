@@ -52,6 +52,13 @@ export class Counters extends APIResource {
     }
     return this._client.getAPIList(`/organizations/${orgId}/counters`, CountersCursor, { query, ...options });
   }
+
+  /**
+   * Delete a Counter for the given UUID.
+   */
+  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+    return this._client.delete(`/organizations/${orgId}/counters/${id}`, options);
+  }
 }
 
 export class CountersCursor extends Cursor<Counter> {}
