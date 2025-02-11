@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class AccountPlans extends APIResource {
   /**
@@ -71,24 +70,17 @@ export class AccountPlans extends APIResource {
    * condition, but must always use it in combination with the `account` query
    * parameter.
    */
-  list(
-    orgId: string,
-    query?: AccountPlanListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountPlansCursor, AccountPlan>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AccountPlansCursor, AccountPlan>;
+  list(orgId: string, query?: AccountPlanListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: AccountPlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountPlansCursor, AccountPlan> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/accountplans`, AccountPlansCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/accountplans`, { query, ...options });
   }
 
   /**
@@ -101,8 +93,6 @@ export class AccountPlans extends APIResource {
     return this._client.delete(`/organizations/${orgId}/accountplans/${id}`, options);
   }
 }
-
-export class AccountPlansCursor extends Cursor<AccountPlan> {}
 
 export interface AccountPlan {
   /**
@@ -230,6 +220,8 @@ export interface AccountPlan {
    */
   startDate?: string;
 }
+
+export type AccountPlanListResponse = unknown;
 
 export interface AccountPlanCreateParams {
   /**
@@ -443,7 +435,7 @@ export interface AccountPlanUpdateParams {
   version?: number;
 }
 
-export interface AccountPlanListParams extends CursorParams {
+export interface AccountPlanListParams {
   /**
    * The unique identifier (UUID) for the Account whose AccountPlans and
    * AccountPlanGroups you want to retrieve.
@@ -476,6 +468,18 @@ export interface AccountPlanListParams extends CursorParams {
   includeall?: boolean;
 
   /**
+   * The `nextToken` for retrieving the next page of AccountPlans and
+   * AccountPlanGroups. It is used to fetch the next page of AccountPlans and
+   * AccountPlanGroups in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * The maximum number of AccountPlans and AccountPlanGroups to return per page.
+   */
+  pageSize?: number;
+
+  /**
    * The unique identifier (UUID) for the Plan or Plan Group whose associated
    * AccountPlans or AccountPlanGroups you want to retrieve.
    */
@@ -492,12 +496,10 @@ export interface AccountPlanListParams extends CursorParams {
   product?: string;
 }
 
-AccountPlans.AccountPlansCursor = AccountPlansCursor;
-
 export declare namespace AccountPlans {
   export {
     type AccountPlan as AccountPlan,
-    AccountPlansCursor as AccountPlansCursor,
+    type AccountPlanListResponse as AccountPlanListResponse,
     type AccountPlanCreateParams as AccountPlanCreateParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,
     type AccountPlanListParams as AccountPlanListParams,

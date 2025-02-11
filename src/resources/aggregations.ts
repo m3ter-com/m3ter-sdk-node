@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class Aggregations extends APIResource {
   /**
@@ -45,24 +44,17 @@ export class Aggregations extends APIResource {
    * Retrieve a list of Aggregations that can be filtered by Product, Aggregation ID,
    * or Code.
    */
-  list(
-    orgId: string,
-    query?: AggregationListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<AggregationsCursor, Aggregation>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AggregationsCursor, Aggregation>;
+  list(orgId: string, query?: AggregationListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: AggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AggregationsCursor, Aggregation> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/aggregations`, AggregationsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/aggregations`, { query, ...options });
   }
 
   /**
@@ -72,8 +64,6 @@ export class Aggregations extends APIResource {
     return this._client.delete(`/organizations/${orgId}/aggregations/${id}`, options);
   }
 }
-
-export class AggregationsCursor extends Cursor<Aggregation> {}
 
 export interface Aggregation {
   /**
@@ -238,6 +228,8 @@ export interface Aggregation {
    */
   unit?: string;
 }
+
+export type AggregationListResponse = unknown;
 
 export interface AggregationCreateParams {
   /**
@@ -529,7 +521,7 @@ export interface AggregationUpdateParams {
   version?: number;
 }
 
-export interface AggregationListParams extends CursorParams {
+export interface AggregationListParams {
   /**
    * List of Aggregation codes to retrieve. These are unique short codes to identify
    * each Aggregation.
@@ -542,17 +534,25 @@ export interface AggregationListParams extends CursorParams {
   ids?: Array<string>;
 
   /**
+   * `nextToken` for multi-page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of Aggregations to retrieve per page.
+   */
+  pageSize?: number;
+
+  /**
    * The UUIDs of the Products to retrieve Aggregations for.
    */
   productId?: Array<string>;
 }
 
-Aggregations.AggregationsCursor = AggregationsCursor;
-
 export declare namespace Aggregations {
   export {
     type Aggregation as Aggregation,
-    AggregationsCursor as AggregationsCursor,
+    type AggregationListResponse as AggregationListResponse,
     type AggregationCreateParams as AggregationCreateParams,
     type AggregationUpdateParams as AggregationUpdateParams,
     type AggregationListParams as AggregationListParams,

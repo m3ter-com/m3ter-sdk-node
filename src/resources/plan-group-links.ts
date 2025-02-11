@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class PlanGroupLinks extends APIResource {
   /**
@@ -43,20 +42,17 @@ export class PlanGroupLinks extends APIResource {
     orgId: string,
     query?: PlanGroupLinkListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: PlanGroupLinkListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/plangrouplinks`, PlanGroupLinksCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/plangrouplinks`, { query, ...options });
   }
 
   /**
@@ -66,8 +62,6 @@ export class PlanGroupLinks extends APIResource {
     return this._client.delete(`/organizations/${orgId}/plangrouplinks/${id}`, options);
   }
 }
-
-export class PlanGroupLinksCursor extends Cursor<PlanGroupLink> {}
 
 export interface PlanGroupLink {
   /**
@@ -116,6 +110,8 @@ export interface PlanGroupLink {
   planId?: string;
 }
 
+export type PlanGroupLinkListResponse = unknown;
+
 export interface PlanGroupLinkCreateParams {
   planGroupId: string;
 
@@ -152,11 +148,21 @@ export interface PlanGroupLinkUpdateParams {
   version?: number;
 }
 
-export interface PlanGroupLinkListParams extends CursorParams {
+export interface PlanGroupLinkListParams {
   /**
    * list of IDs to retrieve
    */
   ids?: Array<string>;
+
+  /**
+   * nextToken for multi page retrievals
+   */
+  nextToken?: string;
+
+  /**
+   * Number of PlanGroupLinks to retrieve per page
+   */
+  pageSize?: number;
 
   /**
    * UUID of the Plan to retrieve PlanGroupLinks for
@@ -169,12 +175,10 @@ export interface PlanGroupLinkListParams extends CursorParams {
   planGroup?: string;
 }
 
-PlanGroupLinks.PlanGroupLinksCursor = PlanGroupLinksCursor;
-
 export declare namespace PlanGroupLinks {
   export {
     type PlanGroupLink as PlanGroupLink,
-    PlanGroupLinksCursor as PlanGroupLinksCursor,
+    type PlanGroupLinkListResponse as PlanGroupLinkListResponse,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,
     type PlanGroupLinkListParams as PlanGroupLinkListParams,

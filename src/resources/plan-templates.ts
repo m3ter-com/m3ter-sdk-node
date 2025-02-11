@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class PlanTemplates extends APIResource {
   /**
@@ -63,20 +62,17 @@ export class PlanTemplates extends APIResource {
     orgId: string,
     query?: PlanTemplateListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanTemplatesCursor, PlanTemplate>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlanTemplatesCursor, PlanTemplate>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: PlanTemplateListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanTemplatesCursor, PlanTemplate> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/plantemplates`, PlanTemplatesCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/plantemplates`, { query, ...options });
   }
 
   /**
@@ -89,8 +85,6 @@ export class PlanTemplates extends APIResource {
     return this._client.delete(`/organizations/${orgId}/plantemplates/${id}`, options);
   }
 }
-
-export class PlanTemplatesCursor extends Cursor<PlanTemplate> {}
 
 export interface PlanTemplate {
   /**
@@ -257,6 +251,8 @@ export interface PlanTemplate {
    */
   standingChargeOffset?: number;
 }
+
+export type PlanTemplateListResponse = unknown;
 
 export interface PlanTemplateCreateParams {
   /**
@@ -570,11 +566,22 @@ export interface PlanTemplateUpdateParams {
   version?: number;
 }
 
-export interface PlanTemplateListParams extends CursorParams {
+export interface PlanTemplateListParams {
   /**
    * List of specific PlanTemplate UUIDs to retrieve.
    */
   ids?: Array<string>;
+
+  /**
+   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
+   * PlanTemplates in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * Specifies the maximum number of PlanTemplates to retrieve per page.
+   */
+  pageSize?: number;
 
   /**
    * The unique identifiers (UUIDs) of the Products to retrieve associated
@@ -583,12 +590,10 @@ export interface PlanTemplateListParams extends CursorParams {
   productId?: string;
 }
 
-PlanTemplates.PlanTemplatesCursor = PlanTemplatesCursor;
-
 export declare namespace PlanTemplates {
   export {
     type PlanTemplate as PlanTemplate,
-    PlanTemplatesCursor as PlanTemplatesCursor,
+    type PlanTemplateListResponse as PlanTemplateListResponse,
     type PlanTemplateCreateParams as PlanTemplateCreateParams,
     type PlanTemplateUpdateParams as PlanTemplateUpdateParams,
     type PlanTemplateListParams as PlanTemplateListParams,

@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class DebitReasons extends APIResource {
   /**
@@ -43,24 +42,17 @@ export class DebitReasons extends APIResource {
    * can filter the list returned for the call by Debit Reason ID, Debit Reason short
    * code, or by Archive status.
    */
-  list(
-    orgId: string,
-    query?: DebitReasonListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitReasonsCursor, DebitReason>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<DebitReasonsCursor, DebitReason>;
+  list(orgId: string, query?: DebitReasonListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: DebitReasonListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitReasonsCursor, DebitReason> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/picklists/debitreasons`, DebitReasonsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/picklists/debitreasons`, { query, ...options });
   }
 
   /**
@@ -70,8 +62,6 @@ export class DebitReasons extends APIResource {
     return this._client.delete(`/organizations/${orgId}/picklists/debitreasons/${id}`, options);
   }
 }
-
-export class DebitReasonsCursor extends Cursor<DebitReason> {}
 
 export interface DebitReason {
   /**
@@ -125,6 +115,8 @@ export interface DebitReason {
    */
   name?: string;
 }
+
+export type DebitReasonListResponse = unknown;
 
 export interface DebitReasonCreateParams {
   /**
@@ -192,7 +184,7 @@ export interface DebitReasonUpdateParams {
   version?: number;
 }
 
-export interface DebitReasonListParams extends CursorParams {
+export interface DebitReasonListParams {
   /**
    * Filter using the boolean archived flag. DebitReasons can be archived if they are
    * obsolete.
@@ -211,14 +203,22 @@ export interface DebitReasonListParams extends CursorParams {
    * List of Debit Reason IDs to retrieve.
    */
   ids?: Array<string>;
-}
 
-DebitReasons.DebitReasonsCursor = DebitReasonsCursor;
+  /**
+   * `nextToken` for multi page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of Debit Reasons to retrieve per page.
+   */
+  pageSize?: number;
+}
 
 export declare namespace DebitReasons {
   export {
     type DebitReason as DebitReason,
-    DebitReasonsCursor as DebitReasonsCursor,
+    type DebitReasonListResponse as DebitReasonListResponse,
     type DebitReasonCreateParams as DebitReasonCreateParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
     type DebitReasonListParams as DebitReasonListParams,

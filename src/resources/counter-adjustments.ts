@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class CounterAdjustments extends APIResource {
   /**
@@ -62,23 +61,17 @@ export class CounterAdjustments extends APIResource {
     orgId: string,
     query?: CounterAdjustmentListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
-  list(
-    orgId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: CounterAdjustmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/counteradjustments`, CounterAdjustmentsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/counteradjustments`, { query, ...options });
   }
 
   /**
@@ -88,8 +81,6 @@ export class CounterAdjustments extends APIResource {
     return this._client.delete(`/organizations/${orgId}/counteradjustments/${id}`, options);
   }
 }
-
-export class CounterAdjustmentsCursor extends Cursor<CounterAdjustment> {}
 
 export interface CounterAdjustment {
   /**
@@ -154,6 +145,8 @@ export interface CounterAdjustment {
    */
   value?: number;
 }
+
+export type CounterAdjustmentListResponse = unknown;
 
 export interface CounterAdjustmentCreateParams {
   /**
@@ -253,7 +246,7 @@ export interface CounterAdjustmentUpdateParams {
   version?: number;
 }
 
-export interface CounterAdjustmentListParams extends CursorParams {
+export interface CounterAdjustmentListParams {
   /**
    * List CounterAdjustment items for the Account UUID.
    */
@@ -282,14 +275,22 @@ export interface CounterAdjustmentListParams extends CursorParams {
    * Only include CounterAdjustments with end dates equal to or later than this date.
    */
   endDateStart?: string;
-}
 
-CounterAdjustments.CounterAdjustmentsCursor = CounterAdjustmentsCursor;
+  /**
+   * nextToken for multi page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of CounterAdjustments to retrieve per page
+   */
+  pageSize?: number;
+}
 
 export declare namespace CounterAdjustments {
   export {
     type CounterAdjustment as CounterAdjustment,
-    CounterAdjustmentsCursor as CounterAdjustmentsCursor,
+    type CounterAdjustmentListResponse as CounterAdjustmentListResponse,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,
     type CounterAdjustmentListParams as CounterAdjustmentListParams,
