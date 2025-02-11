@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class CounterPricings extends APIResource {
   /**
@@ -52,20 +51,17 @@ export class CounterPricings extends APIResource {
     orgId: string,
     query?: CounterPricingListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterPricingsCursor, CounterPricing>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CounterPricingsCursor, CounterPricing>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: CounterPricingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterPricingsCursor, CounterPricing> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/counterpricings`, CounterPricingsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/counterpricings`, { query, ...options });
   }
 
   /**
@@ -75,8 +71,6 @@ export class CounterPricings extends APIResource {
     return this._client.delete(`/organizations/${orgId}/counterpricings/${id}`, options);
   }
 }
-
-export class CounterPricingsCursor extends Cursor<CounterPricing> {}
 
 export interface CounterPricing {
   /**
@@ -241,6 +235,8 @@ export namespace CounterPricing {
     creditTypeId?: string;
   }
 }
+
+export type CounterPricingListResponse = unknown;
 
 export interface CounterPricingCreateParams {
   /**
@@ -548,7 +544,7 @@ export namespace CounterPricingUpdateParams {
   }
 }
 
-export interface CounterPricingListParams extends CursorParams {
+export interface CounterPricingListParams {
   /**
    * Date on which to retrieve active CounterPricings.
    */
@@ -558,6 +554,16 @@ export interface CounterPricingListParams extends CursorParams {
    * List of CounterPricing IDs to retrieve.
    */
   ids?: Array<string>;
+
+  /**
+   * `nextToken` for multi page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of CounterPricings to retrieve per page.
+   */
+  pageSize?: number;
 
   /**
    * UUID of the Plan to retrieve CounterPricings for.
@@ -570,12 +576,10 @@ export interface CounterPricingListParams extends CursorParams {
   planTemplateId?: string;
 }
 
-CounterPricings.CounterPricingsCursor = CounterPricingsCursor;
-
 export declare namespace CounterPricings {
   export {
     type CounterPricing as CounterPricing,
-    CounterPricingsCursor as CounterPricingsCursor,
+    type CounterPricingListResponse as CounterPricingListResponse,
     type CounterPricingCreateParams as CounterPricingCreateParams,
     type CounterPricingUpdateParams as CounterPricingUpdateParams,
     type CounterPricingListParams as CounterPricingListParams,

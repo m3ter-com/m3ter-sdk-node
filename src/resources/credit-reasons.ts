@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class CreditReasons extends APIResource {
   /**
@@ -47,20 +46,17 @@ export class CreditReasons extends APIResource {
     orgId: string,
     query?: CreditReasonListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditReasonsCursor, CreditReason>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CreditReasonsCursor, CreditReason>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: CreditReasonListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditReasonsCursor, CreditReason> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/picklists/creditreasons`, CreditReasonsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/picklists/creditreasons`, { query, ...options });
   }
 
   /**
@@ -70,8 +66,6 @@ export class CreditReasons extends APIResource {
     return this._client.delete(`/organizations/${orgId}/picklists/creditreasons/${id}`, options);
   }
 }
-
-export class CreditReasonsCursor extends Cursor<CreditReason> {}
 
 export interface CreditReason {
   /**
@@ -125,6 +119,8 @@ export interface CreditReason {
    */
   name?: string;
 }
+
+export type CreditReasonListResponse = unknown;
 
 export interface CreditReasonCreateParams {
   /**
@@ -192,7 +188,7 @@ export interface CreditReasonUpdateParams {
   version?: number;
 }
 
-export interface CreditReasonListParams extends CursorParams {
+export interface CreditReasonListParams {
   /**
    * TRUE / FALSE archived flag to filter the list. CreditReasons can be archived
    * once they are obsolete.
@@ -211,14 +207,22 @@ export interface CreditReasonListParams extends CursorParams {
    * List of Credit Reason IDs to retrieve.
    */
   ids?: Array<string>;
-}
 
-CreditReasons.CreditReasonsCursor = CreditReasonsCursor;
+  /**
+   * `nextToken` for multi page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of credit reasons to retrieve per page.
+   */
+  pageSize?: number;
+}
 
 export declare namespace CreditReasons {
   export {
     type CreditReason as CreditReason,
-    CreditReasonsCursor as CreditReasonsCursor,
+    type CreditReasonListResponse as CreditReasonListResponse,
     type CreditReasonCreateParams as CreditReasonCreateParams,
     type CreditReasonUpdateParams as CreditReasonUpdateParams,
     type CreditReasonListParams as CreditReasonListParams,

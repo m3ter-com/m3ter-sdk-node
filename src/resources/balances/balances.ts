@@ -8,10 +8,9 @@ import {
   Transaction,
   TransactionCreateParams,
   TransactionListParams,
+  TransactionListResponse,
   Transactions,
-  TransactionsCursor,
 } from './transactions';
-import { Cursor, type CursorParams } from '../../pagination';
 
 export class Balances extends APIResource {
   transactions: TransactionsAPI.Transactions = new TransactionsAPI.Transactions(this._client);
@@ -57,21 +56,17 @@ export class Balances extends APIResource {
    * You can filter the Balances by the end customer's Account UUID and end dates,
    * and paginate through them using the `pageSize` and `nextToken` parameters.
    */
-  list(
-    orgId: string,
-    query?: BalanceListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<BalancesCursor, Balance>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<BalancesCursor, Balance>;
+  list(orgId: string, query?: BalanceListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: BalanceListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<BalancesCursor, Balance> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/balances`, BalancesCursor, { query, ...options });
+    return this._client.get(`/organizations/${orgId}/balances`, { query, ...options });
   }
 
   /**
@@ -83,8 +78,6 @@ export class Balances extends APIResource {
     return this._client.delete(`/organizations/${orgId}/balances/${id}`, options);
   }
 }
-
-export class BalancesCursor extends Cursor<Balance> {}
 
 export interface Balance {
   /**
@@ -212,6 +205,8 @@ export interface Balance {
    */
   startDate?: string;
 }
+
+export type BalanceListResponse = unknown;
 
 export interface BalanceCreateParams {
   /**
@@ -479,7 +474,7 @@ export interface BalanceUpdateParams {
   version?: number;
 }
 
-export interface BalanceListParams extends CursorParams {
+export interface BalanceListParams {
   /**
    * The unique identifier (UUID) for the end customer's account.
    */
@@ -494,16 +489,25 @@ export interface BalanceListParams extends CursorParams {
    * Only include Balances with end dates equal to or later than this date.
    */
   endDateStart?: string;
+
+  /**
+   * The `nextToken` for retrieving the next page of Balances. It is used to fetch
+   * the next page of Balances in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * The maximum number of Balances to return per page.
+   */
+  pageSize?: number;
 }
 
-Balances.BalancesCursor = BalancesCursor;
 Balances.Transactions = Transactions;
-Balances.TransactionsCursor = TransactionsCursor;
 
 export declare namespace Balances {
   export {
     type Balance as Balance,
-    BalancesCursor as BalancesCursor,
+    type BalanceListResponse as BalanceListResponse,
     type BalanceCreateParams as BalanceCreateParams,
     type BalanceUpdateParams as BalanceUpdateParams,
     type BalanceListParams as BalanceListParams,
@@ -512,7 +516,7 @@ export declare namespace Balances {
   export {
     Transactions as Transactions,
     type Transaction as Transaction,
-    TransactionsCursor as TransactionsCursor,
+    type TransactionListResponse as TransactionListResponse,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
   };

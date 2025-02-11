@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class Products extends APIResource {
   /**
@@ -54,21 +53,17 @@ export class Products extends APIResource {
    * Organization. The list can be paginated, and supports filtering by specific
    * Product IDs.
    */
-  list(
-    orgId: string,
-    query?: ProductListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<ProductsCursor, Product>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
+  list(orgId: string, query?: ProductListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: ProductListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ProductsCursor, Product> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/products`, ProductsCursor, { query, ...options });
+    return this._client.get(`/organizations/${orgId}/products`, { query, ...options });
   }
 
   /**
@@ -81,8 +76,6 @@ export class Products extends APIResource {
     return this._client.delete(`/organizations/${orgId}/products/${id}`, options);
   }
 }
-
-export class ProductsCursor extends Cursor<Product> {}
 
 export interface Product {
   /**
@@ -145,6 +138,8 @@ export interface Product {
    */
   name?: string;
 }
+
+export type ProductListResponse = unknown;
 
 export interface ProductCreateParams {
   /**
@@ -224,19 +219,28 @@ export interface ProductUpdateParams {
   version?: number;
 }
 
-export interface ProductListParams extends CursorParams {
+export interface ProductListParams {
   /**
    * List of specific Product UUIDs to retrieve.
    */
   ids?: Array<string>;
-}
 
-Products.ProductsCursor = ProductsCursor;
+  /**
+   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
+   * Products in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * Specifies the maximum number of Products to retrieve per page.
+   */
+  pageSize?: number;
+}
 
 export declare namespace Products {
   export {
     type Product as Product,
-    ProductsCursor as ProductsCursor,
+    type ProductListResponse as ProductListResponse,
     type ProductCreateParams as ProductCreateParams,
     type ProductUpdateParams as ProductUpdateParams,
     type ProductListParams as ProductListParams,
