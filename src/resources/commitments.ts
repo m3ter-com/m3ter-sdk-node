@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class Commitments extends APIResource {
   /**
@@ -65,24 +64,17 @@ export class Commitments extends APIResource {
    * endpoint supports pagination and includes various query parameters to filter the
    * Commitments based on Account, Product, date, and end dates.
    */
-  list(
-    orgId: string,
-    query?: CommitmentListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CommitmentsCursor, Commitment>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CommitmentsCursor, Commitment>;
+  list(orgId: string, query?: CommitmentListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: CommitmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CommitmentsCursor, Commitment> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/commitments`, CommitmentsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/commitments`, { query, ...options });
   }
 
   /**
@@ -107,21 +99,19 @@ export class Commitments extends APIResource {
     orgId: string,
     query?: CommitmentSearchParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CommitmentSearchResponse>;
-  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<CommitmentSearchResponse>;
+  ): Core.APIPromise<unknown>;
+  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   search(
     orgId: string,
     query: CommitmentSearchParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CommitmentSearchResponse> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.search(orgId, {}, query);
     }
     return this._client.get(`/organizations/${orgId}/commitments/search`, { query, ...options });
   }
 }
-
-export class CommitmentsCursor extends Cursor<Commitment> {}
 
 export interface Commitment {
   /**
@@ -351,18 +341,9 @@ export namespace Commitment {
   }
 }
 
-export interface CommitmentSearchResponse {
-  /**
-   * The list of Commitments information.
-   */
-  data?: Array<Commitment>;
+export type CommitmentListResponse = unknown;
 
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * Commitments in a paginated list.
-   */
-  nextToken?: string;
-}
+export type CommitmentSearchResponse = unknown;
 
 export interface CommitmentCreateParams {
   /**
@@ -840,7 +821,7 @@ export namespace CommitmentUpdateParams {
   }
 }
 
-export interface CommitmentListParams extends CursorParams {
+export interface CommitmentListParams {
   /**
    * The unique identifier (UUID) for the Account. This parameter helps filter the
    * Commitments related to a specific end-customer Account.
@@ -872,6 +853,17 @@ export interface CommitmentListParams extends CursorParams {
    * to fetch specific Commitments in a single request.
    */
   ids?: Array<string>;
+
+  /**
+   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
+   * Commitments in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * Specifies the maximum number of Commitments to retrieve per page.
+   */
+  pageSize?: number;
 
   /**
    * The unique identifier (UUID) for the Product. This parameter helps filter the
@@ -932,13 +924,11 @@ export interface CommitmentSearchParams {
   sortOrder?: 'ASC' | 'DESC';
 }
 
-Commitments.CommitmentsCursor = CommitmentsCursor;
-
 export declare namespace Commitments {
   export {
     type Commitment as Commitment,
+    type CommitmentListResponse as CommitmentListResponse,
     type CommitmentSearchResponse as CommitmentSearchResponse,
-    CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,
     type CommitmentListParams as CommitmentListParams,

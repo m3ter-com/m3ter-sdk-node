@@ -32,10 +32,7 @@ const client = new M3ter({
 });
 
 async function main() {
-  const page = await client.products.list('ORG_ID');
-  const product = page.data[0];
-
-  console.log(product.id);
+  const product = await client.products.list('ORG_ID');
 }
 
 main();
@@ -56,7 +53,7 @@ const client = new M3ter({
 });
 
 async function main() {
-  const [product]: [M3ter.Product] = await client.products.list('ORG_ID');
+  const product: unknown = await client.products.list('ORG_ID');
 }
 
 main();
@@ -73,7 +70,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const page = await client.products.list('ORG_ID').catch(async (err) => {
+  const product = await client.products.list('ORG_ID').catch(async (err) => {
     if (err instanceof M3ter.APIError) {
       console.log(err.status); // 400
       console.log(err.name); // BadRequestError
@@ -146,37 +143,6 @@ On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
 
-## Auto-pagination
-
-List methods in the M3ter API are paginated.
-You can use the `for await … of` syntax to iterate through items across all pages:
-
-```ts
-async function fetchAllProducts(params) {
-  const allProducts = [];
-  // Automatically fetches more pages as needed.
-  for await (const product of client.products.list('ORG_ID')) {
-    allProducts.push(product);
-  }
-  return allProducts;
-}
-```
-
-Alternatively, you can request a single page at a time:
-
-```ts
-let page = await client.products.list('ORG_ID');
-for (const product of page.data) {
-  console.log(product);
-}
-
-// Convenience methods are provided for manually paginating:
-while (page.hasNextPage()) {
-  page = await page.getNextPage();
-  // ...
-}
-```
-
 ## Advanced Usage
 
 ### Accessing raw Response data (e.g., headers)
@@ -193,11 +159,9 @@ const response = await client.products.list('ORG_ID').asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: page, response: raw } = await client.products.list('ORG_ID').withResponse();
+const { data: product, response: raw } = await client.products.list('ORG_ID').withResponse();
 console.log(raw.headers.get('X-My-Header'));
-for await (const product of page) {
-  console.log(product.id);
-}
+console.log(product);
 ```
 
 ### Making custom/undocumented requests

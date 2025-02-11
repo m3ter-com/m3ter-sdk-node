@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class PlanGroups extends APIResource {
   /**
@@ -56,24 +55,17 @@ export class PlanGroups extends APIResource {
    * optionally filter by Account IDs or PlanGroup IDs, and also paginate the results
    * for easier management.
    */
-  list(
-    orgId: string,
-    query?: PlanGroupListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
+  list(orgId: string, query?: PlanGroupListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: PlanGroupListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupsCursor, PlanGroup> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/plangroups`, PlanGroupsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.get(`/organizations/${orgId}/plangroups`, { query, ...options });
   }
 
   /**
@@ -87,8 +79,6 @@ export class PlanGroups extends APIResource {
     return this._client.delete(`/organizations/${orgId}/plangroups/${id}`, options);
   }
 }
-
-export class PlanGroupsCursor extends Cursor<PlanGroup> {}
 
 export interface PlanGroup {
   /**
@@ -213,6 +203,8 @@ export interface PlanGroup {
    */
   standingChargeDescription?: string;
 }
+
+export type PlanGroupListResponse = unknown;
 
 export interface PlanGroupCreateParams {
   /**
@@ -416,7 +408,7 @@ export interface PlanGroupUpdateParams {
   version?: number;
 }
 
-export interface PlanGroupListParams extends CursorParams {
+export interface PlanGroupListParams {
   /**
    * Optional filter. The list of Account IDs to which the PlanGroups belong.
    */
@@ -426,14 +418,23 @@ export interface PlanGroupListParams extends CursorParams {
    * Optional filter. The list of PlanGroup IDs to retrieve.
    */
   ids?: Array<string>;
-}
 
-PlanGroups.PlanGroupsCursor = PlanGroupsCursor;
+  /**
+   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
+   * PlanGroups in a paginated list.
+   */
+  nextToken?: string;
+
+  /**
+   * Specifies the maximum number of PlanGroups to retrieve per page.
+   */
+  pageSize?: number;
+}
 
 export declare namespace PlanGroups {
   export {
     type PlanGroup as PlanGroup,
-    PlanGroupsCursor as PlanGroupsCursor,
+    type PlanGroupListResponse as PlanGroupListResponse,
     type PlanGroupCreateParams as PlanGroupCreateParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,
     type PlanGroupListParams as PlanGroupListParams,

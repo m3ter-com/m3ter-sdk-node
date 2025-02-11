@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import { Cursor, type CursorParams } from '../pagination';
 
 export class Counters extends APIResource {
   /**
@@ -36,21 +35,17 @@ export class Counters extends APIResource {
    * Retrieve a list of Counter entities that can be filtered by Product, Counter ID,
    * or Codes.
    */
-  list(
-    orgId: string,
-    query?: CounterListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CountersCursor, Counter>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
+  list(orgId: string, query?: CounterListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     query: CounterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CountersCursor, Counter> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.getAPIList(`/organizations/${orgId}/counters`, CountersCursor, { query, ...options });
+    return this._client.get(`/organizations/${orgId}/counters`, { query, ...options });
   }
 
   /**
@@ -60,8 +55,6 @@ export class Counters extends APIResource {
     return this._client.delete(`/organizations/${orgId}/counters/${id}`, options);
   }
 }
-
-export class CountersCursor extends Cursor<Counter> {}
 
 export interface Counter {
   /**
@@ -122,6 +115,8 @@ export interface Counter {
    */
   unit?: string;
 }
+
+export type CounterListResponse = unknown;
 
 export interface CounterCreateParams {
   /**
@@ -197,7 +192,7 @@ export interface CounterUpdateParams {
   version?: number;
 }
 
-export interface CounterListParams extends CursorParams {
+export interface CounterListParams {
   /**
    * List of Counter codes to retrieve. These are unique short codes to identify each
    * Counter.
@@ -210,17 +205,25 @@ export interface CounterListParams extends CursorParams {
   ids?: Array<string>;
 
   /**
+   * NextToken for multi page retrievals.
+   */
+  nextToken?: string;
+
+  /**
+   * Number of Counters to retrieve per page
+   */
+  pageSize?: number;
+
+  /**
    * List of Products UUIDs to retrieve Counters for.
    */
   productId?: Array<string>;
 }
 
-Counters.CountersCursor = CountersCursor;
-
 export declare namespace Counters {
   export {
     type Counter as Counter,
-    CountersCursor as CountersCursor,
+    type CounterListResponse as CounterListResponse,
     type CounterCreateParams as CounterCreateParams,
     type CounterUpdateParams as CounterUpdateParams,
     type CounterListParams as CounterListParams,

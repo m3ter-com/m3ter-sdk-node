@@ -3,7 +3,6 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
-import { Cursor, type CursorParams } from '../../pagination';
 
 export class Transactions extends APIResource {
   /**
@@ -48,30 +47,23 @@ export class Transactions extends APIResource {
     balanceId: string,
     query?: TransactionListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction>;
-  list(
-    orgId: string,
-    balanceId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction>;
+  ): Core.APIPromise<unknown>;
+  list(orgId: string, balanceId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
   list(
     orgId: string,
     balanceId: string,
     query: TransactionListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction> {
+  ): Core.APIPromise<unknown> {
     if (isRequestOptions(query)) {
       return this.list(orgId, balanceId, {}, query);
     }
-    return this._client.getAPIList(
-      `/organizations/${orgId}/balances/${balanceId}/transactions`,
-      TransactionsCursor,
-      { query, ...options },
-    );
+    return this._client.get(`/organizations/${orgId}/balances/${balanceId}/transactions`, {
+      query,
+      ...options,
+    });
   }
 }
-
-export class TransactionsCursor extends Cursor<Transaction> {}
 
 export interface Transaction {
   /**
@@ -165,6 +157,8 @@ export interface Transaction {
   transactionTypeId?: string;
 }
 
+export type TransactionListResponse = unknown;
+
 export interface TransactionCreateParams {
   /**
    * The financial value of the transaction.
@@ -216,16 +210,25 @@ export interface TransactionCreateParams {
   version?: number;
 }
 
-export interface TransactionListParams extends CursorParams {
+export interface TransactionListParams {
+  /**
+   * `nextToken` for multi page retrievals. A token for retrieving the next page of
+   * transactions. You'll get this from the response to your request.
+   */
+  nextToken?: string;
+
+  /**
+   * The maximum number of transactions to return per page.
+   */
+  pageSize?: number;
+
   transactionTypeId?: string | null;
 }
-
-Transactions.TransactionsCursor = TransactionsCursor;
 
 export declare namespace Transactions {
   export {
     type Transaction as Transaction,
-    TransactionsCursor as TransactionsCursor,
+    type TransactionListResponse as TransactionListResponse,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
   };
