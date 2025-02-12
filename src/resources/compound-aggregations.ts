@@ -4,6 +4,7 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as AggregationsAPI from './aggregations';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class CompoundAggregations extends APIResource {
   /**
@@ -65,17 +66,24 @@ export class CompoundAggregations extends APIResource {
     orgId: string,
     query?: CompoundAggregationListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
+  list(
+    orgId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
   list(
     orgId: string,
     query: CompoundAggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/compoundaggregations`, { query, ...options });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/compoundaggregations`,
+      CompoundAggregationsCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -90,6 +98,8 @@ export class CompoundAggregations extends APIResource {
     return this._client.delete(`/organizations/${orgId}/compoundaggregations/${id}`, options);
   }
 }
+
+export class CompoundAggregationsCursor extends Cursor<CompoundAggregation> {}
 
 export interface CompoundAggregation {
   /**
@@ -211,8 +221,6 @@ export interface CompoundAggregation {
    */
   unit?: string;
 }
-
-export type CompoundAggregationListResponse = unknown;
 
 export interface CompoundAggregationCreateParams {
   /**
@@ -418,7 +426,7 @@ export interface CompoundAggregationUpdateParams {
   version?: number;
 }
 
-export interface CompoundAggregationListParams {
+export interface CompoundAggregationListParams extends CursorParams {
   /**
    * An optional parameter to retrieve specific CompoundAggregations based on their
    * short codes.
@@ -432,27 +440,18 @@ export interface CompoundAggregationListParams {
   ids?: Array<string>;
 
   /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * CompoundAggregations in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Specifies the maximum number of CompoundAggregations to retrieve per page.
-   */
-  pageSize?: number;
-
-  /**
    * An optional parameter to filter the CompoundAggregations based on specific
    * Product unique identifiers (UUIDs).
    */
   productId?: Array<string>;
 }
 
+CompoundAggregations.CompoundAggregationsCursor = CompoundAggregationsCursor;
+
 export declare namespace CompoundAggregations {
   export {
     type CompoundAggregation as CompoundAggregation,
-    type CompoundAggregationListResponse as CompoundAggregationListResponse,
+    CompoundAggregationsCursor as CompoundAggregationsCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,
     type CompoundAggregationListParams as CompoundAggregationListParams,

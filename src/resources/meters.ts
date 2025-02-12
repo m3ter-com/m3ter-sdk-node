@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Meters extends APIResource {
   /**
@@ -65,17 +66,21 @@ export class Meters extends APIResource {
   /**
    * Retrieve a list of Meter entities
    */
-  list(orgId: string, query?: MeterListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: MeterListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<MetersCursor, Meter>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
   list(
     orgId: string,
     query: MeterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<MetersCursor, Meter> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/meters`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/meters`, MetersCursor, { query, ...options });
   }
 
   /**
@@ -85,6 +90,8 @@ export class Meters extends APIResource {
     return this._client.delete(`/organizations/${orgId}/meters/${id}`, options);
   }
 }
+
+export class MetersCursor extends Cursor<Meter> {}
 
 export interface Meter {
   /**
@@ -235,8 +242,6 @@ export namespace Meter {
     unit?: string;
   }
 }
-
-export type MeterListResponse = unknown;
 
 export interface MeterCreateParams {
   /**
@@ -506,7 +511,7 @@ export namespace MeterUpdateParams {
   }
 }
 
-export interface MeterListParams {
+export interface MeterListParams extends CursorParams {
   /**
    * list of codes to retrieve
    */
@@ -518,25 +523,17 @@ export interface MeterListParams {
   ids?: Array<string>;
 
   /**
-   * nextToken for multi page retrievals
-   */
-  nextToken?: string;
-
-  /**
-   * Number of Meters to retrieve per page
-   */
-  pageSize?: number;
-
-  /**
    * The UUIDs of the products to retrieve meters for
    */
   productId?: Array<string>;
 }
 
+Meters.MetersCursor = MetersCursor;
+
 export declare namespace Meters {
   export {
     type Meter as Meter,
-    type MeterListResponse as MeterListResponse,
+    MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
     type MeterUpdateParams as MeterUpdateParams,
     type MeterListParams as MeterListParams,
