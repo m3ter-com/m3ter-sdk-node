@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Contracts extends APIResource {
   /**
@@ -52,17 +53,24 @@ export class Contracts extends APIResource {
    * includes various query parameters to filter the Contracts returned based on
    * Contract IDs or short codes.
    */
-  list(orgId: string, query?: ContractListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: ContractListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ContractsCursor, Contract>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<ContractsCursor, Contract>;
   list(
     orgId: string,
     query: ContractListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<ContractsCursor, Contract> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/contracts`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/contracts`, ContractsCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -76,6 +84,8 @@ export class Contracts extends APIResource {
     return this._client.delete(`/organizations/${orgId}/contracts/${id}`, options);
   }
 }
+
+export class ContractsCursor extends Cursor<Contract> {}
 
 export interface Contract {
   /**
@@ -164,8 +174,6 @@ export interface Contract {
    */
   startDate?: string;
 }
-
-export type ContractListResponse = unknown;
 
 export interface ContractCreateParams {
   /**
@@ -297,7 +305,7 @@ export interface ContractUpdateParams {
   version?: number;
 }
 
-export interface ContractListParams {
+export interface ContractListParams extends CursorParams {
   accountId?: string | null;
 
   /**
@@ -310,23 +318,14 @@ export interface ContractListParams {
    * identifiers (UUIDs).
    */
   ids?: Array<string>;
-
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * Contracts in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Specifies the maximum number of Contracts to retrieve per page.
-   */
-  pageSize?: number;
 }
+
+Contracts.ContractsCursor = ContractsCursor;
 
 export declare namespace Contracts {
   export {
     type Contract as Contract,
-    type ContractListResponse as ContractListResponse,
+    ContractsCursor as ContractsCursor,
     type ContractCreateParams as ContractCreateParams,
     type ContractUpdateParams as ContractUpdateParams,
     type ContractListParams as ContractListParams,

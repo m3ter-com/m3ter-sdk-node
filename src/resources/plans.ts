@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Plans extends APIResource {
   /**
@@ -38,17 +39,21 @@ export class Plans extends APIResource {
   /**
    * Retrieve a list of Plans that can be filtered by Product, Account, or Plan ID.
    */
-  list(orgId: string, query?: PlanListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: PlanListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<PlansCursor, Plan>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
   list(
     orgId: string,
     query: PlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<PlansCursor, Plan> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/plans`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/plans`, PlansCursor, { query, ...options });
   }
 
   /**
@@ -58,6 +63,8 @@ export class Plans extends APIResource {
     return this._client.delete(`/organizations/${orgId}/plans/${id}`, options);
   }
 }
+
+export class PlansCursor extends Cursor<Plan> {}
 
 export interface Plan {
   /**
@@ -197,8 +204,6 @@ export interface Plan {
    */
   standingChargeDescription?: string;
 }
-
-export type PlanListResponse = unknown;
 
 export interface PlanCreateParams {
   /**
@@ -440,7 +445,7 @@ export interface PlanUpdateParams {
   version?: number;
 }
 
-export interface PlanListParams {
+export interface PlanListParams extends CursorParams {
   /**
    * List of Account IDs the Plan belongs to.
    */
@@ -452,25 +457,17 @@ export interface PlanListParams {
   ids?: Array<string>;
 
   /**
-   * `nextToken` for multi-page retrievals.
-   */
-  nextToken?: string;
-
-  /**
-   * Number of Plans to retrieve per page.
-   */
-  pageSize?: number;
-
-  /**
    * UUID of the Product to retrieve Plans for.
    */
   productId?: string;
 }
 
+Plans.PlansCursor = PlansCursor;
+
 export declare namespace Plans {
   export {
     type Plan as Plan,
-    type PlanListResponse as PlanListResponse,
+    PlansCursor as PlansCursor,
     type PlanCreateParams as PlanCreateParams,
     type PlanUpdateParams as PlanUpdateParams,
     type PlanListParams as PlanListParams,

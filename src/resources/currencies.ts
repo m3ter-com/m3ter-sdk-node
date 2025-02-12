@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Currencies extends APIResource {
   /**
@@ -48,17 +49,24 @@ export class Currencies extends APIResource {
    * supports pagination and includes various query parameters to filter the
    * Currencies based on Currency ID, and short codes.
    */
-  list(orgId: string, query?: CurrencyListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: CurrencyListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CurrenciesCursor, Currency>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CurrenciesCursor, Currency>;
   list(
     orgId: string,
     query: CurrencyListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<CurrenciesCursor, Currency> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/picklists/currency`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/picklists/currency`, CurrenciesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -71,6 +79,8 @@ export class Currencies extends APIResource {
     return this._client.delete(`/organizations/${orgId}/picklists/currency/${id}`, options);
   }
 }
+
+export class CurrenciesCursor extends Cursor<Currency> {}
 
 export interface Currency {
   /**
@@ -131,8 +141,6 @@ export interface Currency {
 
   roundingMode?: 'UP' | 'DOWN' | 'CEILING' | 'FLOOR' | 'HALF_UP' | 'HALF_DOWN' | 'HALF_EVEN' | 'UNNECESSARY';
 }
-
-export type CurrencyListResponse = unknown;
 
 export interface CurrencyCreateParams {
   /**
@@ -214,7 +222,7 @@ export interface CurrencyUpdateParams {
   version?: number;
 }
 
-export interface CurrencyListParams {
+export interface CurrencyListParams extends CursorParams {
   /**
    * Filter by archived flag. A True / False flag indicating whether to return
    * Currencies that are archived _(obsolete)_.
@@ -235,23 +243,14 @@ export interface CurrencyListParams {
    * identifiers (UUIDs).
    */
   ids?: Array<string>;
-
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * Currencies in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Specifies the maximum number of Currencies to retrieve per page.
-   */
-  pageSize?: number;
 }
+
+Currencies.CurrenciesCursor = CurrenciesCursor;
 
 export declare namespace Currencies {
   export {
     type Currency as Currency,
-    type CurrencyListResponse as CurrencyListResponse,
+    CurrenciesCursor as CurrenciesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,
     type CurrencyListParams as CurrencyListParams,

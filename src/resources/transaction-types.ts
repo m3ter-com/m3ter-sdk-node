@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class TransactionTypes extends APIResource {
   /**
@@ -48,17 +49,24 @@ export class TransactionTypes extends APIResource {
     orgId: string,
     query?: TransactionTypeListParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  ): Core.PagePromise<TransactionTypesCursor, TransactionType>;
+  list(
+    orgId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<TransactionTypesCursor, TransactionType>;
   list(
     orgId: string,
     query: TransactionTypeListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<TransactionTypesCursor, TransactionType> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/picklists/transactiontypes`, { query, ...options });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/picklists/transactiontypes`,
+      TransactionTypesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -68,6 +76,8 @@ export class TransactionTypes extends APIResource {
     return this._client.delete(`/organizations/${orgId}/picklists/transactiontypes/${id}`, options);
   }
 }
+
+export class TransactionTypesCursor extends Cursor<TransactionType> {}
 
 export interface TransactionType {
   /**
@@ -122,8 +132,6 @@ export interface TransactionType {
    */
   name?: string;
 }
-
-export type TransactionTypeListResponse = unknown;
 
 export interface TransactionTypeCreateParams {
   /**
@@ -191,7 +199,7 @@ export interface TransactionTypeUpdateParams {
   version?: number;
 }
 
-export interface TransactionTypeListParams {
+export interface TransactionTypeListParams extends CursorParams {
   /**
    * Filter with this Boolean flag whether to include TransactionTypes that are
    * archived.
@@ -210,23 +218,14 @@ export interface TransactionTypeListParams {
    * A list of TransactionType unique identifiers (UUIDs) to retrieve.
    */
   ids?: Array<string>;
-
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * TransactionTypes in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Specifies the maximum number of TransactionTypes to retrieve per page.
-   */
-  pageSize?: number;
 }
+
+TransactionTypes.TransactionTypesCursor = TransactionTypesCursor;
 
 export declare namespace TransactionTypes {
   export {
     type TransactionType as TransactionType,
-    type TransactionTypeListResponse as TransactionTypeListResponse,
+    TransactionTypesCursor as TransactionTypesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
     type TransactionTypeListParams as TransactionTypeListParams,

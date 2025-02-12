@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Accounts extends APIResource {
   /**
@@ -39,17 +40,21 @@ export class Accounts extends APIResource {
   /**
    * Retrieve a list of Accounts that can be filtered by Account ID or Account Code.
    */
-  list(orgId: string, query?: AccountListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: AccountListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<AccountsCursor, Account>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
   list(
     orgId: string,
     query: AccountListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<AccountsCursor, Account> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/accounts`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/accounts`, AccountsCursor, { query, ...options });
   }
 
   /**
@@ -85,19 +90,25 @@ export class Accounts extends APIResource {
   /**
    * Search for account entities
    */
-  search(orgId: string, query?: AccountSearchParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  search(
+    orgId: string,
+    query?: AccountSearchParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountSearchResponse>;
+  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
   search(
     orgId: string,
     query: AccountSearchParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.APIPromise<AccountSearchResponse> {
     if (isRequestOptions(query)) {
       return this.search(orgId, {}, query);
     }
     return this._client.get(`/organizations/${orgId}/accounts/search`, { query, ...options });
   }
 }
+
+export class AccountsCursor extends Cursor<Account> {}
 
 export interface Account {
   /**
@@ -282,9 +293,11 @@ export namespace Account {
   }
 }
 
-export type AccountListResponse = unknown;
+export interface AccountSearchResponse {
+  data?: Array<Account>;
 
-export type AccountSearchResponse = unknown;
+  nextToken?: string;
+}
 
 export interface AccountCreateParams {
   /**
@@ -640,7 +653,7 @@ export namespace AccountUpdateParams {
   }
 }
 
-export interface AccountListParams {
+export interface AccountListParams extends CursorParams {
   /**
    * List of Account Codes to retrieve. These are unique short codes for each
    * Account.
@@ -651,16 +664,6 @@ export interface AccountListParams {
    * List of Account IDs to retrieve.
    */
   ids?: Array<string>;
-
-  /**
-   * `nextToken` for multi-page retrievals.
-   */
-  nextToken?: string;
-
-  /**
-   * Number of accounts to retrieve per page.
-   */
-  pageSize?: number;
 }
 
 export interface AccountListChildrenParams {
@@ -707,11 +710,13 @@ export interface AccountSearchParams {
   sortOrder?: 'ASC' | 'DESC';
 }
 
+Accounts.AccountsCursor = AccountsCursor;
+
 export declare namespace Accounts {
   export {
     type Account as Account,
-    type AccountListResponse as AccountListResponse,
     type AccountSearchResponse as AccountSearchResponse,
+    AccountsCursor as AccountsCursor,
     type AccountCreateParams as AccountCreateParams,
     type AccountUpdateParams as AccountUpdateParams,
     type AccountListParams as AccountListParams,
