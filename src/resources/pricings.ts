@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import { Cursor, type CursorParams } from '../pagination';
 
 export class Pricings extends APIResource {
   /**
@@ -43,17 +44,21 @@ export class Pricings extends APIResource {
    * Retrieve a list of Pricings filtered by date, Plan ID, PlanTemplate ID, or
    * Pricing ID.
    */
-  list(orgId: string, query?: PricingListParams, options?: Core.RequestOptions): Core.APIPromise<unknown>;
-  list(orgId: string, options?: Core.RequestOptions): Core.APIPromise<unknown>;
+  list(
+    orgId: string,
+    query?: PricingListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<PricingsCursor, Pricing>;
+  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
   list(
     orgId: string,
     query: PricingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<unknown> {
+  ): Core.PagePromise<PricingsCursor, Pricing> {
     if (isRequestOptions(query)) {
       return this.list(orgId, {}, query);
     }
-    return this._client.get(`/organizations/${orgId}/pricings`, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/pricings`, PricingsCursor, { query, ...options });
   }
 
   /**
@@ -63,6 +68,8 @@ export class Pricings extends APIResource {
     return this._client.delete(`/organizations/${orgId}/pricings/${id}`, options);
   }
 }
+
+export class PricingsCursor extends Cursor<Pricing> {}
 
 export interface Pricing {
   /**
@@ -286,8 +293,6 @@ export namespace Pricing {
     creditTypeId?: string;
   }
 }
-
-export type PricingListResponse = unknown;
 
 export interface PricingCreateParams {
   pricingBands: Array<PricingCreateParams.PricingBand>;
@@ -713,7 +718,7 @@ export namespace PricingUpdateParams {
   }
 }
 
-export interface PricingListParams {
+export interface PricingListParams extends CursorParams {
   /**
    * Date on which to retrieve active Pricings.
    */
@@ -723,16 +728,6 @@ export interface PricingListParams {
    * List of Pricing IDs to retrieve.
    */
   ids?: Array<string>;
-
-  /**
-   * `nextToken` for multi-page retrievals.
-   */
-  nextToken?: string;
-
-  /**
-   * Number of Pricings to retrieve per page.
-   */
-  pageSize?: number;
 
   /**
    * UUID of the Plan to retrieve Pricings for.
@@ -745,10 +740,12 @@ export interface PricingListParams {
   planTemplateId?: string;
 }
 
+Pricings.PricingsCursor = PricingsCursor;
+
 export declare namespace Pricings {
   export {
     type Pricing as Pricing,
-    type PricingListResponse as PricingListResponse,
+    PricingsCursor as PricingsCursor,
     type PricingCreateParams as PricingCreateParams,
     type PricingUpdateParams as PricingUpdateParams,
     type PricingListParams as PricingListParams,

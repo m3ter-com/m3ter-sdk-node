@@ -12,28 +12,28 @@ import {
   AccountPlan,
   AccountPlanCreateParams,
   AccountPlanListParams,
-  AccountPlanListResponse,
   AccountPlanUpdateParams,
   AccountPlans,
+  AccountPlansCursor,
 } from './resources/account-plans';
 import {
   Account,
   AccountCreateParams,
   AccountListChildrenParams,
   AccountListParams,
-  AccountListResponse,
   AccountSearchParams,
   AccountSearchResponse,
   AccountUpdateParams,
   Accounts,
+  AccountsCursor,
 } from './resources/accounts';
 import {
   Aggregation,
   AggregationCreateParams,
   AggregationListParams,
-  AggregationListResponse,
   AggregationUpdateParams,
   Aggregations,
+  AggregationsCursor,
 } from './resources/aggregations';
 import {
   Authentication,
@@ -45,83 +45,83 @@ import {
   Commitment,
   CommitmentCreateParams,
   CommitmentListParams,
-  CommitmentListResponse,
   CommitmentSearchParams,
   CommitmentSearchResponse,
   CommitmentUpdateParams,
   Commitments,
+  CommitmentsCursor,
 } from './resources/commitments';
 import {
   CompoundAggregation,
   CompoundAggregationCreateParams,
   CompoundAggregationListParams,
-  CompoundAggregationListResponse,
   CompoundAggregationUpdateParams,
   CompoundAggregations,
+  CompoundAggregationsCursor,
 } from './resources/compound-aggregations';
 import {
   Contract,
   ContractCreateParams,
   ContractListParams,
-  ContractListResponse,
   ContractUpdateParams,
   Contracts,
+  ContractsCursor,
 } from './resources/contracts';
 import {
   CounterAdjustment,
   CounterAdjustmentCreateParams,
   CounterAdjustmentListParams,
-  CounterAdjustmentListResponse,
   CounterAdjustmentUpdateParams,
   CounterAdjustments,
+  CounterAdjustmentsCursor,
 } from './resources/counter-adjustments';
 import {
   CounterPricing,
   CounterPricingCreateParams,
   CounterPricingListParams,
-  CounterPricingListResponse,
   CounterPricingUpdateParams,
   CounterPricings,
+  CounterPricingsCursor,
 } from './resources/counter-pricings';
 import {
   Counter,
   CounterCreateParams,
   CounterListParams,
-  CounterListResponse,
   CounterUpdateParams,
   Counters,
+  CountersCursor,
 } from './resources/counters';
 import {
   CreditReason,
   CreditReasonCreateParams,
   CreditReasonListParams,
-  CreditReasonListResponse,
   CreditReasonUpdateParams,
   CreditReasons,
+  CreditReasonsCursor,
 } from './resources/credit-reasons';
 import {
   Currencies,
+  CurrenciesCursor,
   Currency,
   CurrencyCreateParams,
   CurrencyListParams,
-  CurrencyListResponse,
   CurrencyUpdateParams,
 } from './resources/currencies';
 import {
   DebitReason,
   DebitReasonCreateParams,
   DebitReasonListParams,
-  DebitReasonListResponse,
   DebitReasonUpdateParams,
   DebitReasons,
+  DebitReasonsCursor,
 } from './resources/debit-reasons';
 import {
   Meter,
   MeterCreateParams,
   MeterListParams,
-  MeterListResponse,
   MeterUpdateParams,
   Meters,
+  MetersCursor,
 } from './resources/meters';
 import {
   OrganizationConfig,
@@ -132,65 +132,65 @@ import {
   PlanGroupLink,
   PlanGroupLinkCreateParams,
   PlanGroupLinkListParams,
-  PlanGroupLinkListResponse,
   PlanGroupLinkUpdateParams,
   PlanGroupLinks,
+  PlanGroupLinksCursor,
 } from './resources/plan-group-links';
 import {
   PlanGroup,
   PlanGroupCreateParams,
   PlanGroupListParams,
-  PlanGroupListResponse,
   PlanGroupUpdateParams,
   PlanGroups,
+  PlanGroupsCursor,
 } from './resources/plan-groups';
 import {
   PlanTemplate,
   PlanTemplateCreateParams,
   PlanTemplateListParams,
-  PlanTemplateListResponse,
   PlanTemplateUpdateParams,
   PlanTemplates,
+  PlanTemplatesCursor,
 } from './resources/plan-templates';
 import {
   Plan,
   PlanCreateParams,
   PlanListParams,
-  PlanListResponse,
   PlanUpdateParams,
   Plans,
+  PlansCursor,
 } from './resources/plans';
 import {
   Pricing,
   PricingCreateParams,
   PricingListParams,
-  PricingListResponse,
   PricingUpdateParams,
   Pricings,
+  PricingsCursor,
 } from './resources/pricings';
 import {
   Product,
   ProductCreateParams,
   ProductListParams,
-  ProductListResponse,
   ProductUpdateParams,
   Products,
+  ProductsCursor,
 } from './resources/products';
 import {
   TransactionType,
   TransactionTypeCreateParams,
   TransactionTypeListParams,
-  TransactionTypeListResponse,
   TransactionTypeUpdateParams,
   TransactionTypes,
+  TransactionTypesCursor,
 } from './resources/transaction-types';
 import {
   Balance,
   BalanceCreateParams,
   BalanceListParams,
-  BalanceListResponse,
   BalanceUpdateParams,
   Balances,
+  BalancesCursor,
 } from './resources/balances/balances';
 
 export interface ClientOptions {
@@ -447,28 +447,49 @@ export class M3ter extends Core.APIClient {
 
 M3ter.Authentication = Authentication;
 M3ter.Accounts = Accounts;
+M3ter.AccountsCursor = AccountsCursor;
 M3ter.AccountPlans = AccountPlans;
+M3ter.AccountPlansCursor = AccountPlansCursor;
 M3ter.Aggregations = Aggregations;
+M3ter.AggregationsCursor = AggregationsCursor;
 M3ter.Balances = Balances;
+M3ter.BalancesCursor = BalancesCursor;
 M3ter.BillConfigResource = BillConfigResource;
 M3ter.Commitments = Commitments;
+M3ter.CommitmentsCursor = CommitmentsCursor;
 M3ter.CompoundAggregations = CompoundAggregations;
+M3ter.CompoundAggregationsCursor = CompoundAggregationsCursor;
 M3ter.Contracts = Contracts;
+M3ter.ContractsCursor = ContractsCursor;
 M3ter.Counters = Counters;
+M3ter.CountersCursor = CountersCursor;
 M3ter.CounterAdjustments = CounterAdjustments;
+M3ter.CounterAdjustmentsCursor = CounterAdjustmentsCursor;
 M3ter.CounterPricings = CounterPricings;
+M3ter.CounterPricingsCursor = CounterPricingsCursor;
 M3ter.CreditReasons = CreditReasons;
+M3ter.CreditReasonsCursor = CreditReasonsCursor;
 M3ter.Currencies = Currencies;
+M3ter.CurrenciesCursor = CurrenciesCursor;
 M3ter.DebitReasons = DebitReasons;
+M3ter.DebitReasonsCursor = DebitReasonsCursor;
 M3ter.Meters = Meters;
+M3ter.MetersCursor = MetersCursor;
 M3ter.OrganizationConfigResource = OrganizationConfigResource;
 M3ter.Plans = Plans;
+M3ter.PlansCursor = PlansCursor;
 M3ter.PlanGroups = PlanGroups;
+M3ter.PlanGroupsCursor = PlanGroupsCursor;
 M3ter.PlanGroupLinks = PlanGroupLinks;
+M3ter.PlanGroupLinksCursor = PlanGroupLinksCursor;
 M3ter.PlanTemplates = PlanTemplates;
+M3ter.PlanTemplatesCursor = PlanTemplatesCursor;
 M3ter.Pricings = Pricings;
+M3ter.PricingsCursor = PricingsCursor;
 M3ter.Products = Products;
+M3ter.ProductsCursor = ProductsCursor;
 M3ter.TransactionTypes = TransactionTypes;
+M3ter.TransactionTypesCursor = TransactionTypesCursor;
 export declare namespace M3ter {
   export type RequestOptions = Core.RequestOptions;
 
@@ -484,8 +505,8 @@ export declare namespace M3ter {
   export {
     Accounts as Accounts,
     type Account as Account,
-    type AccountListResponse as AccountListResponse,
     type AccountSearchResponse as AccountSearchResponse,
+    AccountsCursor as AccountsCursor,
     type AccountCreateParams as AccountCreateParams,
     type AccountUpdateParams as AccountUpdateParams,
     type AccountListParams as AccountListParams,
@@ -496,7 +517,7 @@ export declare namespace M3ter {
   export {
     AccountPlans as AccountPlans,
     type AccountPlan as AccountPlan,
-    type AccountPlanListResponse as AccountPlanListResponse,
+    AccountPlansCursor as AccountPlansCursor,
     type AccountPlanCreateParams as AccountPlanCreateParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,
     type AccountPlanListParams as AccountPlanListParams,
@@ -505,7 +526,7 @@ export declare namespace M3ter {
   export {
     Aggregations as Aggregations,
     type Aggregation as Aggregation,
-    type AggregationListResponse as AggregationListResponse,
+    AggregationsCursor as AggregationsCursor,
     type AggregationCreateParams as AggregationCreateParams,
     type AggregationUpdateParams as AggregationUpdateParams,
     type AggregationListParams as AggregationListParams,
@@ -514,7 +535,7 @@ export declare namespace M3ter {
   export {
     Balances as Balances,
     type Balance as Balance,
-    type BalanceListResponse as BalanceListResponse,
+    BalancesCursor as BalancesCursor,
     type BalanceCreateParams as BalanceCreateParams,
     type BalanceUpdateParams as BalanceUpdateParams,
     type BalanceListParams as BalanceListParams,
@@ -529,8 +550,8 @@ export declare namespace M3ter {
   export {
     Commitments as Commitments,
     type Commitment as Commitment,
-    type CommitmentListResponse as CommitmentListResponse,
     type CommitmentSearchResponse as CommitmentSearchResponse,
+    CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,
     type CommitmentListParams as CommitmentListParams,
@@ -540,7 +561,7 @@ export declare namespace M3ter {
   export {
     CompoundAggregations as CompoundAggregations,
     type CompoundAggregation as CompoundAggregation,
-    type CompoundAggregationListResponse as CompoundAggregationListResponse,
+    CompoundAggregationsCursor as CompoundAggregationsCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,
     type CompoundAggregationListParams as CompoundAggregationListParams,
@@ -549,7 +570,7 @@ export declare namespace M3ter {
   export {
     Contracts as Contracts,
     type Contract as Contract,
-    type ContractListResponse as ContractListResponse,
+    ContractsCursor as ContractsCursor,
     type ContractCreateParams as ContractCreateParams,
     type ContractUpdateParams as ContractUpdateParams,
     type ContractListParams as ContractListParams,
@@ -558,7 +579,7 @@ export declare namespace M3ter {
   export {
     Counters as Counters,
     type Counter as Counter,
-    type CounterListResponse as CounterListResponse,
+    CountersCursor as CountersCursor,
     type CounterCreateParams as CounterCreateParams,
     type CounterUpdateParams as CounterUpdateParams,
     type CounterListParams as CounterListParams,
@@ -567,7 +588,7 @@ export declare namespace M3ter {
   export {
     CounterAdjustments as CounterAdjustments,
     type CounterAdjustment as CounterAdjustment,
-    type CounterAdjustmentListResponse as CounterAdjustmentListResponse,
+    CounterAdjustmentsCursor as CounterAdjustmentsCursor,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,
     type CounterAdjustmentListParams as CounterAdjustmentListParams,
@@ -576,7 +597,7 @@ export declare namespace M3ter {
   export {
     CounterPricings as CounterPricings,
     type CounterPricing as CounterPricing,
-    type CounterPricingListResponse as CounterPricingListResponse,
+    CounterPricingsCursor as CounterPricingsCursor,
     type CounterPricingCreateParams as CounterPricingCreateParams,
     type CounterPricingUpdateParams as CounterPricingUpdateParams,
     type CounterPricingListParams as CounterPricingListParams,
@@ -585,7 +606,7 @@ export declare namespace M3ter {
   export {
     CreditReasons as CreditReasons,
     type CreditReason as CreditReason,
-    type CreditReasonListResponse as CreditReasonListResponse,
+    CreditReasonsCursor as CreditReasonsCursor,
     type CreditReasonCreateParams as CreditReasonCreateParams,
     type CreditReasonUpdateParams as CreditReasonUpdateParams,
     type CreditReasonListParams as CreditReasonListParams,
@@ -594,7 +615,7 @@ export declare namespace M3ter {
   export {
     Currencies as Currencies,
     type Currency as Currency,
-    type CurrencyListResponse as CurrencyListResponse,
+    CurrenciesCursor as CurrenciesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,
     type CurrencyListParams as CurrencyListParams,
@@ -603,7 +624,7 @@ export declare namespace M3ter {
   export {
     DebitReasons as DebitReasons,
     type DebitReason as DebitReason,
-    type DebitReasonListResponse as DebitReasonListResponse,
+    DebitReasonsCursor as DebitReasonsCursor,
     type DebitReasonCreateParams as DebitReasonCreateParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
     type DebitReasonListParams as DebitReasonListParams,
@@ -612,7 +633,7 @@ export declare namespace M3ter {
   export {
     Meters as Meters,
     type Meter as Meter,
-    type MeterListResponse as MeterListResponse,
+    MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
     type MeterUpdateParams as MeterUpdateParams,
     type MeterListParams as MeterListParams,
@@ -627,7 +648,7 @@ export declare namespace M3ter {
   export {
     Plans as Plans,
     type Plan as Plan,
-    type PlanListResponse as PlanListResponse,
+    PlansCursor as PlansCursor,
     type PlanCreateParams as PlanCreateParams,
     type PlanUpdateParams as PlanUpdateParams,
     type PlanListParams as PlanListParams,
@@ -636,7 +657,7 @@ export declare namespace M3ter {
   export {
     PlanGroups as PlanGroups,
     type PlanGroup as PlanGroup,
-    type PlanGroupListResponse as PlanGroupListResponse,
+    PlanGroupsCursor as PlanGroupsCursor,
     type PlanGroupCreateParams as PlanGroupCreateParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,
     type PlanGroupListParams as PlanGroupListParams,
@@ -645,7 +666,7 @@ export declare namespace M3ter {
   export {
     PlanGroupLinks as PlanGroupLinks,
     type PlanGroupLink as PlanGroupLink,
-    type PlanGroupLinkListResponse as PlanGroupLinkListResponse,
+    PlanGroupLinksCursor as PlanGroupLinksCursor,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,
     type PlanGroupLinkListParams as PlanGroupLinkListParams,
@@ -654,7 +675,7 @@ export declare namespace M3ter {
   export {
     PlanTemplates as PlanTemplates,
     type PlanTemplate as PlanTemplate,
-    type PlanTemplateListResponse as PlanTemplateListResponse,
+    PlanTemplatesCursor as PlanTemplatesCursor,
     type PlanTemplateCreateParams as PlanTemplateCreateParams,
     type PlanTemplateUpdateParams as PlanTemplateUpdateParams,
     type PlanTemplateListParams as PlanTemplateListParams,
@@ -663,7 +684,7 @@ export declare namespace M3ter {
   export {
     Pricings as Pricings,
     type Pricing as Pricing,
-    type PricingListResponse as PricingListResponse,
+    PricingsCursor as PricingsCursor,
     type PricingCreateParams as PricingCreateParams,
     type PricingUpdateParams as PricingUpdateParams,
     type PricingListParams as PricingListParams,
@@ -672,7 +693,7 @@ export declare namespace M3ter {
   export {
     Products as Products,
     type Product as Product,
-    type ProductListResponse as ProductListResponse,
+    ProductsCursor as ProductsCursor,
     type ProductCreateParams as ProductCreateParams,
     type ProductUpdateParams as ProductUpdateParams,
     type ProductListParams as ProductListParams,
@@ -681,7 +702,7 @@ export declare namespace M3ter {
   export {
     TransactionTypes as TransactionTypes,
     type TransactionType as TransactionType,
-    type TransactionTypeListResponse as TransactionTypeListResponse,
+    TransactionTypesCursor as TransactionTypesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
     type TransactionTypeListParams as TransactionTypeListParams,
