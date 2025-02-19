@@ -117,6 +117,8 @@ export interface CompoundAggregation {
    */
   version: number;
 
+  accountingProductId?: string;
+
   /**
    * This field is a string that represents the formula for the calculation. This
    * formula determines how the CompoundAggregation is calculated from the underlying
@@ -281,6 +283,12 @@ export interface CompoundAggregationCreateParams {
   unit: string;
 
   /**
+   * Optional Product ID this Aggregation should be attributed to for accounting
+   * purposes
+   */
+  accountingProductId?: string;
+
+  /**
    * Code of the new Aggregation. A unique short code to identify the Aggregation.
    */
   code?: string;
@@ -381,6 +389,12 @@ export interface CompoundAggregationUpdateParams {
    * customers what they are being charged for.
    */
   unit: string;
+
+  /**
+   * Optional Product ID this Aggregation should be attributed to for accounting
+   * purposes
+   */
+  accountingProductId?: string;
 
   /**
    * Code of the new Aggregation. A unique short code to identify the Aggregation.

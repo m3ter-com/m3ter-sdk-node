@@ -91,6 +91,8 @@ export interface Aggregation {
    */
   version: number;
 
+  accountingProductId?: string;
+
   /**
    * Specifies the computation method applied to usage data collected in
    * `targetField`. Aggregation unit value depends on the **Category** configured for
@@ -134,6 +136,8 @@ export interface Aggregation {
   createdBy?: string;
 
   customFields?: Record<string, string | number>;
+
+  customSql?: string;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
@@ -328,11 +332,19 @@ export interface AggregationCreateParams {
   unit: string;
 
   /**
+   * Optional Product ID this Aggregation should be attributed to for accounting
+   * purposes
+   */
+  accountingProductId?: string;
+
+  /**
    * Code of the new Aggregation. A unique short code to identify the Aggregation.
    */
   code?: string;
 
   customFields?: Record<string, string | number>;
+
+  customSql?: string;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
@@ -473,11 +485,19 @@ export interface AggregationUpdateParams {
   unit: string;
 
   /**
+   * Optional Product ID this Aggregation should be attributed to for accounting
+   * purposes
+   */
+  accountingProductId?: string;
+
+  /**
    * Code of the new Aggregation. A unique short code to identify the Aggregation.
    */
   code?: string;
 
   customFields?: Record<string, string | number>;
+
+  customSql?: string;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.

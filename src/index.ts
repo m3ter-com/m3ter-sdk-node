@@ -108,6 +108,13 @@ import {
   CurrencyUpdateParams,
 } from './resources/currencies';
 import {
+  AdHocOperationalDataRequest,
+  AdHocUsageDataRequest,
+  AdhocExport,
+  DataExportCreateAdhocParams,
+  DataExports,
+} from './resources/data-exports';
+import {
   DebitReason,
   DebitReasonCreateParams,
   DebitReasonListParams,
@@ -368,6 +375,7 @@ export class M3ter extends Core.APIClient {
   pricings: API.Pricings = new API.Pricings(this);
   products: API.Products = new API.Products(this);
   transactionTypes: API.TransactionTypes = new API.TransactionTypes(this);
+  dataExports: API.DataExports = new API.DataExports(this);
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
     return this._options.defaultQuery;
@@ -470,6 +478,7 @@ M3ter.Products = Products;
 M3ter.ProductsCursor = ProductsCursor;
 M3ter.TransactionTypes = TransactionTypes;
 M3ter.TransactionTypesCursor = TransactionTypesCursor;
+M3ter.DataExports = DataExports;
 export declare namespace M3ter {
   export type RequestOptions = Core.RequestOptions;
 
@@ -686,6 +695,14 @@ export declare namespace M3ter {
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
     type TransactionTypeListParams as TransactionTypeListParams,
+  };
+
+  export {
+    DataExports as DataExports,
+    type AdhocExport as AdhocExport,
+    type AdHocOperationalDataRequest as AdHocOperationalDataRequest,
+    type AdHocUsageDataRequest as AdHocUsageDataRequest,
+    type DataExportCreateAdhocParams as DataExportCreateAdhocParams,
   };
 }
 
