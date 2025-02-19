@@ -124,6 +124,8 @@ export interface Balance {
    */
   code?: string;
 
+  consumptionsAccountingProductId?: string;
+
   /**
    * The unique identifier (UUID) for the user who created the Balance.
    */
@@ -154,6 +156,8 @@ export interface Balance {
    * active.
    */
   endDate?: string;
+
+  feesAccountingProductId?: string;
 
   /**
    * The unique identifier (UUID) for the user who last modified the Balance.
@@ -251,9 +255,21 @@ export interface BalanceCreateParams {
   code?: string;
 
   /**
+   * Optional Product ID this Balance Consumptions should be attributed to for
+   * accounting purposes
+   */
+  consumptionsAccountingProductId?: string;
+
+  /**
    * A description of the Balance.
    */
   description?: string;
+
+  /**
+   * Optional Product ID this Balance Fees should be attributed to for accounting
+   * purposes
+   */
+  feesAccountingProductId?: string;
 
   /**
    * Specify the line item charge types that can draw-down at billing against the
@@ -384,9 +400,21 @@ export interface BalanceUpdateParams {
   code?: string;
 
   /**
+   * Optional Product ID this Balance Consumptions should be attributed to for
+   * accounting purposes
+   */
+  consumptionsAccountingProductId?: string;
+
+  /**
    * A description of the Balance.
    */
   description?: string;
+
+  /**
+   * Optional Product ID this Balance Fees should be attributed to for accounting
+   * purposes
+   */
+  feesAccountingProductId?: string;
 
   /**
    * Specify the line item charge types that can draw-down at billing against the

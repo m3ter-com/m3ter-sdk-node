@@ -87,6 +87,8 @@ export interface Pricing {
    */
   version: number;
 
+  accountingProductId?: string;
+
   /**
    * UUID of the Aggregation used to create the Pricing. Use this when creating a
    * Pricing for a segmented aggregation.
@@ -304,6 +306,11 @@ export interface PricingCreateParams {
   startDate: string;
 
   /**
+   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   */
+  accountingProductId?: string;
+
+  /**
    * UUID of the Aggregation used to create the Pricing. Use this when creating a
    * Pricing for a segmented aggregation.
    */
@@ -514,6 +521,11 @@ export interface PricingUpdateParams {
    * for the Plan of Plan Template._(Required)_
    */
   startDate: string;
+
+  /**
+   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   */
+  accountingProductId?: string;
 
   /**
    * UUID of the Aggregation used to create the Pricing. Use this when creating a

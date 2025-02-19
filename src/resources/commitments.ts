@@ -249,6 +249,8 @@ export interface Commitment {
    */
   currency?: string;
 
+  drawdownsAccountingProductId?: string;
+
   /**
    * The date and time _(in ISO-8601 format)_ when the Commitment was created.
    */
@@ -276,6 +278,8 @@ export interface Commitment {
    *   period the bill covers _(in ISO-8601 format)_.
    */
   feeDates?: Array<Commitment.FeeDate>;
+
+  feesAccountingProductId?: string;
 
   /**
    * The unique identifier (UUID) of the user who last modified this Commitment.
@@ -488,6 +492,12 @@ export interface CommitmentCreateParams {
   contractId?: string;
 
   /**
+   * Optional Product ID this Commitment consumptions should be attributed to for
+   * accounting purposes
+   */
+  drawdownsAccountingProductId?: string;
+
+  /**
    * Used for billing any outstanding Commitment fees _on a schedule_.
    *
    * Create an array to define a series of bill dates and amounts covering specified
@@ -507,6 +517,12 @@ export interface CommitmentCreateParams {
    *   use case requires this.
    */
   feeDates?: Array<CommitmentCreateParams.FeeDate>;
+
+  /**
+   * Optional Product ID this Commitment fees should be attributed to for accounting
+   * purposes
+   */
+  feesAccountingProductId?: string;
 
   /**
    * Specify the line item charge types that can draw-down at billing against the
@@ -726,6 +742,12 @@ export interface CommitmentUpdateParams {
   contractId?: string;
 
   /**
+   * Optional Product ID this Commitment consumptions should be attributed to for
+   * accounting purposes
+   */
+  drawdownsAccountingProductId?: string;
+
+  /**
    * Used for billing any outstanding Commitment fees _on a schedule_.
    *
    * Create an array to define a series of bill dates and amounts covering specified
@@ -745,6 +767,12 @@ export interface CommitmentUpdateParams {
    *   use case requires this.
    */
   feeDates?: Array<CommitmentUpdateParams.FeeDate>;
+
+  /**
+   * Optional Product ID this Commitment fees should be attributed to for accounting
+   * purposes
+   */
+  feesAccountingProductId?: string;
 
   /**
    * Specify the line item charge types that can draw-down at billing against the
