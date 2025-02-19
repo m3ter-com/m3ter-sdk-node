@@ -142,6 +142,12 @@ export interface Plan {
   minimumSpend?: number;
 
   /**
+   * Optional Product ID this plan's minimum spend should be attributed to for
+   * accounting purposes
+   */
+  minimumSpendAccountingProductId?: string;
+
+  /**
    * When TRUE, minimum spend is billed at the start of each billing period.
    *
    * When FALSE, minimum spend is billed at the end of each billing period.
@@ -188,6 +194,12 @@ export interface Plan {
    * _(Optional)_. Overrides PlanTemplate value.
    */
   standingCharge?: number;
+
+  /**
+   * Optional Product ID this plan's standing charge should be attributed to for
+   * accounting purposes
+   */
+  standingChargeAccountingProductId?: string;
 
   /**
    * When TRUE, standing charge is billed at the start of each billing period.
@@ -265,6 +277,12 @@ export interface PlanCreateParams {
   minimumSpend?: number;
 
   /**
+   * Optional Product ID this plan's minimum spend should be attributed to for
+   * accounting purposes
+   */
+  minimumSpendAccountingProductId?: string;
+
+  /**
    * When TRUE, minimum spend is billed at the start of each billing period.
    *
    * When FALSE, minimum spend is billed at the end of each billing period.
@@ -296,6 +314,12 @@ export interface PlanCreateParams {
    * _(Optional)_. Overrides PlanTemplate value.
    */
   standingCharge?: number;
+
+  /**
+   * Optional Product ID this plan's standing charge should be attributed to for
+   * accounting purposes
+   */
+  standingChargeAccountingProductId?: string;
 
   /**
    * When TRUE, standing charge is billed at the start of each billing period.
@@ -385,6 +409,12 @@ export interface PlanUpdateParams {
   minimumSpend?: number;
 
   /**
+   * Optional Product ID this plan's minimum spend should be attributed to for
+   * accounting purposes
+   */
+  minimumSpendAccountingProductId?: string;
+
+  /**
    * When TRUE, minimum spend is billed at the start of each billing period.
    *
    * When FALSE, minimum spend is billed at the end of each billing period.
@@ -416,6 +446,12 @@ export interface PlanUpdateParams {
    * _(Optional)_. Overrides PlanTemplate value.
    */
   standingCharge?: number;
+
+  /**
+   * Optional Product ID this plan's standing charge should be attributed to for
+   * accounting purposes
+   */
+  standingChargeAccountingProductId?: string;
 
   /**
    * When TRUE, standing charge is billed at the start of each billing period.

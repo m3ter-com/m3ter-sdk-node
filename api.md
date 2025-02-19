@@ -339,3 +339,15 @@ Methods:
 - <code title="put /organizations/{orgId}/picklists/transactiontypes/{id}">client.transactionTypes.<a href="./src/resources/transaction-types.ts">update</a>(orgId, id, { ...params }) -> TransactionType</code>
 - <code title="get /organizations/{orgId}/picklists/transactiontypes">client.transactionTypes.<a href="./src/resources/transaction-types.ts">list</a>(orgId, { ...params }) -> TransactionTypesCursor</code>
 - <code title="delete /organizations/{orgId}/picklists/transactiontypes/{id}">client.transactionTypes.<a href="./src/resources/transaction-types.ts">delete</a>(orgId, id) -> TransactionType</code>
+
+# DataExports
+
+Types:
+
+- <code><a href="./src/resources/data-exports.ts">AdhocExport</a></code>
+- <code><a href="./src/resources/data-exports.ts">AdHocOperationalDataRequest</a></code>
+- <code><a href="./src/resources/data-exports.ts">AdHocUsageDataRequest</a></code>
+
+Methods:
+
+- <code title="post /organizations/{orgId}/dataexports/adhoc">client.dataExports.<a href="./src/resources/data-exports.ts">createAdhoc</a>(orgId, { ...params }) -> AdhocExport</code>

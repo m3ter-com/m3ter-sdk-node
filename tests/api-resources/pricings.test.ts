@@ -29,6 +29,7 @@ describe('resource pricings', () => {
     const response = await client.pricings.create('orgId', {
       pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0, id: 'id', creditTypeId: 'creditTypeId' }],
       startDate: '2019-12-27T18:11:19.117Z',
+      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       aggregationId: 'aggregationId',
       code: 'JS!?Q0]r] ]$]',
       compoundAggregationId: 'compoundAggregationId',
@@ -86,6 +87,7 @@ describe('resource pricings', () => {
     const response = await client.pricings.update('orgId', 'id', {
       pricingBands: [{ fixedPrice: 0, lowerLimit: 0, unitPrice: 0, id: 'id', creditTypeId: 'creditTypeId' }],
       startDate: '2019-12-27T18:11:19.117Z',
+      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       aggregationId: 'aggregationId',
       code: 'JS!?Q0]r] ]$]',
       compoundAggregationId: 'compoundAggregationId',

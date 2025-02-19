@@ -35,7 +35,7 @@ describe('resource commitments', () => {
       currency: 'x',
       endDate: '2019-12-27',
       startDate: '2019-12-27',
-      accountingProductId: 'accountingProductId',
+      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amountFirstBill: 0,
       amountPrePaid: 0,
       billEpoch: '2019-12-27',
@@ -47,6 +47,7 @@ describe('resource commitments', () => {
       commitmentFeeDescription: 'commitmentFeeDescription',
       commitmentUsageDescription: 'commitmentUsageDescription',
       contractId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      drawdownsAccountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       feeDates: [
         {
           amount: 1,
@@ -55,6 +56,7 @@ describe('resource commitments', () => {
           servicePeriodStartDate: '2019-12-27T18:11:19.117Z',
         },
       ],
+      feesAccountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       lineItemTypes: ['STANDING_CHARGE'],
       overageDescription: 'overageDescription',
       overageSurchargePercent: 0,
@@ -106,7 +108,7 @@ describe('resource commitments', () => {
       currency: 'x',
       endDate: '2019-12-27',
       startDate: '2019-12-27',
-      accountingProductId: 'accountingProductId',
+      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amountFirstBill: 0,
       amountPrePaid: 0,
       billEpoch: '2019-12-27',
@@ -118,6 +120,7 @@ describe('resource commitments', () => {
       commitmentFeeDescription: 'commitmentFeeDescription',
       commitmentUsageDescription: 'commitmentUsageDescription',
       contractId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      drawdownsAccountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       feeDates: [
         {
           amount: 1,
@@ -126,6 +129,7 @@ describe('resource commitments', () => {
           servicePeriodStartDate: '2019-12-27T18:11:19.117Z',
         },
       ],
+      feesAccountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       lineItemTypes: ['STANDING_CHARGE'],
       overageDescription: 'overageDescription',
       overageSurchargePercent: 0,

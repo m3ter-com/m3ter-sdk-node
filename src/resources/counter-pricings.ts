@@ -94,6 +94,8 @@ export interface CounterPricing {
    */
   version: number;
 
+  accountingProductId?: string;
+
   /**
    * Unique short code for the Pricing.
    */
@@ -257,6 +259,11 @@ export interface CounterPricingCreateParams {
   startDate: string;
 
   /**
+   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   */
+  accountingProductId?: string;
+
+  /**
    * Unique short code for the Pricing.
    */
   code?: string;
@@ -408,6 +415,11 @@ export interface CounterPricingUpdateParams {
    * for the Plan of Plan Template._(Required)_
    */
   startDate: string;
+
+  /**
+   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   */
+  accountingProductId?: string;
 
   /**
    * Unique short code for the Pricing.

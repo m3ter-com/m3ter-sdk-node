@@ -108,6 +108,13 @@ export {
   type CurrencyListParams,
 } from './currencies';
 export {
+  DataExports,
+  type AdhocExport,
+  type AdHocOperationalDataRequest,
+  type AdHocUsageDataRequest,
+  type DataExportCreateAdhocParams,
+} from './data-exports';
+export {
   DebitReasonsCursor,
   DebitReasons,
   type DebitReason,
