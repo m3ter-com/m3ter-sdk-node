@@ -11,18 +11,29 @@ export class DebitReasons extends APIResource {
    * Reason, it becomes available as a debit type for adding Debit line items to
    * Bills. See [Debits](https://www.m3ter.com/docs/api#tag/Debits).
    */
-  create(
-    orgId: string,
-    body: DebitReasonCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason> {
+  create(params: DebitReasonCreateParams, options?: Core.RequestOptions): Core.APIPromise<DebitReason> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/debitreasons`, { body, ...options });
   }
 
   /**
    * Retrieve the Debit Reason with the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason> {
+  retrieve(
+    id: string,
+    params?: DebitReasonRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<DebitReason>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason>;
+  retrieve(
+    id: string,
+    params: DebitReasonRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<DebitReason> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/picklists/debitreasons/${id}`, options);
   }
 
@@ -30,11 +41,11 @@ export class DebitReasons extends APIResource {
    * Update the Debit Reason with the given UUID.
    */
   update(
-    orgId: string,
     id: string,
-    body: DebitReasonUpdateParams,
+    params: DebitReasonUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<DebitReason> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/debitreasons/${id}`, { body, ...options });
   }
 
@@ -44,19 +55,18 @@ export class DebitReasons extends APIResource {
    * code, or by Archive status.
    */
   list(
-    orgId: string,
-    query?: DebitReasonListParams,
+    params?: DebitReasonListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<DebitReasonsCursor, DebitReason>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<DebitReasonsCursor, DebitReason>;
+  list(options?: Core.RequestOptions): Core.PagePromise<DebitReasonsCursor, DebitReason>;
   list(
-    orgId: string,
-    query: DebitReasonListParams | Core.RequestOptions = {},
+    params: DebitReasonListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<DebitReasonsCursor, DebitReason> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/picklists/debitreasons`, DebitReasonsCursor, {
       query,
       ...options,
@@ -66,7 +76,21 @@ export class DebitReasons extends APIResource {
   /**
    * Delete the Debit Reason with the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason> {
+  delete(
+    id: string,
+    params?: DebitReasonDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<DebitReason>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason>;
+  delete(
+    id: string,
+    params: DebitReasonDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<DebitReason> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/picklists/debitreasons/${id}`, options);
   }
 }
@@ -128,13 +152,19 @@ export interface DebitReason {
 
 export interface DebitReasonCreateParams {
   /**
-   * The name of the entity.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -142,12 +172,12 @@ export interface DebitReasonCreateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -159,15 +189,29 @@ export interface DebitReasonCreateParams {
   version?: number;
 }
 
+export interface DebitReasonRetrieveParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface DebitReasonUpdateParams {
   /**
-   * The name of the entity.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -175,12 +219,12 @@ export interface DebitReasonUpdateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -194,8 +238,14 @@ export interface DebitReasonUpdateParams {
 
 export interface DebitReasonListParams extends CursorParams {
   /**
-   * Filter using the boolean archived flag. DebitReasons can be archived if they are
-   * obsolete.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: Filter using the boolean archived flag. DebitReasons can be
+   * archived if they are obsolete.
    *
    * - TRUE includes DebitReasons that have been archived.
    * - FALSE excludes archived DebitReasons.
@@ -203,14 +253,22 @@ export interface DebitReasonListParams extends CursorParams {
   archived?: boolean;
 
   /**
-   * List of Debit Reason short codes to retrieve.
+   * Query param: List of Debit Reason short codes to retrieve.
    */
   codes?: Array<string>;
 
   /**
-   * List of Debit Reason IDs to retrieve.
+   * Query param: List of Debit Reason IDs to retrieve.
    */
   ids?: Array<string>;
+}
+
+export interface DebitReasonDeleteParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 DebitReasons.DebitReasonsCursor = DebitReasonsCursor;
@@ -220,7 +278,9 @@ export declare namespace DebitReasons {
     type DebitReason as DebitReason,
     DebitReasonsCursor as DebitReasonsCursor,
     type DebitReasonCreateParams as DebitReasonCreateParams,
+    type DebitReasonRetrieveParams as DebitReasonRetrieveParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
     type DebitReasonListParams as DebitReasonListParams,
+    type DebitReasonDeleteParams as DebitReasonDeleteParams,
   };
 }

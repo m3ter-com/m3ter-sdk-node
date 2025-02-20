@@ -11,7 +11,9 @@ import * as API from './resources/index';
 import {
   AccountPlan,
   AccountPlanCreateParams,
+  AccountPlanDeleteParams,
   AccountPlanListParams,
+  AccountPlanRetrieveParams,
   AccountPlanUpdateParams,
   AccountPlans,
   AccountPlansCursor,
@@ -19,8 +21,10 @@ import {
 import {
   Account,
   AccountCreateParams,
+  AccountDeleteParams,
   AccountListChildrenParams,
   AccountListParams,
+  AccountRetrieveParams,
   AccountSearchParams,
   AccountSearchResponse,
   AccountUpdateParams,
@@ -30,7 +34,9 @@ import {
 import {
   Aggregation,
   AggregationCreateParams,
+  AggregationDeleteParams,
   AggregationListParams,
+  AggregationRetrieveParams,
   AggregationUpdateParams,
   Aggregations,
   AggregationsCursor,
@@ -40,11 +46,18 @@ import {
   AuthenticationGetBearerTokenParams,
   AuthenticationGetBearerTokenResponse,
 } from './resources/authentication';
-import { BillConfig, BillConfigResource, BillConfigUpdateParams } from './resources/bill-config';
+import {
+  BillConfig,
+  BillConfigResource,
+  BillConfigRetrieveParams,
+  BillConfigUpdateParams,
+} from './resources/bill-config';
 import {
   Commitment,
   CommitmentCreateParams,
+  CommitmentDeleteParams,
   CommitmentListParams,
+  CommitmentRetrieveParams,
   CommitmentSearchParams,
   CommitmentSearchResponse,
   CommitmentUpdateParams,
@@ -54,7 +67,9 @@ import {
 import {
   CompoundAggregation,
   CompoundAggregationCreateParams,
+  CompoundAggregationDeleteParams,
   CompoundAggregationListParams,
+  CompoundAggregationRetrieveParams,
   CompoundAggregationUpdateParams,
   CompoundAggregations,
   CompoundAggregationsCursor,
@@ -62,7 +77,9 @@ import {
 import {
   Contract,
   ContractCreateParams,
+  ContractDeleteParams,
   ContractListParams,
+  ContractRetrieveParams,
   ContractUpdateParams,
   Contracts,
   ContractsCursor,
@@ -70,7 +87,9 @@ import {
 import {
   CounterAdjustment,
   CounterAdjustmentCreateParams,
+  CounterAdjustmentDeleteParams,
   CounterAdjustmentListParams,
+  CounterAdjustmentRetrieveParams,
   CounterAdjustmentUpdateParams,
   CounterAdjustments,
   CounterAdjustmentsCursor,
@@ -78,7 +97,9 @@ import {
 import {
   CounterPricing,
   CounterPricingCreateParams,
+  CounterPricingDeleteParams,
   CounterPricingListParams,
+  CounterPricingRetrieveParams,
   CounterPricingUpdateParams,
   CounterPricings,
   CounterPricingsCursor,
@@ -86,7 +107,9 @@ import {
 import {
   Counter,
   CounterCreateParams,
+  CounterDeleteParams,
   CounterListParams,
+  CounterRetrieveParams,
   CounterUpdateParams,
   Counters,
   CountersCursor,
@@ -94,7 +117,9 @@ import {
 import {
   CreditReason,
   CreditReasonCreateParams,
+  CreditReasonDeleteParams,
   CreditReasonListParams,
+  CreditReasonRetrieveParams,
   CreditReasonUpdateParams,
   CreditReasons,
   CreditReasonsCursor,
@@ -104,7 +129,9 @@ import {
   CurrenciesCursor,
   Currency,
   CurrencyCreateParams,
+  CurrencyDeleteParams,
   CurrencyListParams,
+  CurrencyRetrieveParams,
   CurrencyUpdateParams,
 } from './resources/currencies';
 import {
@@ -117,7 +144,9 @@ import {
 import {
   DebitReason,
   DebitReasonCreateParams,
+  DebitReasonDeleteParams,
   DebitReasonListParams,
+  DebitReasonRetrieveParams,
   DebitReasonUpdateParams,
   DebitReasons,
   DebitReasonsCursor,
@@ -125,7 +154,9 @@ import {
 import {
   Meter,
   MeterCreateParams,
+  MeterDeleteParams,
   MeterListParams,
+  MeterRetrieveParams,
   MeterUpdateParams,
   Meters,
   MetersCursor,
@@ -133,12 +164,15 @@ import {
 import {
   OrganizationConfig,
   OrganizationConfigResource,
+  OrganizationConfigRetrieveParams,
   OrganizationConfigUpdateParams,
 } from './resources/organization-config';
 import {
   PlanGroupLink,
   PlanGroupLinkCreateParams,
+  PlanGroupLinkDeleteParams,
   PlanGroupLinkListParams,
+  PlanGroupLinkRetrieveParams,
   PlanGroupLinkUpdateParams,
   PlanGroupLinks,
   PlanGroupLinksCursor,
@@ -146,7 +180,9 @@ import {
 import {
   PlanGroup,
   PlanGroupCreateParams,
+  PlanGroupDeleteParams,
   PlanGroupListParams,
+  PlanGroupRetrieveParams,
   PlanGroupUpdateParams,
   PlanGroups,
   PlanGroupsCursor,
@@ -154,7 +190,9 @@ import {
 import {
   PlanTemplate,
   PlanTemplateCreateParams,
+  PlanTemplateDeleteParams,
   PlanTemplateListParams,
+  PlanTemplateRetrieveParams,
   PlanTemplateUpdateParams,
   PlanTemplates,
   PlanTemplatesCursor,
@@ -162,7 +200,9 @@ import {
 import {
   Plan,
   PlanCreateParams,
+  PlanDeleteParams,
   PlanListParams,
+  PlanRetrieveParams,
   PlanUpdateParams,
   Plans,
   PlansCursor,
@@ -170,7 +210,9 @@ import {
 import {
   Pricing,
   PricingCreateParams,
+  PricingDeleteParams,
   PricingListParams,
+  PricingRetrieveParams,
   PricingUpdateParams,
   Pricings,
   PricingsCursor,
@@ -178,7 +220,9 @@ import {
 import {
   Product,
   ProductCreateParams,
+  ProductDeleteParams,
   ProductListParams,
+  ProductRetrieveParams,
   ProductUpdateParams,
   Products,
   ProductsCursor,
@@ -186,7 +230,9 @@ import {
 import {
   TransactionType,
   TransactionTypeCreateParams,
+  TransactionTypeDeleteParams,
   TransactionTypeListParams,
+  TransactionTypeRetrieveParams,
   TransactionTypeUpdateParams,
   TransactionTypes,
   TransactionTypesCursor,
@@ -194,7 +240,9 @@ import {
 import {
   Balance,
   BalanceCreateParams,
+  BalanceDeleteParams,
   BalanceListParams,
+  BalanceRetrieveParams,
   BalanceUpdateParams,
   Balances,
   BalancesCursor,
@@ -215,6 +263,8 @@ export interface ClientOptions {
    * Defaults to process.env['M3TER_API_TOKEN'].
    */
   token?: string | null | undefined;
+
+  orgId: string;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -286,6 +336,7 @@ export class M3ter extends Core.APIClient {
   apiKey: string;
   apiSecret: string;
   token: string | null;
+  orgId: string;
 
   private _options: ClientOptions;
 
@@ -295,6 +346,7 @@ export class M3ter extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['M3TER_API_KEY'] ?? undefined]
    * @param {string | undefined} [opts.apiSecret=process.env['M3TER_API_SECRET'] ?? undefined]
    * @param {string | null | undefined} [opts.token=process.env['M3TER_API_TOKEN'] ?? null]
+   * @param {string} opts.orgId
    * @param {string} [opts.baseURL=process.env['M3TER_BASE_URL'] ?? https://api.m3ter.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -309,8 +361,9 @@ export class M3ter extends Core.APIClient {
     apiKey = Core.readEnv('M3TER_API_KEY'),
     apiSecret = Core.readEnv('M3TER_API_SECRET'),
     token = Core.readEnv('M3TER_API_TOKEN') ?? null,
+    orgId,
     ...opts
-  }: ClientOptions = {}) {
+  }: ClientOptions) {
     if (apiKey === undefined) {
       throw new Errors.M3terError(
         "The M3TER_API_KEY environment variable is missing or empty; either provide it, or instantiate the M3ter client with an apiKey option, like new M3ter({ apiKey: 'My API Key' }).",
@@ -321,11 +374,17 @@ export class M3ter extends Core.APIClient {
         "The M3TER_API_SECRET environment variable is missing or empty; either provide it, or instantiate the M3ter client with an apiSecret option, like new M3ter({ apiSecret: 'My API Secret' }).",
       );
     }
+    if (orgId === undefined) {
+      throw new Errors.M3terError(
+        "Missing required client option orgId; you need to instantiate the M3ter client with an orgId option, like new M3ter({ orgId: 'My Org ID' }).",
+      );
+    }
 
     const options: ClientOptions = {
       apiKey,
       apiSecret,
       token,
+      orgId,
       ...opts,
       baseURL: baseURL || `https://api.m3ter.com`,
     };
@@ -349,6 +408,7 @@ export class M3ter extends Core.APIClient {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
     this.token = token;
+    this.orgId = orgId;
   }
 
   authentication: API.Authentication = new API.Authentication(this);
@@ -497,8 +557,10 @@ export declare namespace M3ter {
     type AccountSearchResponse as AccountSearchResponse,
     AccountsCursor as AccountsCursor,
     type AccountCreateParams as AccountCreateParams,
+    type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,
     type AccountListParams as AccountListParams,
+    type AccountDeleteParams as AccountDeleteParams,
     type AccountListChildrenParams as AccountListChildrenParams,
     type AccountSearchParams as AccountSearchParams,
   };
@@ -508,8 +570,10 @@ export declare namespace M3ter {
     type AccountPlan as AccountPlan,
     AccountPlansCursor as AccountPlansCursor,
     type AccountPlanCreateParams as AccountPlanCreateParams,
+    type AccountPlanRetrieveParams as AccountPlanRetrieveParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,
     type AccountPlanListParams as AccountPlanListParams,
+    type AccountPlanDeleteParams as AccountPlanDeleteParams,
   };
 
   export {
@@ -517,8 +581,10 @@ export declare namespace M3ter {
     type Aggregation as Aggregation,
     AggregationsCursor as AggregationsCursor,
     type AggregationCreateParams as AggregationCreateParams,
+    type AggregationRetrieveParams as AggregationRetrieveParams,
     type AggregationUpdateParams as AggregationUpdateParams,
     type AggregationListParams as AggregationListParams,
+    type AggregationDeleteParams as AggregationDeleteParams,
   };
 
   export {
@@ -526,13 +592,16 @@ export declare namespace M3ter {
     type Balance as Balance,
     BalancesCursor as BalancesCursor,
     type BalanceCreateParams as BalanceCreateParams,
+    type BalanceRetrieveParams as BalanceRetrieveParams,
     type BalanceUpdateParams as BalanceUpdateParams,
     type BalanceListParams as BalanceListParams,
+    type BalanceDeleteParams as BalanceDeleteParams,
   };
 
   export {
     BillConfigResource as BillConfigResource,
     type BillConfig as BillConfig,
+    type BillConfigRetrieveParams as BillConfigRetrieveParams,
     type BillConfigUpdateParams as BillConfigUpdateParams,
   };
 
@@ -542,8 +611,10 @@ export declare namespace M3ter {
     type CommitmentSearchResponse as CommitmentSearchResponse,
     CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
+    type CommitmentRetrieveParams as CommitmentRetrieveParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,
     type CommitmentListParams as CommitmentListParams,
+    type CommitmentDeleteParams as CommitmentDeleteParams,
     type CommitmentSearchParams as CommitmentSearchParams,
   };
 
@@ -552,8 +623,10 @@ export declare namespace M3ter {
     type CompoundAggregation as CompoundAggregation,
     CompoundAggregationsCursor as CompoundAggregationsCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
+    type CompoundAggregationRetrieveParams as CompoundAggregationRetrieveParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,
     type CompoundAggregationListParams as CompoundAggregationListParams,
+    type CompoundAggregationDeleteParams as CompoundAggregationDeleteParams,
   };
 
   export {
@@ -561,8 +634,10 @@ export declare namespace M3ter {
     type Contract as Contract,
     ContractsCursor as ContractsCursor,
     type ContractCreateParams as ContractCreateParams,
+    type ContractRetrieveParams as ContractRetrieveParams,
     type ContractUpdateParams as ContractUpdateParams,
     type ContractListParams as ContractListParams,
+    type ContractDeleteParams as ContractDeleteParams,
   };
 
   export {
@@ -570,8 +645,10 @@ export declare namespace M3ter {
     type Counter as Counter,
     CountersCursor as CountersCursor,
     type CounterCreateParams as CounterCreateParams,
+    type CounterRetrieveParams as CounterRetrieveParams,
     type CounterUpdateParams as CounterUpdateParams,
     type CounterListParams as CounterListParams,
+    type CounterDeleteParams as CounterDeleteParams,
   };
 
   export {
@@ -579,8 +656,10 @@ export declare namespace M3ter {
     type CounterAdjustment as CounterAdjustment,
     CounterAdjustmentsCursor as CounterAdjustmentsCursor,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
+    type CounterAdjustmentRetrieveParams as CounterAdjustmentRetrieveParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,
     type CounterAdjustmentListParams as CounterAdjustmentListParams,
+    type CounterAdjustmentDeleteParams as CounterAdjustmentDeleteParams,
   };
 
   export {
@@ -588,8 +667,10 @@ export declare namespace M3ter {
     type CounterPricing as CounterPricing,
     CounterPricingsCursor as CounterPricingsCursor,
     type CounterPricingCreateParams as CounterPricingCreateParams,
+    type CounterPricingRetrieveParams as CounterPricingRetrieveParams,
     type CounterPricingUpdateParams as CounterPricingUpdateParams,
     type CounterPricingListParams as CounterPricingListParams,
+    type CounterPricingDeleteParams as CounterPricingDeleteParams,
   };
 
   export {
@@ -597,8 +678,10 @@ export declare namespace M3ter {
     type CreditReason as CreditReason,
     CreditReasonsCursor as CreditReasonsCursor,
     type CreditReasonCreateParams as CreditReasonCreateParams,
+    type CreditReasonRetrieveParams as CreditReasonRetrieveParams,
     type CreditReasonUpdateParams as CreditReasonUpdateParams,
     type CreditReasonListParams as CreditReasonListParams,
+    type CreditReasonDeleteParams as CreditReasonDeleteParams,
   };
 
   export {
@@ -606,8 +689,10 @@ export declare namespace M3ter {
     type Currency as Currency,
     CurrenciesCursor as CurrenciesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
+    type CurrencyRetrieveParams as CurrencyRetrieveParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,
     type CurrencyListParams as CurrencyListParams,
+    type CurrencyDeleteParams as CurrencyDeleteParams,
   };
 
   export {
@@ -615,8 +700,10 @@ export declare namespace M3ter {
     type DebitReason as DebitReason,
     DebitReasonsCursor as DebitReasonsCursor,
     type DebitReasonCreateParams as DebitReasonCreateParams,
+    type DebitReasonRetrieveParams as DebitReasonRetrieveParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
     type DebitReasonListParams as DebitReasonListParams,
+    type DebitReasonDeleteParams as DebitReasonDeleteParams,
   };
 
   export {
@@ -624,13 +711,16 @@ export declare namespace M3ter {
     type Meter as Meter,
     MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
+    type MeterRetrieveParams as MeterRetrieveParams,
     type MeterUpdateParams as MeterUpdateParams,
     type MeterListParams as MeterListParams,
+    type MeterDeleteParams as MeterDeleteParams,
   };
 
   export {
     OrganizationConfigResource as OrganizationConfigResource,
     type OrganizationConfig as OrganizationConfig,
+    type OrganizationConfigRetrieveParams as OrganizationConfigRetrieveParams,
     type OrganizationConfigUpdateParams as OrganizationConfigUpdateParams,
   };
 
@@ -639,8 +729,10 @@ export declare namespace M3ter {
     type Plan as Plan,
     PlansCursor as PlansCursor,
     type PlanCreateParams as PlanCreateParams,
+    type PlanRetrieveParams as PlanRetrieveParams,
     type PlanUpdateParams as PlanUpdateParams,
     type PlanListParams as PlanListParams,
+    type PlanDeleteParams as PlanDeleteParams,
   };
 
   export {
@@ -648,8 +740,10 @@ export declare namespace M3ter {
     type PlanGroup as PlanGroup,
     PlanGroupsCursor as PlanGroupsCursor,
     type PlanGroupCreateParams as PlanGroupCreateParams,
+    type PlanGroupRetrieveParams as PlanGroupRetrieveParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,
     type PlanGroupListParams as PlanGroupListParams,
+    type PlanGroupDeleteParams as PlanGroupDeleteParams,
   };
 
   export {
@@ -657,8 +751,10 @@ export declare namespace M3ter {
     type PlanGroupLink as PlanGroupLink,
     PlanGroupLinksCursor as PlanGroupLinksCursor,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
+    type PlanGroupLinkRetrieveParams as PlanGroupLinkRetrieveParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,
     type PlanGroupLinkListParams as PlanGroupLinkListParams,
+    type PlanGroupLinkDeleteParams as PlanGroupLinkDeleteParams,
   };
 
   export {
@@ -666,8 +762,10 @@ export declare namespace M3ter {
     type PlanTemplate as PlanTemplate,
     PlanTemplatesCursor as PlanTemplatesCursor,
     type PlanTemplateCreateParams as PlanTemplateCreateParams,
+    type PlanTemplateRetrieveParams as PlanTemplateRetrieveParams,
     type PlanTemplateUpdateParams as PlanTemplateUpdateParams,
     type PlanTemplateListParams as PlanTemplateListParams,
+    type PlanTemplateDeleteParams as PlanTemplateDeleteParams,
   };
 
   export {
@@ -675,8 +773,10 @@ export declare namespace M3ter {
     type Pricing as Pricing,
     PricingsCursor as PricingsCursor,
     type PricingCreateParams as PricingCreateParams,
+    type PricingRetrieveParams as PricingRetrieveParams,
     type PricingUpdateParams as PricingUpdateParams,
     type PricingListParams as PricingListParams,
+    type PricingDeleteParams as PricingDeleteParams,
   };
 
   export {
@@ -684,8 +784,10 @@ export declare namespace M3ter {
     type Product as Product,
     ProductsCursor as ProductsCursor,
     type ProductCreateParams as ProductCreateParams,
+    type ProductRetrieveParams as ProductRetrieveParams,
     type ProductUpdateParams as ProductUpdateParams,
     type ProductListParams as ProductListParams,
+    type ProductDeleteParams as ProductDeleteParams,
   };
 
   export {
@@ -693,8 +795,10 @@ export declare namespace M3ter {
     type TransactionType as TransactionType,
     TransactionTypesCursor as TransactionTypesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
+    type TransactionTypeRetrieveParams as TransactionTypeRetrieveParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
     type TransactionTypeListParams as TransactionTypeListParams,
+    type TransactionTypeDeleteParams as TransactionTypeDeleteParams,
   };
 
   export {

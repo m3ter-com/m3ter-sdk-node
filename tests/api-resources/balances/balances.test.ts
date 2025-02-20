@@ -7,12 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource balances', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.balances.create('orgId', {
+    const responsePromise = client.balances.create({
       accountId: 'x',
       currency: 'x',
       endDate: '2019-12-27T18:11:19.117Z',
@@ -28,7 +29,8 @@ describe('resource balances', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.balances.create('orgId', {
+    const response = await client.balances.create({
+      orgId: 'orgId',
       accountId: 'x',
       currency: 'x',
       endDate: '2019-12-27T18:11:19.117Z',
@@ -49,8 +51,8 @@ describe('resource balances', () => {
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.balances.retrieve('orgId', 'id');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.balances.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -60,15 +62,26 @@ describe('resource balances', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: required and optional params', async () => {
+    const response = await client.balances.retrieve('id', { orgId: 'orgId' });
+  });
+
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.balances.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.balances.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.balances.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.balances.update('orgId', 'id', {
+    const responsePromise = client.balances.update('id', {
       accountId: 'x',
       currency: 'x',
       endDate: '2019-12-27T18:11:19.117Z',
@@ -84,7 +97,8 @@ describe('resource balances', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.balances.update('orgId', 'id', {
+    const response = await client.balances.update('id', {
+      orgId: 'orgId',
       accountId: 'x',
       currency: 'x',
       endDate: '2019-12-27T18:11:19.117Z',
@@ -105,8 +119,8 @@ describe('resource balances', () => {
     });
   });
 
-  test('list', async () => {
-    const responsePromise = client.balances.list('orgId');
+  test('list: only required params', async () => {
+    const responsePromise = client.balances.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -116,9 +130,20 @@ describe('resource balances', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('list: required and optional params', async () => {
+    const response = await client.balances.list({
+      orgId: 'orgId',
+      accountId: 'accountId',
+      endDateEnd: 'endDateEnd',
+      endDateStart: 'endDateStart',
+      nextToken: 'nextToken',
+      pageSize: 1,
+    });
+  });
+
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.balances.list('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.balances.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -127,8 +152,8 @@ describe('resource balances', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.balances.list(
-        'orgId',
         {
+          orgId: 'orgId',
           accountId: 'accountId',
           endDateEnd: 'endDateEnd',
           endDateStart: 'endDateStart',
@@ -140,8 +165,8 @@ describe('resource balances', () => {
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.balances.delete('orgId', 'id');
+  test('delete: only required params', async () => {
+    const responsePromise = client.balances.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -151,10 +176,21 @@ describe('resource balances', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('delete: required and optional params', async () => {
+    const response = await client.balances.delete('id', { orgId: 'orgId' });
+  });
+
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.balances.delete('orgId', 'id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.balances.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.balances.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

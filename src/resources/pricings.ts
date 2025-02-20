@@ -13,14 +13,29 @@ export class Pricings extends APIResource {
    * for this call to be valid. If you omit both, then you will receive a validation
    * error.
    */
-  create(orgId: string, body: PricingCreateParams, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+  create(params: PricingCreateParams, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/pricings`, { body, ...options });
   }
 
   /**
    * Retrieve the Pricing with the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+  retrieve(
+    id: string,
+    params?: PricingRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Pricing>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
+  retrieve(
+    id: string,
+    params: PricingRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Pricing> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/pricings/${id}`, options);
   }
 
@@ -31,12 +46,8 @@ export class Pricings extends APIResource {
    * for this call to be valid. If you omit both, then you will receive a validation
    * error.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: PricingUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Pricing> {
+  update(id: string, params: PricingUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/pricings/${id}`, { body, ...options });
   }
 
@@ -44,27 +55,33 @@ export class Pricings extends APIResource {
    * Retrieve a list of Pricings filtered by date, Plan ID, PlanTemplate ID, or
    * Pricing ID.
    */
+  list(params?: PricingListParams, options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
   list(
-    orgId: string,
-    query?: PricingListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<PricingsCursor, Pricing>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
-  list(
-    orgId: string,
-    query: PricingListParams | Core.RequestOptions = {},
+    params: PricingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<PricingsCursor, Pricing> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/pricings`, PricingsCursor, { query, ...options });
   }
 
   /**
    * Delete the Pricing with the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+  delete(id: string, params?: PricingDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
+  delete(
+    id: string,
+    params: PricingDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Pricing> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/pricings/${id}`, options);
   }
 }
@@ -297,39 +314,49 @@ export namespace Pricing {
 }
 
 export interface PricingCreateParams {
+  /**
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param:
+   */
   pricingBands: Array<PricingCreateParams.PricingBand>;
 
   /**
-   * The start date _(in ISO-8601 format)_ for when the Pricing starts to be active
-   * for the Plan of Plan Template._(Required)_
+   * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
+   * be active for the Plan of Plan Template._(Required)_
    */
   startDate: string;
 
   /**
-   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   * Body param: Optional Product ID this Pricing should be attributed to for
+   * accounting purposes
    */
   accountingProductId?: string;
 
   /**
-   * UUID of the Aggregation used to create the Pricing. Use this when creating a
-   * Pricing for a segmented aggregation.
+   * Body param: UUID of the Aggregation used to create the Pricing. Use this when
+   * creating a Pricing for a segmented aggregation.
    */
   aggregationId?: string;
 
   /**
-   * Unique short code for the Pricing.
+   * Body param: Unique short code for the Pricing.
    */
   code?: string;
 
   /**
-   * UUID of the Compound Aggregation used to create the Pricing.
+   * Body param: UUID of the Compound Aggregation used to create the Pricing.
    */
   compoundAggregationId?: string;
 
   /**
-   * Controls whether or not charge rates under a set of pricing bands configured for
-   * a Pricing are applied according to each separate band or at the highest band
-   * reached.
+   * Body param: Controls whether or not charge rates under a set of pricing bands
+   * configured for a Pricing are applied according to each separate band or at the
+   * highest band reached.
    *
    * _(Optional)_. The default value is **FALSE**.
    *
@@ -346,26 +373,26 @@ export interface PricingCreateParams {
   cumulative?: boolean;
 
   /**
-   * Displayed on Bill line items.
+   * Body param: Displayed on Bill line items.
    */
   description?: string;
 
   /**
-   * The end date _(in ISO-8601 format)_ for when the Pricing ceases to be active for
-   * the Plan or Plan Template.
+   * Body param: The end date _(in ISO-8601 format)_ for when the Pricing ceases to
+   * be active for the Plan or Plan Template.
    *
    * _(Optional)_ If not specified, the Pricing remains active indefinitely.
    */
   endDate?: string;
 
   /**
-   * The minimum spend amount per billing cycle for end customer Accounts on a Plan
-   * to which the Pricing is applied.
+   * Body param: The minimum spend amount per billing cycle for end customer Accounts
+   * on a Plan to which the Pricing is applied.
    */
   minimumSpend?: number;
 
   /**
-   * The default value is **FALSE**.
+   * Body param: The default value is **FALSE**.
    *
    * - When TRUE, minimum spend is billed at the start of each billing period.
    *
@@ -377,29 +404,29 @@ export interface PricingCreateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Minimum spend description _(displayed on the bill line item)_.
+   * Body param: Minimum spend description _(displayed on the bill line item)_.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Specify Prepayment/Balance overage pricing in pricing bands for the case of a
-   * **Tiered** pricing structure.
+   * Body param: Specify Prepayment/Balance overage pricing in pricing bands for the
+   * case of a **Tiered** pricing structure.
    */
   overagePricingBands?: Array<PricingCreateParams.OveragePricingBand>;
 
   /**
-   * UUID of the Plan the Pricing is created for.
+   * Body param: UUID of the Plan the Pricing is created for.
    */
   planId?: string;
 
   /**
-   * UUID of the Plan Template the Pricing is created for.
+   * Body param: UUID of the Plan Template the Pricing is created for.
    */
   planTemplateId?: string;
 
   /**
-   * Specifies the segment value which you are defining a Pricing for using this
-   * call:
+   * Body param: Specifies the segment value which you are defining a Pricing for
+   * using this call:
    *
    * - For each segment value defined on a Segmented Aggregation you must create a
    *   separate Pricing and use the appropriate `aggregationId` parameter for the
@@ -418,7 +445,7 @@ export interface PricingCreateParams {
   segment?: Record<string, string>;
 
   /**
-   * The default value is **FALSE**.
+   * Body param: The default value is **FALSE**.
    *
    * - If TRUE, usage accumulates over the entire period the priced Plan is active
    *   for the account, and is not reset for pricing band rates at the start of each
@@ -430,8 +457,8 @@ export interface PricingCreateParams {
   tiersSpanPlan?: boolean;
 
   /**
-   * - **DEBIT**. Default setting. The amount calculated using the Pricing is added
-   *   to the bill as a debit.
+   * Body param: \* **DEBIT**. Default setting. The amount calculated using the
+   * Pricing is added to the bill as a debit.
    *
    * - **PRODUCT_CREDIT**. The amount calculated using the Pricing is added to the
    *   bill as a credit _(negative amount)_. To prevent negative billing, the bill
@@ -445,7 +472,7 @@ export interface PricingCreateParams {
   type?: 'DEBIT' | 'PRODUCT_CREDIT' | 'GLOBAL_CREDIT';
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -513,40 +540,58 @@ export namespace PricingCreateParams {
   }
 }
 
+export interface PricingRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface PricingUpdateParams {
+  /**
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param:
+   */
   pricingBands: Array<PricingUpdateParams.PricingBand>;
 
   /**
-   * The start date _(in ISO-8601 format)_ for when the Pricing starts to be active
-   * for the Plan of Plan Template._(Required)_
+   * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
+   * be active for the Plan of Plan Template._(Required)_
    */
   startDate: string;
 
   /**
-   * Optional Product ID this Pricing should be attributed to for accounting purposes
+   * Body param: Optional Product ID this Pricing should be attributed to for
+   * accounting purposes
    */
   accountingProductId?: string;
 
   /**
-   * UUID of the Aggregation used to create the Pricing. Use this when creating a
-   * Pricing for a segmented aggregation.
+   * Body param: UUID of the Aggregation used to create the Pricing. Use this when
+   * creating a Pricing for a segmented aggregation.
    */
   aggregationId?: string;
 
   /**
-   * Unique short code for the Pricing.
+   * Body param: Unique short code for the Pricing.
    */
   code?: string;
 
   /**
-   * UUID of the Compound Aggregation used to create the Pricing.
+   * Body param: UUID of the Compound Aggregation used to create the Pricing.
    */
   compoundAggregationId?: string;
 
   /**
-   * Controls whether or not charge rates under a set of pricing bands configured for
-   * a Pricing are applied according to each separate band or at the highest band
-   * reached.
+   * Body param: Controls whether or not charge rates under a set of pricing bands
+   * configured for a Pricing are applied according to each separate band or at the
+   * highest band reached.
    *
    * _(Optional)_. The default value is **FALSE**.
    *
@@ -563,26 +608,26 @@ export interface PricingUpdateParams {
   cumulative?: boolean;
 
   /**
-   * Displayed on Bill line items.
+   * Body param: Displayed on Bill line items.
    */
   description?: string;
 
   /**
-   * The end date _(in ISO-8601 format)_ for when the Pricing ceases to be active for
-   * the Plan or Plan Template.
+   * Body param: The end date _(in ISO-8601 format)_ for when the Pricing ceases to
+   * be active for the Plan or Plan Template.
    *
    * _(Optional)_ If not specified, the Pricing remains active indefinitely.
    */
   endDate?: string;
 
   /**
-   * The minimum spend amount per billing cycle for end customer Accounts on a Plan
-   * to which the Pricing is applied.
+   * Body param: The minimum spend amount per billing cycle for end customer Accounts
+   * on a Plan to which the Pricing is applied.
    */
   minimumSpend?: number;
 
   /**
-   * The default value is **FALSE**.
+   * Body param: The default value is **FALSE**.
    *
    * - When TRUE, minimum spend is billed at the start of each billing period.
    *
@@ -594,29 +639,29 @@ export interface PricingUpdateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Minimum spend description _(displayed on the bill line item)_.
+   * Body param: Minimum spend description _(displayed on the bill line item)_.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Specify Prepayment/Balance overage pricing in pricing bands for the case of a
-   * **Tiered** pricing structure.
+   * Body param: Specify Prepayment/Balance overage pricing in pricing bands for the
+   * case of a **Tiered** pricing structure.
    */
   overagePricingBands?: Array<PricingUpdateParams.OveragePricingBand>;
 
   /**
-   * UUID of the Plan the Pricing is created for.
+   * Body param: UUID of the Plan the Pricing is created for.
    */
   planId?: string;
 
   /**
-   * UUID of the Plan Template the Pricing is created for.
+   * Body param: UUID of the Plan Template the Pricing is created for.
    */
   planTemplateId?: string;
 
   /**
-   * Specifies the segment value which you are defining a Pricing for using this
-   * call:
+   * Body param: Specifies the segment value which you are defining a Pricing for
+   * using this call:
    *
    * - For each segment value defined on a Segmented Aggregation you must create a
    *   separate Pricing and use the appropriate `aggregationId` parameter for the
@@ -635,7 +680,7 @@ export interface PricingUpdateParams {
   segment?: Record<string, string>;
 
   /**
-   * The default value is **FALSE**.
+   * Body param: The default value is **FALSE**.
    *
    * - If TRUE, usage accumulates over the entire period the priced Plan is active
    *   for the account, and is not reset for pricing band rates at the start of each
@@ -647,8 +692,8 @@ export interface PricingUpdateParams {
   tiersSpanPlan?: boolean;
 
   /**
-   * - **DEBIT**. Default setting. The amount calculated using the Pricing is added
-   *   to the bill as a debit.
+   * Body param: \* **DEBIT**. Default setting. The amount calculated using the
+   * Pricing is added to the bill as a debit.
    *
    * - **PRODUCT_CREDIT**. The amount calculated using the Pricing is added to the
    *   bill as a credit _(negative amount)_. To prevent negative billing, the bill
@@ -662,7 +707,7 @@ export interface PricingUpdateParams {
   type?: 'DEBIT' | 'PRODUCT_CREDIT' | 'GLOBAL_CREDIT';
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -732,24 +777,38 @@ export namespace PricingUpdateParams {
 
 export interface PricingListParams extends CursorParams {
   /**
-   * Date on which to retrieve active Pricings.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: Date on which to retrieve active Pricings.
    */
   date?: string;
 
   /**
-   * List of Pricing IDs to retrieve.
+   * Query param: List of Pricing IDs to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * UUID of the Plan to retrieve Pricings for.
+   * Query param: UUID of the Plan to retrieve Pricings for.
    */
   planId?: string;
 
   /**
-   * UUID of the PlanTemplate to retrieve Pricings for.
+   * Query param: UUID of the PlanTemplate to retrieve Pricings for.
    */
   planTemplateId?: string;
+}
+
+export interface PricingDeleteParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 Pricings.PricingsCursor = PricingsCursor;
@@ -759,7 +818,9 @@ export declare namespace Pricings {
     type Pricing as Pricing,
     PricingsCursor as PricingsCursor,
     type PricingCreateParams as PricingCreateParams,
+    type PricingRetrieveParams as PricingRetrieveParams,
     type PricingUpdateParams as PricingUpdateParams,
     type PricingListParams as PricingListParams,
+    type PricingDeleteParams as PricingDeleteParams,
   };
 }

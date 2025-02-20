@@ -12,11 +12,8 @@ export class Contracts extends APIResource {
    * Creates a new Contract for the specified Account. The Contract includes
    * information such as the associated Account along with start and end dates.
    */
-  create(
-    orgId: string,
-    body: ContractCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Contract> {
+  create(params: ContractCreateParams, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/contracts`, { body, ...options });
   }
 
@@ -24,7 +21,21 @@ export class Contracts extends APIResource {
    * Retrieves the Contract with the given UUID. Used to obtain the details of a
    * Contract.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+  retrieve(
+    id: string,
+    params?: ContractRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Contract>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Contract>;
+  retrieve(
+    id: string,
+    params: ContractRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Contract> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/contracts/${id}`, options);
   }
 
@@ -39,12 +50,8 @@ export class Contracts extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: ContractUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Contract> {
+  update(id: string, params: ContractUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/contracts/${id}`, { body, ...options });
   }
 
@@ -54,19 +61,18 @@ export class Contracts extends APIResource {
    * Contract IDs or short codes.
    */
   list(
-    orgId: string,
-    query?: ContractListParams,
+    params?: ContractListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<ContractsCursor, Contract>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<ContractsCursor, Contract>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ContractsCursor, Contract>;
   list(
-    orgId: string,
-    query: ContractListParams | Core.RequestOptions = {},
+    params: ContractListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<ContractsCursor, Contract> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/contracts`, ContractsCursor, {
       query,
       ...options,
@@ -80,7 +86,17 @@ export class Contracts extends APIResource {
    * **Note:** This call will fail if there are any AccountPlans or Commitments that
    * have been added to the Contract.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+  delete(id: string, params?: ContractDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Contract>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Contract>;
+  delete(
+    id: string,
+    params: ContractDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Contract> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/contracts/${id}`, options);
   }
 }
@@ -177,35 +193,42 @@ export interface Contract {
 
 export interface ContractCreateParams {
   /**
-   * The unique identifier (UUID) of the Account associated with this Contract.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) of the Account associated with this
+   * Contract.
    */
   accountId: string;
 
   /**
-   * The exclusive end date of the Contract _(in ISO-8601 format)_. This means the
-   * Contract is active until midnight on the day **_before_** this date.
+   * Body param: The exclusive end date of the Contract _(in ISO-8601 format)_. This
+   * means the Contract is active until midnight on the day **_before_** this date.
    */
   endDate: string;
 
   /**
-   * The name of the Contract.
+   * Body param: The name of the Contract.
    */
   name: string;
 
   /**
-   * The start date for the Contract _(in ISO-8601 format)_. This date is inclusive,
-   * meaning the Contract is active from this date onward.
+   * Body param: The start date for the Contract _(in ISO-8601 format)_. This date is
+   * inclusive, meaning the Contract is active from this date onward.
    */
   startDate: string;
 
   /**
-   * The short code of the Contract.
+   * Body param: The short code of the Contract.
    */
   code?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -218,17 +241,18 @@ export interface ContractCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The description of the Contract, which provides context and information.
+   * Body param: The description of the Contract, which provides context and
+   * information.
    */
   description?: string;
 
   /**
-   * The Purchase Order Number associated with the Contract.
+   * Body param: The Purchase Order Number associated with the Contract.
    */
   purchaseOrderNumber?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -240,37 +264,52 @@ export interface ContractCreateParams {
   version?: number;
 }
 
+export interface ContractRetrieveParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface ContractUpdateParams {
   /**
-   * The unique identifier (UUID) of the Account associated with this Contract.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) of the Account associated with this
+   * Contract.
    */
   accountId: string;
 
   /**
-   * The exclusive end date of the Contract _(in ISO-8601 format)_. This means the
-   * Contract is active until midnight on the day **_before_** this date.
+   * Body param: The exclusive end date of the Contract _(in ISO-8601 format)_. This
+   * means the Contract is active until midnight on the day **_before_** this date.
    */
   endDate: string;
 
   /**
-   * The name of the Contract.
+   * Body param: The name of the Contract.
    */
   name: string;
 
   /**
-   * The start date for the Contract _(in ISO-8601 format)_. This date is inclusive,
-   * meaning the Contract is active from this date onward.
+   * Body param: The start date for the Contract _(in ISO-8601 format)_. This date is
+   * inclusive, meaning the Contract is active from this date onward.
    */
   startDate: string;
 
   /**
-   * The short code of the Contract.
+   * Body param: The short code of the Contract.
    */
   code?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -283,17 +322,18 @@ export interface ContractUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The description of the Contract, which provides context and information.
+   * Body param: The description of the Contract, which provides context and
+   * information.
    */
   description?: string;
 
   /**
-   * The Purchase Order Number associated with the Contract.
+   * Body param: The Purchase Order Number associated with the Contract.
    */
   purchaseOrderNumber?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -306,18 +346,36 @@ export interface ContractUpdateParams {
 }
 
 export interface ContractListParams extends CursorParams {
+  /**
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param:
+   */
   accountId?: string | null;
 
   /**
-   * An optional parameter to retrieve specific Contracts based on their short codes.
+   * Query param: An optional parameter to retrieve specific Contracts based on their
+   * short codes.
    */
   codes?: Array<string>;
 
   /**
-   * An optional parameter to filter the list based on specific Contract unique
-   * identifiers (UUIDs).
+   * Query param: An optional parameter to filter the list based on specific Contract
+   * unique identifiers (UUIDs).
    */
   ids?: Array<string>;
+}
+
+export interface ContractDeleteParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 Contracts.ContractsCursor = ContractsCursor;
@@ -327,7 +385,9 @@ export declare namespace Contracts {
     type Contract as Contract,
     ContractsCursor as ContractsCursor,
     type ContractCreateParams as ContractCreateParams,
+    type ContractRetrieveParams as ContractRetrieveParams,
     type ContractUpdateParams as ContractUpdateParams,
     type ContractListParams as ContractListParams,
+    type ContractDeleteParams as ContractDeleteParams,
   };
 }

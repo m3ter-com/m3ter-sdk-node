@@ -63,10 +63,10 @@ export class DataExports extends APIResource {
    * Reference.
    */
   createAdhoc(
-    orgId: string,
-    body: DataExportCreateAdhocParams,
+    params: DataExportCreateAdhocParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<AdhocExport> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/dataexports/adhoc`, { body, ...options });
   }
 }
@@ -229,7 +229,12 @@ export type DataExportCreateAdhocParams =
 export declare namespace DataExportCreateAdhocParams {
   export interface AdHocOperationalDataRequest {
     /**
-     * The list of the operational data types should be exported for.
+     * Path param: UUID of the organization
+     */
+    orgId?: string;
+
+    /**
+     * Body param: The list of the operational data types should be exported for.
      */
     operationalDataTypes: Array<
       | 'BILLS'
@@ -252,10 +257,13 @@ export declare namespace DataExportCreateAdhocParams {
       | 'BALANCE_TRANSACTIONS'
     >;
 
+    /**
+     * Body param:
+     */
     sourceType: 'USAGE' | 'OPERATIONAL';
 
     /**
-     * The version number of the entity:
+     * Body param: The version number of the entity:
      *
      * - **Create entity:** Not valid for initial insertion of new entity - _do not use
      *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -269,8 +277,13 @@ export declare namespace DataExportCreateAdhocParams {
 
   export interface AdHocUsageDataRequest {
     /**
-     * Specifies the time period for the aggregation of usage data included each time
-     * the Data Export Schedule runs:
+     * Path param: UUID of the organization
+     */
+    orgId?: string;
+
+    /**
+     * Body param: Specifies the time period for the aggregation of usage data included
+     * each time the Data Export Schedule runs:
      *
      * - **ORIGINAL**. Usage data is _not aggregated_. If you select to not aggregate,
      *   then raw usage data measurements collected by all Data Field types and any
@@ -294,17 +307,20 @@ export declare namespace DataExportCreateAdhocParams {
      */
     aggregationFrequency: 'ORIGINAL' | 'HOUR' | 'DAY' | 'WEEK' | 'MONTH';
 
+    /**
+     * Body param:
+     */
     sourceType: 'USAGE' | 'OPERATIONAL';
 
     /**
-     * List of account IDs for which the usage data will be exported.
+     * Body param: List of account IDs for which the usage data will be exported.
      */
     accountIds?: Array<string>;
 
     /**
-     * Specifies the aggregation method applied to usage data collected in the numeric
-     * Data Fields of Meters included for the Data Export Schedule - that is, Data
-     * Fields of type **MEASURE**, **INCOME**, or **COST**:
+     * Body param: Specifies the aggregation method applied to usage data collected in
+     * the numeric Data Fields of Meters included for the Data Export Schedule - that
+     * is, Data Fields of type **MEASURE**, **INCOME**, or **COST**:
      *
      * - **SUM**. Adds the values.
      * - **MIN**. Uses the minimum value.
@@ -317,13 +333,13 @@ export declare namespace DataExportCreateAdhocParams {
     aggregation?: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN';
 
     /**
-     * List of meter IDs for which the usage data will be exported.
+     * Body param: List of meter IDs for which the usage data will be exported.
      */
     meterIds?: Array<string>;
 
     /**
-     * Define a time period to control the range of usage data you want the data export
-     * to contain when it runs:
+     * Body param: Define a time period to control the range of usage data you want the
+     * data export to contain when it runs:
      *
      * - **TODAY**. Data collected for the current day up until the time the export
      *   runs.
@@ -356,7 +372,7 @@ export declare namespace DataExportCreateAdhocParams {
       | 'PREVIOUS_MONTH';
 
     /**
-     * The version number of the entity:
+     * Body param: The version number of the entity:
      *
      * - **Create entity:** Not valid for initial insertion of new entity - _do not use
      *   for Create_. On initial Create, version is set at 1 and listed in the

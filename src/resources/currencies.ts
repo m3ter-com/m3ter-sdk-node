@@ -11,11 +11,8 @@ export class Currencies extends APIResource {
    *
    * Used to create a Currency that your Organization will start to use.
    */
-  create(
-    orgId: string,
-    body: CurrencyCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Currency> {
+  create(params: CurrencyCreateParams, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/currency`, { body, ...options });
   }
 
@@ -23,7 +20,21 @@ export class Currencies extends APIResource {
    * Retrieve the specified Currency with the given UUID. Used to obtain the details
    * of a specified existing Currency in your Organization.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+  retrieve(
+    id: string,
+    params?: CurrencyRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Currency>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Currency>;
+  retrieve(
+    id: string,
+    params: CurrencyRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Currency> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/picklists/currency/${id}`, options);
   }
 
@@ -33,12 +44,8 @@ export class Currencies extends APIResource {
    * Used to update the attributes of the specified Currency for the specified
    * Organization.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: CurrencyUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Currency> {
+  update(id: string, params: CurrencyUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/currency/${id}`, { body, ...options });
   }
 
@@ -50,19 +57,18 @@ export class Currencies extends APIResource {
    * Currencies based on Currency ID, and short codes.
    */
   list(
-    orgId: string,
-    query?: CurrencyListParams,
+    params?: CurrencyListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<CurrenciesCursor, Currency>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CurrenciesCursor, Currency>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CurrenciesCursor, Currency>;
   list(
-    orgId: string,
-    query: CurrencyListParams | Core.RequestOptions = {},
+    params: CurrencyListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<CurrenciesCursor, Currency> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/picklists/currency`, CurrenciesCursor, {
       query,
       ...options,
@@ -75,7 +81,17 @@ export class Currencies extends APIResource {
    * Used to remove an existing Currency from your Organization that is no longer
    * required.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+  delete(id: string, params?: CurrencyDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Currency>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Currency>;
+  delete(
+    id: string,
+    params: CurrencyDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Currency> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/picklists/currency/${id}`, options);
   }
 }
@@ -144,13 +160,19 @@ export interface Currency {
 
 export interface CurrencyCreateParams {
   /**
-   * The name of the entity.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -158,19 +180,23 @@ export interface CurrencyCreateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * Indicates the maximum number of decimal places to use for this Currency.
+   * Body param: Indicates the maximum number of decimal places to use for this
+   * Currency.
    */
   maxDecimalPlaces?: number;
 
+  /**
+   * Body param:
+   */
   roundingMode?: 'UP' | 'DOWN' | 'CEILING' | 'FLOOR' | 'HALF_UP' | 'HALF_DOWN' | 'HALF_EVEN' | 'UNNECESSARY';
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -182,15 +208,29 @@ export interface CurrencyCreateParams {
   version?: number;
 }
 
+export interface CurrencyRetrieveParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface CurrencyUpdateParams {
   /**
-   * The name of the entity.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -198,19 +238,23 @@ export interface CurrencyUpdateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * Indicates the maximum number of decimal places to use for this Currency.
+   * Body param: Indicates the maximum number of decimal places to use for this
+   * Currency.
    */
   maxDecimalPlaces?: number;
 
+  /**
+   * Body param:
+   */
   roundingMode?: 'UP' | 'DOWN' | 'CEILING' | 'FLOOR' | 'HALF_UP' | 'HALF_DOWN' | 'HALF_EVEN' | 'UNNECESSARY';
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -224,8 +268,14 @@ export interface CurrencyUpdateParams {
 
 export interface CurrencyListParams extends CursorParams {
   /**
-   * Filter by archived flag. A True / False flag indicating whether to return
-   * Currencies that are archived _(obsolete)_.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: Filter by archived flag. A True / False flag indicating whether to
+   * return Currencies that are archived _(obsolete)_.
    *
    * - TRUE - return archived Currencies.
    * - FALSE - archived Currencies are not returned.
@@ -233,16 +283,24 @@ export interface CurrencyListParams extends CursorParams {
   archived?: boolean;
 
   /**
-   * An optional parameter to retrieve specific Currencies based on their short
-   * codes.
+   * Query param: An optional parameter to retrieve specific Currencies based on
+   * their short codes.
    */
   codes?: Array<string>;
 
   /**
-   * An optional parameter to filter the list based on specific Currency unique
-   * identifiers (UUIDs).
+   * Query param: An optional parameter to filter the list based on specific Currency
+   * unique identifiers (UUIDs).
    */
   ids?: Array<string>;
+}
+
+export interface CurrencyDeleteParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 Currencies.CurrenciesCursor = CurrenciesCursor;
@@ -252,7 +310,9 @@ export declare namespace Currencies {
     type Currency as Currency,
     CurrenciesCursor as CurrenciesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
+    type CurrencyRetrieveParams as CurrencyRetrieveParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,
     type CurrencyListParams as CurrencyListParams,
+    type CurrencyDeleteParams as CurrencyDeleteParams,
   };
 }

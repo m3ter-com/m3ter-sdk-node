@@ -23,11 +23,8 @@ export class Commitments extends APIResource {
    *   `feeDates` request parameter to define a precise schedule of bill dates and
    *   amounts.
    */
-  create(
-    orgId: string,
-    body: CommitmentCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment> {
+  create(params: CommitmentCreateParams, options?: Core.RequestOptions): Core.APIPromise<Commitment> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/commitments`, { body, ...options });
   }
 
@@ -38,7 +35,21 @@ export class Commitments extends APIResource {
    * comprehensive information about the Commitment, such as the agreed amount,
    * overage surcharge percentage, and other related details.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment> {
+  retrieve(
+    id: string,
+    params?: CommitmentRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Commitment>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment>;
+  retrieve(
+    id: string,
+    params: CommitmentRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Commitment> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/commitments/${id}`, options);
   }
 
@@ -50,11 +61,11 @@ export class Commitments extends APIResource {
    * percentage, or associated contract details.
    */
   update(
-    orgId: string,
     id: string,
-    body: CommitmentUpdateParams,
+    params: CommitmentUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Commitment> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/commitments/${id}`, { body, ...options });
   }
 
@@ -66,19 +77,18 @@ export class Commitments extends APIResource {
    * Commitments based on Account, Product, date, and end dates.
    */
   list(
-    orgId: string,
-    query?: CommitmentListParams,
+    params?: CommitmentListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<CommitmentsCursor, Commitment>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CommitmentsCursor, Commitment>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CommitmentsCursor, Commitment>;
   list(
-    orgId: string,
-    query: CommitmentListParams | Core.RequestOptions = {},
+    params: CommitmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<CommitmentsCursor, Commitment> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/commitments`, CommitmentsCursor, {
       query,
       ...options,
@@ -91,7 +101,21 @@ export class Commitments extends APIResource {
    * Deletes the Commitment with the given UUID. Use this endpoint when a Commitment
    * is no longer valid or needs to be removed from the system.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment> {
+  delete(
+    id: string,
+    params?: CommitmentDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Commitment>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment>;
+  delete(
+    id: string,
+    params: CommitmentDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Commitment> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/commitments/${id}`, options);
   }
 
@@ -104,19 +128,18 @@ export class Commitments extends APIResource {
    * paginated for easier management.
    */
   search(
-    orgId: string,
-    query?: CommitmentSearchParams,
+    params?: CommitmentSearchParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<CommitmentSearchResponse>;
-  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<CommitmentSearchResponse>;
+  search(options?: Core.RequestOptions): Core.APIPromise<CommitmentSearchResponse>;
   search(
-    orgId: string,
-    query: CommitmentSearchParams | Core.RequestOptions = {},
+    params: CommitmentSearchParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<CommitmentSearchResponse> {
-    if (isRequestOptions(query)) {
-      return this.search(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.search({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/commitments/search`, { query, ...options });
   }
 }
@@ -370,23 +393,29 @@ export interface CommitmentSearchResponse {
 
 export interface CommitmentCreateParams {
   /**
-   * The unique identifier (UUID) for the end customer Account the Commitment is
-   * added to.
+   * Path param: The unique identifier (UUID) for your Organization. This represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the end customer Account the
+   * Commitment is added to.
    */
   accountId: string;
 
   /**
-   * The total amount that the customer has committed to pay.
+   * Body param: The total amount that the customer has committed to pay.
    */
   amount: number;
 
   /**
-   * The currency used for the Commitment. For example: USD.
+   * Body param: The currency used for the Commitment. For example: USD.
    */
   currency: string;
 
   /**
-   * The end date of the Commitment period in ISO-8601 format.
+   * Body param: The end date of the Commitment period in ISO-8601 format.
    *
    * **Note:** End date is exclusive - if you set an end date of June 1st 2022, then
    * the Commitment ceases to be active for the Account at midnight on May 31st 2022,
@@ -396,60 +425,60 @@ export interface CommitmentCreateParams {
   endDate: string;
 
   /**
-   * The start date of the Commitment period in ISO-8601 format.
+   * Body param: The start date of the Commitment period in ISO-8601 format.
    */
   startDate: string;
 
   /**
-   * The unique identifier (UUID) for the Product linked to the Commitment for
-   * accounting purposes. _(Optional)_
+   * Body param: The unique identifier (UUID) for the Product linked to the
+   * Commitment for accounting purposes. _(Optional)_
    */
   accountingProductId?: string;
 
   /**
-   * The amount to be billed in the first invoice.
+   * Body param: The amount to be billed in the first invoice.
    */
   amountFirstBill?: number;
 
   /**
-   * The amount that the customer has already paid upfront at the start of the
-   * Commitment service period.
+   * Body param: The amount that the customer has already paid upfront at the start
+   * of the Commitment service period.
    */
   amountPrePaid?: number;
 
   /**
-   * The starting date _(in ISO-8601 date format)_ from which the billing cycles are
-   * calculated.
+   * Body param: The starting date _(in ISO-8601 date format)_ from which the billing
+   * cycles are calculated.
    */
   billEpoch?: string;
 
   /**
-   * How often the Commitment fees are applied to bills. For example, if the plan
-   * being used to bill for Commitment fees is set to issue bills every three months
-   * and the `billingInterval` is set to 2, then the Commitment fees are applied
-   * every six months.
+   * Body param: How often the Commitment fees are applied to bills. For example, if
+   * the plan being used to bill for Commitment fees is set to issue bills every
+   * three months and the `billingInterval` is set to 2, then the Commitment fees are
+   * applied every six months.
    */
   billingInterval?: number;
 
   /**
-   * Defines an offset for when the Commitment fees are first applied to bills on the
-   * Account. For example, if bills are issued every three months and the
-   * `billingOffset` is 0, then the charge is applied to the first bill (at three
+   * Body param: Defines an offset for when the Commitment fees are first applied to
+   * bills on the Account. For example, if bills are issued every three months and
+   * the `billingOffset` is 0, then the charge is applied to the first bill (at three
    * months); if set to 1, it's applied to the next bill (at six months), and so on.
    */
   billingOffset?: number;
 
   /**
-   * The unique identifier (UUID) for the Product Plan used for billing Commitment
-   * fees due.
+   * Body param: The unique identifier (UUID) for the Product Plan used for billing
+   * Commitment fees due.
    */
   billingPlanId?: string;
 
   /**
-   * If the Account is either a Parent or a Child Account, this specifies the Account
-   * hierarchy billing mode. The mode determines how billing will be handled and
-   * shown on bills for charges due on the Parent Account, and charges due on Child
-   * Accounts:
+   * Body param: If the Account is either a Parent or a Child Account, this specifies
+   * the Account hierarchy billing mode. The mode determines how billing will be
+   * handled and shown on bills for charges due on the Parent Account, and charges
+   * due on Child Accounts:
    *
    * - **Parent Breakdown** - a separate bill line item per Account. Default setting.
    *
@@ -460,8 +489,9 @@ export interface CommitmentCreateParams {
   childBillingMode?: 'PARENT_SUMMARY' | 'PARENT_BREAKDOWN' | 'CHILD';
 
   /**
-   * A boolean value indicating whether the Commitment fee is billed in advance
-   * _(start of each billing period)_ or arrears _(end of each billing period)_.
+   * Body param: A boolean value indicating whether the Commitment fee is billed in
+   * advance _(start of each billing period)_ or arrears _(end of each billing
+   * period)_.
    *
    * If no value is supplied, then the Organization Configuration value is used.
    *
@@ -471,18 +501,18 @@ export interface CommitmentCreateParams {
   commitmentFeeBillInAdvance?: boolean;
 
   /**
-   * A textual description of the Commitment fee.
+   * Body param: A textual description of the Commitment fee.
    */
   commitmentFeeDescription?: string;
 
   /**
-   * A textual description of the Commitment usage.
+   * Body param: A textual description of the Commitment usage.
    */
   commitmentUsageDescription?: string;
 
   /**
-   * The unique identifier (UUID) for a Contract you've created for the Account -
-   * used to add the Commitment to this Contract.
+   * Body param: The unique identifier (UUID) for a Contract you've created for the
+   * Account - used to add the Commitment to this Contract.
    *
    * **Note:** If you associate the Commitment with a Contract you must ensure the
    * Account Plan attached to the Account has the same Contract associated with it.
@@ -492,13 +522,13 @@ export interface CommitmentCreateParams {
   contractId?: string;
 
   /**
-   * Optional Product ID this Commitment consumptions should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this Commitment consumptions should be
+   * attributed to for accounting purposes
    */
   drawdownsAccountingProductId?: string;
 
   /**
-   * Used for billing any outstanding Commitment fees _on a schedule_.
+   * Body param: Used for billing any outstanding Commitment fees _on a schedule_.
    *
    * Create an array to define a series of bill dates and amounts covering specified
    * service periods:
@@ -519,14 +549,14 @@ export interface CommitmentCreateParams {
   feeDates?: Array<CommitmentCreateParams.FeeDate>;
 
   /**
-   * Optional Product ID this Commitment fees should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Commitment fees should be attributed to for
+   * accounting purposes
    */
   feesAccountingProductId?: string;
 
   /**
-   * Specify the line item charge types that can draw-down at billing against the
-   * Commitment amount. Options are:
+   * Body param: Specify the line item charge types that can draw-down at billing
+   * against the Commitment amount. Options are:
    *
    * - `MINIMUM_SPEND`
    * - `STANDING_CHARGE`
@@ -546,13 +576,13 @@ export interface CommitmentCreateParams {
   >;
 
   /**
-   * A textual description of the overage charges.
+   * Body param: A textual description of the overage charges.
    */
   overageDescription?: string;
 
   /**
-   * The percentage surcharge applied to usage charges that exceed the Commitment
-   * amount.
+   * Body param: The percentage surcharge applied to usage charges that exceed the
+   * Commitment amount.
    *
    * **Note:** You can enter a _negative percentage_ if you want to give a discount
    * rate for usage to end customers who exceed their Commitment amount
@@ -560,9 +590,9 @@ export interface CommitmentCreateParams {
   overageSurchargePercent?: number;
 
   /**
-   * A list of unique identifiers (UUIDs) for Products the Account consumes. Charges
-   * due for these Products will be made available for draw-down against the
-   * Commitment.
+   * Body param: A list of unique identifiers (UUIDs) for Products the Account
+   * consumes. Charges due for these Products will be made available for draw-down
+   * against the Commitment.
    *
    * **Note:** If not used, then charges due for all Products the Account consumes
    * will be made available for draw-down against the Commitment.
@@ -570,11 +600,11 @@ export interface CommitmentCreateParams {
   productIds?: Array<string>;
 
   /**
-   * A boolean value indicating whether the overage usage is billed separately or
-   * together. If overage usage is separated and a Commitment amount has been
-   * consumed by an Account, any subsequent line items on Bills against the Account
-   * for usage will show as separate "overage usage" charges, not simply as "usage"
-   * charges:
+   * Body param: A boolean value indicating whether the overage usage is billed
+   * separately or together. If overage usage is separated and a Commitment amount
+   * has been consumed by an Account, any subsequent line items on Bills against the
+   * Account for usage will show as separate "overage usage" charges, not simply as
+   * "usage" charges:
    *
    * - **TRUE** - billed separately.
    * - **FALSE** - billed together.
@@ -594,7 +624,7 @@ export interface CommitmentCreateParams {
   separateOverageUsage?: boolean;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -618,25 +648,39 @@ export namespace CommitmentCreateParams {
   }
 }
 
+export interface CommitmentRetrieveParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface CommitmentUpdateParams {
   /**
-   * The unique identifier (UUID) for the end customer Account the Commitment is
-   * added to.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the end customer Account the
+   * Commitment is added to.
    */
   accountId: string;
 
   /**
-   * The total amount that the customer has committed to pay.
+   * Body param: The total amount that the customer has committed to pay.
    */
   amount: number;
 
   /**
-   * The currency used for the Commitment. For example: USD.
+   * Body param: The currency used for the Commitment. For example: USD.
    */
   currency: string;
 
   /**
-   * The end date of the Commitment period in ISO-8601 format.
+   * Body param: The end date of the Commitment period in ISO-8601 format.
    *
    * **Note:** End date is exclusive - if you set an end date of June 1st 2022, then
    * the Commitment ceases to be active for the Account at midnight on May 31st 2022,
@@ -646,60 +690,60 @@ export interface CommitmentUpdateParams {
   endDate: string;
 
   /**
-   * The start date of the Commitment period in ISO-8601 format.
+   * Body param: The start date of the Commitment period in ISO-8601 format.
    */
   startDate: string;
 
   /**
-   * The unique identifier (UUID) for the Product linked to the Commitment for
-   * accounting purposes. _(Optional)_
+   * Body param: The unique identifier (UUID) for the Product linked to the
+   * Commitment for accounting purposes. _(Optional)_
    */
   accountingProductId?: string;
 
   /**
-   * The amount to be billed in the first invoice.
+   * Body param: The amount to be billed in the first invoice.
    */
   amountFirstBill?: number;
 
   /**
-   * The amount that the customer has already paid upfront at the start of the
-   * Commitment service period.
+   * Body param: The amount that the customer has already paid upfront at the start
+   * of the Commitment service period.
    */
   amountPrePaid?: number;
 
   /**
-   * The starting date _(in ISO-8601 date format)_ from which the billing cycles are
-   * calculated.
+   * Body param: The starting date _(in ISO-8601 date format)_ from which the billing
+   * cycles are calculated.
    */
   billEpoch?: string;
 
   /**
-   * How often the Commitment fees are applied to bills. For example, if the plan
-   * being used to bill for Commitment fees is set to issue bills every three months
-   * and the `billingInterval` is set to 2, then the Commitment fees are applied
-   * every six months.
+   * Body param: How often the Commitment fees are applied to bills. For example, if
+   * the plan being used to bill for Commitment fees is set to issue bills every
+   * three months and the `billingInterval` is set to 2, then the Commitment fees are
+   * applied every six months.
    */
   billingInterval?: number;
 
   /**
-   * Defines an offset for when the Commitment fees are first applied to bills on the
-   * Account. For example, if bills are issued every three months and the
-   * `billingOffset` is 0, then the charge is applied to the first bill (at three
+   * Body param: Defines an offset for when the Commitment fees are first applied to
+   * bills on the Account. For example, if bills are issued every three months and
+   * the `billingOffset` is 0, then the charge is applied to the first bill (at three
    * months); if set to 1, it's applied to the next bill (at six months), and so on.
    */
   billingOffset?: number;
 
   /**
-   * The unique identifier (UUID) for the Product Plan used for billing Commitment
-   * fees due.
+   * Body param: The unique identifier (UUID) for the Product Plan used for billing
+   * Commitment fees due.
    */
   billingPlanId?: string;
 
   /**
-   * If the Account is either a Parent or a Child Account, this specifies the Account
-   * hierarchy billing mode. The mode determines how billing will be handled and
-   * shown on bills for charges due on the Parent Account, and charges due on Child
-   * Accounts:
+   * Body param: If the Account is either a Parent or a Child Account, this specifies
+   * the Account hierarchy billing mode. The mode determines how billing will be
+   * handled and shown on bills for charges due on the Parent Account, and charges
+   * due on Child Accounts:
    *
    * - **Parent Breakdown** - a separate bill line item per Account. Default setting.
    *
@@ -710,8 +754,9 @@ export interface CommitmentUpdateParams {
   childBillingMode?: 'PARENT_SUMMARY' | 'PARENT_BREAKDOWN' | 'CHILD';
 
   /**
-   * A boolean value indicating whether the Commitment fee is billed in advance
-   * _(start of each billing period)_ or arrears _(end of each billing period)_.
+   * Body param: A boolean value indicating whether the Commitment fee is billed in
+   * advance _(start of each billing period)_ or arrears _(end of each billing
+   * period)_.
    *
    * If no value is supplied, then the Organization Configuration value is used.
    *
@@ -721,18 +766,18 @@ export interface CommitmentUpdateParams {
   commitmentFeeBillInAdvance?: boolean;
 
   /**
-   * A textual description of the Commitment fee.
+   * Body param: A textual description of the Commitment fee.
    */
   commitmentFeeDescription?: string;
 
   /**
-   * A textual description of the Commitment usage.
+   * Body param: A textual description of the Commitment usage.
    */
   commitmentUsageDescription?: string;
 
   /**
-   * The unique identifier (UUID) for a Contract you've created for the Account -
-   * used to add the Commitment to this Contract.
+   * Body param: The unique identifier (UUID) for a Contract you've created for the
+   * Account - used to add the Commitment to this Contract.
    *
    * **Note:** If you associate the Commitment with a Contract you must ensure the
    * Account Plan attached to the Account has the same Contract associated with it.
@@ -742,13 +787,13 @@ export interface CommitmentUpdateParams {
   contractId?: string;
 
   /**
-   * Optional Product ID this Commitment consumptions should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this Commitment consumptions should be
+   * attributed to for accounting purposes
    */
   drawdownsAccountingProductId?: string;
 
   /**
-   * Used for billing any outstanding Commitment fees _on a schedule_.
+   * Body param: Used for billing any outstanding Commitment fees _on a schedule_.
    *
    * Create an array to define a series of bill dates and amounts covering specified
    * service periods:
@@ -769,14 +814,14 @@ export interface CommitmentUpdateParams {
   feeDates?: Array<CommitmentUpdateParams.FeeDate>;
 
   /**
-   * Optional Product ID this Commitment fees should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Commitment fees should be attributed to for
+   * accounting purposes
    */
   feesAccountingProductId?: string;
 
   /**
-   * Specify the line item charge types that can draw-down at billing against the
-   * Commitment amount. Options are:
+   * Body param: Specify the line item charge types that can draw-down at billing
+   * against the Commitment amount. Options are:
    *
    * - `MINIMUM_SPEND`
    * - `STANDING_CHARGE`
@@ -796,13 +841,13 @@ export interface CommitmentUpdateParams {
   >;
 
   /**
-   * A textual description of the overage charges.
+   * Body param: A textual description of the overage charges.
    */
   overageDescription?: string;
 
   /**
-   * The percentage surcharge applied to usage charges that exceed the Commitment
-   * amount.
+   * Body param: The percentage surcharge applied to usage charges that exceed the
+   * Commitment amount.
    *
    * **Note:** You can enter a _negative percentage_ if you want to give a discount
    * rate for usage to end customers who exceed their Commitment amount
@@ -810,9 +855,9 @@ export interface CommitmentUpdateParams {
   overageSurchargePercent?: number;
 
   /**
-   * A list of unique identifiers (UUIDs) for Products the Account consumes. Charges
-   * due for these Products will be made available for draw-down against the
-   * Commitment.
+   * Body param: A list of unique identifiers (UUIDs) for Products the Account
+   * consumes. Charges due for these Products will be made available for draw-down
+   * against the Commitment.
    *
    * **Note:** If not used, then charges due for all Products the Account consumes
    * will be made available for draw-down against the Commitment.
@@ -820,11 +865,11 @@ export interface CommitmentUpdateParams {
   productIds?: Array<string>;
 
   /**
-   * A boolean value indicating whether the overage usage is billed separately or
-   * together. If overage usage is separated and a Commitment amount has been
-   * consumed by an Account, any subsequent line items on Bills against the Account
-   * for usage will show as separate "overage usage" charges, not simply as "usage"
-   * charges:
+   * Body param: A boolean value indicating whether the overage usage is billed
+   * separately or together. If overage usage is separated and a Commitment amount
+   * has been consumed by an Account, any subsequent line items on Bills against the
+   * Account for usage will show as separate "overage usage" charges, not simply as
+   * "usage" charges:
    *
    * - **TRUE** - billed separately.
    * - **FALSE** - billed together.
@@ -844,7 +889,7 @@ export interface CommitmentUpdateParams {
   separateOverageUsage?: boolean;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -870,62 +915,84 @@ export namespace CommitmentUpdateParams {
 
 export interface CommitmentListParams extends CursorParams {
   /**
-   * The unique identifier (UUID) for the Account. This parameter helps filter the
-   * Commitments related to a specific end-customer Account.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: The unique identifier (UUID) for the Account. This parameter helps
+   * filter the Commitments related to a specific end-customer Account.
    */
   accountId?: string;
 
+  /**
+   * Query param:
+   */
   contractId?: string | null;
 
   /**
-   * A date _(in ISO-8601 format)_ to filter Commitments which are active on this
-   * specific date.
+   * Query param: A date _(in ISO-8601 format)_ to filter Commitments which are
+   * active on this specific date.
    */
   date?: string;
 
   /**
-   * A date _(in ISO-8601 format)_ used to filter Commitments. Only Commitments with
-   * end dates before this date will be included.
+   * Query param: A date _(in ISO-8601 format)_ used to filter Commitments. Only
+   * Commitments with end dates before this date will be included.
    */
   endDateEnd?: string;
 
   /**
-   * A date _(in ISO-8601 format)_ used to filter Commitments. Only Commitments with
-   * end dates on or after this date will be included.
+   * Query param: A date _(in ISO-8601 format)_ used to filter Commitments. Only
+   * Commitments with end dates on or after this date will be included.
    */
   endDateStart?: string;
 
   /**
-   * A list of unique identifiers (UUIDs) for the Commitments to retrieve. Use this
-   * to fetch specific Commitments in a single request.
+   * Query param: A list of unique identifiers (UUIDs) for the Commitments to
+   * retrieve. Use this to fetch specific Commitments in a single request.
    */
   ids?: Array<string>;
 
   /**
-   * The unique identifier (UUID) for the Product. This parameter helps filter the
-   * Commitments related to a specific Product.
+   * Query param: The unique identifier (UUID) for the Product. This parameter helps
+   * filter the Commitments related to a specific Product.
    */
   productId?: string;
 }
 
+export interface CommitmentDeleteParams {
+  /**
+   * The unique identifier (UUID) for your organization. The Organization represents
+   * your company as a direct customer our service.
+   */
+  orgId?: string;
+}
+
 export interface CommitmentSearchParams {
   /**
-   * fromDocument for multi page retrievals
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Query param: fromDocument for multi page retrievals
    */
   fromDocument?: number;
 
   /**
-   * Search Operator to be used while querying search
+   * Query param: Search Operator to be used while querying search
    */
   operator?: 'AND' | 'OR';
 
   /**
-   * Number of Commitments to retrieve per page
+   * Query param: Number of Commitments to retrieve per page
    */
   pageSize?: number;
 
   /**
-   * Query for data using special syntax:
+   * Query param: Query for data using special syntax:
    *
    * - Query parameters should be delimited using $ (dollar sign).
    * - Allowed comparators are:
@@ -949,13 +1016,14 @@ export interface CommitmentSearchParams {
   searchQuery?: string;
 
   /**
-   * Name of the parameter on which sorting is performed. Use any field available on
-   * the Commitment entity to sort by, such as `accountId`, `endDate`, and so on.
+   * Query param: Name of the parameter on which sorting is performed. Use any field
+   * available on the Commitment entity to sort by, such as `accountId`, `endDate`,
+   * and so on.
    */
   sortBy?: string;
 
   /**
-   * Sorting order
+   * Query param: Sorting order
    */
   sortOrder?: 'ASC' | 'DESC';
 }
@@ -968,8 +1036,10 @@ export declare namespace Commitments {
     type CommitmentSearchResponse as CommitmentSearchResponse,
     CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
+    type CommitmentRetrieveParams as CommitmentRetrieveParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,
     type CommitmentListParams as CommitmentListParams,
+    type CommitmentDeleteParams as CommitmentDeleteParams,
     type CommitmentSearchParams as CommitmentSearchParams,
   };
 }

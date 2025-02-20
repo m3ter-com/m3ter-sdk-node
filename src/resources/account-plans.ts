@@ -17,11 +17,8 @@ export class AccountPlans extends APIResource {
    * AccountPlanGroup for an Account at the same time. If you want to create both for
    * an Account, you must submit two separate calls.
    */
-  create(
-    orgId: string,
-    body: AccountPlanCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan> {
+  create(params: AccountPlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<AccountPlan> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/accountplans`, { body, ...options });
   }
 
@@ -29,7 +26,21 @@ export class AccountPlans extends APIResource {
    * Retrieve the AccountPlan or AccountPlanGroup details corresponding to the given
    * UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan> {
+  retrieve(
+    id: string,
+    params?: AccountPlanRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountPlan>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan>;
+  retrieve(
+    id: string,
+    params: AccountPlanRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountPlan> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/accountplans/${id}`, options);
   }
 
@@ -51,11 +62,11 @@ export class AccountPlans extends APIResource {
    *   will be lost.
    */
   update(
-    orgId: string,
     id: string,
-    body: AccountPlanUpdateParams,
+    params: AccountPlanUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<AccountPlan> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/accountplans/${id}`, { body, ...options });
   }
 
@@ -72,19 +83,18 @@ export class AccountPlans extends APIResource {
    * parameter.
    */
   list(
-    orgId: string,
-    query?: AccountPlanListParams,
+    params?: AccountPlanListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<AccountPlansCursor, AccountPlan>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AccountPlansCursor, AccountPlan>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AccountPlansCursor, AccountPlan>;
   list(
-    orgId: string,
-    query: AccountPlanListParams | Core.RequestOptions = {},
+    params: AccountPlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<AccountPlansCursor, AccountPlan> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/accountplans`, AccountPlansCursor, {
       query,
       ...options,
@@ -97,7 +107,21 @@ export class AccountPlans extends APIResource {
    * This endpoint deletes an AccountPlan or AccountPlanGroup that has been attached
    * to a specific Account in your Organization.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan> {
+  delete(
+    id: string,
+    params?: AccountPlanDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountPlan>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan>;
+  delete(
+    id: string,
+    params: AccountPlanDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountPlan> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/accountplans/${id}`, options);
   }
 }
@@ -233,19 +257,25 @@ export interface AccountPlan {
 
 export interface AccountPlanCreateParams {
   /**
-   * The unique identifier (UUID) for the Account.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the Account.
    */
   accountId: string;
 
   /**
-   * The start date _(in ISO-8601 format)_ for the AccountPlan or AccountPlanGroup
-   * becoming active for the Account.
+   * Body param: The start date _(in ISO-8601 format)_ for the AccountPlan or
+   * AccountPlanGroup becoming active for the Account.
    */
   startDate: string;
 
   /**
-   * Optional setting to define a _billing cycle date_, which acts as a reference for
-   * when in the applied billing frequency period bills are created:
+   * Body param: Optional setting to define a _billing cycle date_, which acts as a
+   * reference for when in the applied billing frequency period bills are created:
    *
    * - For example, if you attach a Plan to an Account where the Plan is configured
    *   for monthly billing frequency and you've defined the period the Plan will
@@ -261,10 +291,10 @@ export interface AccountPlanCreateParams {
   billEpoch?: string;
 
   /**
-   * If the Account is either a Parent or a Child Account, this specifies the Account
-   * hierarchy billing mode. The mode determines how billing will be handled and
-   * shown on bills for charges due on the Parent Account, and charges due on Child
-   * Accounts:
+   * Body param: If the Account is either a Parent or a Child Account, this specifies
+   * the Account hierarchy billing mode. The mode determines how billing will be
+   * handled and shown on bills for charges due on the Parent Account, and charges
+   * due on Child Accounts:
    *
    * - **Parent Breakdown** - a separate bill line item per Account. Default setting.
    *
@@ -275,19 +305,19 @@ export interface AccountPlanCreateParams {
   childBillingMode?: 'PARENT_SUMMARY' | 'PARENT_BREAKDOWN' | 'CHILD';
 
   /**
-   * A unique short code for the AccountPlan or AccountPlanGroup.
+   * Body param: A unique short code for the AccountPlan or AccountPlanGroup.
    */
   code?: string;
 
   /**
-   * The unique identifier (UUID) for a Contract to which you want to add the Plan or
-   * Plan Group being attached to the Account.
+   * Body param: The unique identifier (UUID) for a Contract to which you want to add
+   * the Plan or Plan Group being attached to the Account.
    */
   contractId?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -300,15 +330,15 @@ export interface AccountPlanCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The end date _(in ISO-8601 format)_ for when the AccountPlan or AccountPlanGroup
-   * ceases to be active for the Account. If not specified, the AccountPlan or
-   * AccountPlanGroup remains active indefinitely.
+   * Body param: The end date _(in ISO-8601 format)_ for when the AccountPlan or
+   * AccountPlanGroup ceases to be active for the Account. If not specified, the
+   * AccountPlan or AccountPlanGroup remains active indefinitely.
    */
   endDate?: string;
 
   /**
-   * The unique identifier (UUID) of the PlanGroup to be attached to the Account to
-   * create an AccountPlanGroup.
+   * Body param: The unique identifier (UUID) of the PlanGroup to be attached to the
+   * Account to create an AccountPlanGroup.
    *
    * **Note:** Exclusive of the `planId` request parameter - exactly one of `planId`
    * or `planGroupId` must be used per call.
@@ -316,8 +346,8 @@ export interface AccountPlanCreateParams {
   planGroupId?: string;
 
   /**
-   * The unique identifier (UUID) of the Plan to be attached to the Account to create
-   * an AccountPlan.
+   * Body param: The unique identifier (UUID) of the Plan to be attached to the
+   * Account to create an AccountPlan.
    *
    * **Note:** Exclusive of the `planGroupId` request parameter - exactly one of
    * `planId` or `planGroupId` must be used per call.
@@ -325,7 +355,7 @@ export interface AccountPlanCreateParams {
   planId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -337,21 +367,35 @@ export interface AccountPlanCreateParams {
   version?: number;
 }
 
+export interface AccountPlanRetrieveParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface AccountPlanUpdateParams {
   /**
-   * The unique identifier (UUID) for the Account.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the Account.
    */
   accountId: string;
 
   /**
-   * The start date _(in ISO-8601 format)_ for the AccountPlan or AccountPlanGroup
-   * becoming active for the Account.
+   * Body param: The start date _(in ISO-8601 format)_ for the AccountPlan or
+   * AccountPlanGroup becoming active for the Account.
    */
   startDate: string;
 
   /**
-   * Optional setting to define a _billing cycle date_, which acts as a reference for
-   * when in the applied billing frequency period bills are created:
+   * Body param: Optional setting to define a _billing cycle date_, which acts as a
+   * reference for when in the applied billing frequency period bills are created:
    *
    * - For example, if you attach a Plan to an Account where the Plan is configured
    *   for monthly billing frequency and you've defined the period the Plan will
@@ -367,10 +411,10 @@ export interface AccountPlanUpdateParams {
   billEpoch?: string;
 
   /**
-   * If the Account is either a Parent or a Child Account, this specifies the Account
-   * hierarchy billing mode. The mode determines how billing will be handled and
-   * shown on bills for charges due on the Parent Account, and charges due on Child
-   * Accounts:
+   * Body param: If the Account is either a Parent or a Child Account, this specifies
+   * the Account hierarchy billing mode. The mode determines how billing will be
+   * handled and shown on bills for charges due on the Parent Account, and charges
+   * due on Child Accounts:
    *
    * - **Parent Breakdown** - a separate bill line item per Account. Default setting.
    *
@@ -381,19 +425,19 @@ export interface AccountPlanUpdateParams {
   childBillingMode?: 'PARENT_SUMMARY' | 'PARENT_BREAKDOWN' | 'CHILD';
 
   /**
-   * A unique short code for the AccountPlan or AccountPlanGroup.
+   * Body param: A unique short code for the AccountPlan or AccountPlanGroup.
    */
   code?: string;
 
   /**
-   * The unique identifier (UUID) for a Contract to which you want to add the Plan or
-   * Plan Group being attached to the Account.
+   * Body param: The unique identifier (UUID) for a Contract to which you want to add
+   * the Plan or Plan Group being attached to the Account.
    */
   contractId?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -406,15 +450,15 @@ export interface AccountPlanUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The end date _(in ISO-8601 format)_ for when the AccountPlan or AccountPlanGroup
-   * ceases to be active for the Account. If not specified, the AccountPlan or
-   * AccountPlanGroup remains active indefinitely.
+   * Body param: The end date _(in ISO-8601 format)_ for when the AccountPlan or
+   * AccountPlanGroup ceases to be active for the Account. If not specified, the
+   * AccountPlan or AccountPlanGroup remains active indefinitely.
    */
   endDate?: string;
 
   /**
-   * The unique identifier (UUID) of the PlanGroup to be attached to the Account to
-   * create an AccountPlanGroup.
+   * Body param: The unique identifier (UUID) of the PlanGroup to be attached to the
+   * Account to create an AccountPlanGroup.
    *
    * **Note:** Exclusive of the `planId` request parameter - exactly one of `planId`
    * or `planGroupId` must be used per call.
@@ -422,8 +466,8 @@ export interface AccountPlanUpdateParams {
   planGroupId?: string;
 
   /**
-   * The unique identifier (UUID) of the Plan to be attached to the Account to create
-   * an AccountPlan.
+   * Body param: The unique identifier (UUID) of the Plan to be attached to the
+   * Account to create an AccountPlan.
    *
    * **Note:** Exclusive of the `planGroupId` request parameter - exactly one of
    * `planId` or `planGroupId` must be used per call.
@@ -431,7 +475,7 @@ export interface AccountPlanUpdateParams {
   planId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -445,28 +489,37 @@ export interface AccountPlanUpdateParams {
 
 export interface AccountPlanListParams extends CursorParams {
   /**
-   * The unique identifier (UUID) for the Account whose AccountPlans and
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: The unique identifier (UUID) for the Account whose AccountPlans and
    * AccountPlanGroups you want to retrieve.
    */
   account?: string;
 
+  /**
+   * Query param:
+   */
   contract?: string | null;
 
   /**
-   * The specific date for which you want to retrieve active AccountPlans and
-   * AccountPlanGroups.
+   * Query param: The specific date for which you want to retrieve active
+   * AccountPlans and AccountPlanGroups.
    */
   date?: string;
 
   /**
-   * A list of unique identifiers (UUIDs) for specific AccountPlans and
+   * Query param: A list of unique identifiers (UUIDs) for specific AccountPlans and
    * AccountPlanGroups you want to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * A Boolean flag that specifies whether to include both active and inactive
-   * AccountPlans and AccountPlanGroups in the list.
+   * Query param: A Boolean flag that specifies whether to include both active and
+   * inactive AccountPlans and AccountPlanGroups in the list.
    *
    * - **TRUE** - both active and inactive AccountPlans and AccountPlanGroups are
    *   included in the list.
@@ -476,20 +529,28 @@ export interface AccountPlanListParams extends CursorParams {
   includeall?: boolean;
 
   /**
-   * The unique identifier (UUID) for the Plan or Plan Group whose associated
-   * AccountPlans or AccountPlanGroups you want to retrieve.
+   * Query param: The unique identifier (UUID) for the Plan or Plan Group whose
+   * associated AccountPlans or AccountPlanGroups you want to retrieve.
    */
   plan?: string;
 
   /**
-   * The unique identifier (UUID) for the Product whose associated AccountPlans you
-   * want to retrieve.
+   * Query param: The unique identifier (UUID) for the Product whose associated
+   * AccountPlans you want to retrieve.
    *
    * **NOTE:** You cannot use the `product` query parameter as a single filter
    * condition, but must always use it in combination with the `account` query
    * parameter.
    */
   product?: string;
+}
+
+export interface AccountPlanDeleteParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 AccountPlans.AccountPlansCursor = AccountPlansCursor;
@@ -499,7 +560,9 @@ export declare namespace AccountPlans {
     type AccountPlan as AccountPlan,
     AccountPlansCursor as AccountPlansCursor,
     type AccountPlanCreateParams as AccountPlanCreateParams,
+    type AccountPlanRetrieveParams as AccountPlanRetrieveParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,
     type AccountPlanListParams as AccountPlanListParams,
+    type AccountPlanDeleteParams as AccountPlanDeleteParams,
   };
 }
