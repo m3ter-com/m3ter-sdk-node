@@ -11,10 +11,10 @@ export class TransactionTypes extends APIResource {
    * TransactionType should be included in the request body.
    */
   create(
-    orgId: string,
-    body: TransactionTypeCreateParams,
+    params: TransactionTypeCreateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<TransactionType> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/transactiontypes`, { body, ...options });
   }
 
@@ -22,7 +22,21 @@ export class TransactionTypes extends APIResource {
    * Retrieves the TransactionType with the given UUID from the specified
    * Organization.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType> {
+  retrieve(
+    id: string,
+    params?: TransactionTypeRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionType>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType>;
+  retrieve(
+    id: string,
+    params: TransactionTypeRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionType> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/picklists/transactiontypes/${id}`, options);
   }
 
@@ -32,11 +46,11 @@ export class TransactionTypes extends APIResource {
    * request body.
    */
   update(
-    orgId: string,
     id: string,
-    body: TransactionTypeUpdateParams,
+    params: TransactionTypeUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<TransactionType> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/transactiontypes/${id}`, { body, ...options });
   }
 
@@ -46,22 +60,18 @@ export class TransactionTypes extends APIResource {
    * parameters.
    */
   list(
-    orgId: string,
-    query?: TransactionTypeListParams,
+    params?: TransactionTypeListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<TransactionTypesCursor, TransactionType>;
+  list(options?: Core.RequestOptions): Core.PagePromise<TransactionTypesCursor, TransactionType>;
   list(
-    orgId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionTypesCursor, TransactionType>;
-  list(
-    orgId: string,
-    query: TransactionTypeListParams | Core.RequestOptions = {},
+    params: TransactionTypeListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<TransactionTypesCursor, TransactionType> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/picklists/transactiontypes`,
       TransactionTypesCursor,
@@ -72,7 +82,21 @@ export class TransactionTypes extends APIResource {
   /**
    * Deletes the TransactionType with the given UUID from the specified Organization.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType> {
+  delete(
+    id: string,
+    params?: TransactionTypeDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionType>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType>;
+  delete(
+    id: string,
+    params: TransactionTypeDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionType> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/picklists/transactiontypes/${id}`, options);
   }
 }
@@ -135,13 +159,19 @@ export interface TransactionType {
 
 export interface TransactionTypeCreateParams {
   /**
-   * The name of the entity.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -149,12 +179,12 @@ export interface TransactionTypeCreateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -166,15 +196,29 @@ export interface TransactionTypeCreateParams {
   version?: number;
 }
 
+export interface TransactionTypeRetrieveParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface TransactionTypeUpdateParams {
   /**
-   * The name of the entity.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The name of the entity.
    */
   name: string;
 
   /**
-   * A Boolean TRUE / FALSE flag indicating whether the entity is archived. An entity
-   * can be archived if it is obsolete.
+   * Body param: A Boolean TRUE / FALSE flag indicating whether the entity is
+   * archived. An entity can be archived if it is obsolete.
    *
    * - TRUE - the entity is in the archived state.
    * - FALSE - the entity is not in the archived state.
@@ -182,12 +226,12 @@ export interface TransactionTypeUpdateParams {
   archived?: boolean;
 
   /**
-   * The short code for the entity.
+   * Body param: The short code for the entity.
    */
   code?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -201,8 +245,14 @@ export interface TransactionTypeUpdateParams {
 
 export interface TransactionTypeListParams extends CursorParams {
   /**
-   * Filter with this Boolean flag whether to include TransactionTypes that are
-   * archived.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: Filter with this Boolean flag whether to include TransactionTypes
+   * that are archived.
    *
    * - TRUE - include archived TransactionTypes in the list.
    * - FALSE - exclude archived TransactionTypes.
@@ -210,14 +260,22 @@ export interface TransactionTypeListParams extends CursorParams {
   archived?: boolean;
 
   /**
-   * A list of TransactionType short codes to retrieve.
+   * Query param: A list of TransactionType short codes to retrieve.
    */
   codes?: Array<string>;
 
   /**
-   * A list of TransactionType unique identifiers (UUIDs) to retrieve.
+   * Query param: A list of TransactionType unique identifiers (UUIDs) to retrieve.
    */
   ids?: Array<string>;
+}
+
+export interface TransactionTypeDeleteParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 TransactionTypes.TransactionTypesCursor = TransactionTypesCursor;
@@ -227,7 +285,9 @@ export declare namespace TransactionTypes {
     type TransactionType as TransactionType,
     TransactionTypesCursor as TransactionTypesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
+    type TransactionTypeRetrieveParams as TransactionTypeRetrieveParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
     type TransactionTypeListParams as TransactionTypeListParams,
+    type TransactionTypeDeleteParams as TransactionTypeDeleteParams,
   };
 }

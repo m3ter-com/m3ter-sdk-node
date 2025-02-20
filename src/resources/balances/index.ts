@@ -5,8 +5,10 @@ export {
   Balances,
   type Balance,
   type BalanceCreateParams,
+  type BalanceRetrieveParams,
   type BalanceUpdateParams,
   type BalanceListParams,
+  type BalanceDeleteParams,
 } from './balances';
 export {
   TransactionsCursor,

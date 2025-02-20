@@ -7,12 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource debitReasons', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.debitReasons.create('orgId', { name: 'x' });
+    const responsePromise = client.debitReasons.create({ name: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,7 +24,8 @@ describe('resource debitReasons', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.debitReasons.create('orgId', {
+    const response = await client.debitReasons.create({
+      orgId: 'orgId',
       name: 'x',
       archived: true,
       code: '{1{}}_',
@@ -31,8 +33,8 @@ describe('resource debitReasons', () => {
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.debitReasons.retrieve('orgId', 'id');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.debitReasons.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -42,15 +44,26 @@ describe('resource debitReasons', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: required and optional params', async () => {
+    const response = await client.debitReasons.retrieve('id', { orgId: 'orgId' });
+  });
+
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.debitReasons.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.debitReasons.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.debitReasons.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.debitReasons.update('orgId', 'id', { name: 'x' });
+    const responsePromise = client.debitReasons.update('id', { name: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -61,7 +74,8 @@ describe('resource debitReasons', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.debitReasons.update('orgId', 'id', {
+    const response = await client.debitReasons.update('id', {
+      orgId: 'orgId',
       name: 'x',
       archived: true,
       code: '{1{}}_',
@@ -69,8 +83,8 @@ describe('resource debitReasons', () => {
     });
   });
 
-  test('list', async () => {
-    const responsePromise = client.debitReasons.list('orgId');
+  test('list: only required params', async () => {
+    const responsePromise = client.debitReasons.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -80,9 +94,20 @@ describe('resource debitReasons', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('list: required and optional params', async () => {
+    const response = await client.debitReasons.list({
+      orgId: 'orgId',
+      archived: true,
+      codes: ['string'],
+      ids: ['string'],
+      nextToken: 'nextToken',
+      pageSize: 1,
+    });
+  });
+
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.debitReasons.list('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.debitReasons.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -91,15 +116,21 @@ describe('resource debitReasons', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.debitReasons.list(
-        'orgId',
-        { archived: true, codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+        {
+          orgId: 'orgId',
+          archived: true,
+          codes: ['string'],
+          ids: ['string'],
+          nextToken: 'nextToken',
+          pageSize: 1,
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.debitReasons.delete('orgId', 'id');
+  test('delete: only required params', async () => {
+    const responsePromise = client.debitReasons.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -109,10 +140,21 @@ describe('resource debitReasons', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('delete: required and optional params', async () => {
+    const response = await client.debitReasons.delete('id', { orgId: 'orgId' });
+  });
+
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.debitReasons.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.debitReasons.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.debitReasons.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

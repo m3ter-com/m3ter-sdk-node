@@ -12,7 +12,8 @@ export class Products extends APIResource {
    * This endpoint creates a new Product within the specified Organization. The
    * details of the Product are provided in the request body.
    */
-  create(orgId: string, body: ProductCreateParams, options?: Core.RequestOptions): Core.APIPromise<Product> {
+  create(params: ProductCreateParams, options?: Core.RequestOptions): Core.APIPromise<Product> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/products`, { body, ...options });
   }
 
@@ -22,7 +23,21 @@ export class Products extends APIResource {
    * This endpoint retrieves the details of a specific Product within a specified
    * Organization, using the Product UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Product> {
+  retrieve(
+    id: string,
+    params?: ProductRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Product>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Product>;
+  retrieve(
+    id: string,
+    params: ProductRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Product> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/products/${id}`, options);
   }
 
@@ -38,12 +53,8 @@ export class Products extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: ProductUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Product> {
+  update(id: string, params: ProductUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Product> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/products/${id}`, { body, ...options });
   }
 
@@ -54,20 +65,16 @@ export class Products extends APIResource {
    * Organization. The list can be paginated, and supports filtering by specific
    * Product IDs.
    */
+  list(params?: ProductListParams, options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
   list(
-    orgId: string,
-    query?: ProductListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<ProductsCursor, Product>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
-  list(
-    orgId: string,
-    query: ProductListParams | Core.RequestOptions = {},
+    params: ProductListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<ProductsCursor, Product> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/products`, ProductsCursor, { query, ...options });
   }
 
@@ -77,7 +84,17 @@ export class Products extends APIResource {
    * This endpoint deletes a specific Product within a specified Organization, using
    * the Product UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Product> {
+  delete(id: string, params?: ProductDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Product>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Product>;
+  delete(
+    id: string,
+    params: ProductDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Product> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/products/${id}`, options);
   }
 }
@@ -148,19 +165,25 @@ export interface Product {
 
 export interface ProductCreateParams {
   /**
-   * A unique short code to identify the Product. It should not contain control
-   * chracters or spaces.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: A unique short code to identify the Product. It should not contain
+   * control chracters or spaces.
    */
   code: string;
 
   /**
-   * Descriptive name for the Product providing context and information.
+   * Body param: Descriptive name for the Product providing context and information.
    */
   name: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -173,7 +196,7 @@ export interface ProductCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -185,21 +208,35 @@ export interface ProductCreateParams {
   version?: number;
 }
 
+export interface ProductRetrieveParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface ProductUpdateParams {
   /**
-   * A unique short code to identify the Product. It should not contain control
-   * chracters or spaces.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: A unique short code to identify the Product. It should not contain
+   * control chracters or spaces.
    */
   code: string;
 
   /**
-   * Descriptive name for the Product providing context and information.
+   * Body param: Descriptive name for the Product providing context and information.
    */
   name: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -212,7 +249,7 @@ export interface ProductUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -226,9 +263,23 @@ export interface ProductUpdateParams {
 
 export interface ProductListParams extends CursorParams {
   /**
-   * List of specific Product UUIDs to retrieve.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List of specific Product UUIDs to retrieve.
    */
   ids?: Array<string>;
+}
+
+export interface ProductDeleteParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 Products.ProductsCursor = ProductsCursor;
@@ -238,7 +289,9 @@ export declare namespace Products {
     type Product as Product,
     ProductsCursor as ProductsCursor,
     type ProductCreateParams as ProductCreateParams,
+    type ProductRetrieveParams as ProductRetrieveParams,
     type ProductUpdateParams as ProductUpdateParams,
     type ProductListParams as ProductListParams,
+    type ProductDeleteParams as ProductDeleteParams,
   };
 }

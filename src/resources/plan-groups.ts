@@ -10,11 +10,8 @@ export class PlanGroups extends APIResource {
    * Create a new PlanGroup. This endpoint creates a new PlanGroup within the
    * specified organization.
    */
-  create(
-    orgId: string,
-    body: PlanGroupCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup> {
+  create(params: PlanGroupCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanGroup> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plangroups`, { body, ...options });
   }
 
@@ -24,7 +21,21 @@ export class PlanGroups extends APIResource {
    * This endpoint retrieves detailed information about a specific PlanGroup
    * identified by the given UUID within a specific organization.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup> {
+  retrieve(
+    id: string,
+    params?: PlanGroupRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroup>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup>;
+  retrieve(
+    id: string,
+    params: PlanGroupRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroup> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/plangroups/${id}`, options);
   }
 
@@ -41,11 +52,11 @@ export class PlanGroups extends APIResource {
    * lost.
    */
   update(
-    orgId: string,
     id: string,
-    body: PlanGroupUpdateParams,
+    params: PlanGroupUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<PlanGroup> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plangroups/${id}`, { body, ...options });
   }
 
@@ -57,19 +68,18 @@ export class PlanGroups extends APIResource {
    * for easier management.
    */
   list(
-    orgId: string,
-    query?: PlanGroupListParams,
+    params?: PlanGroupListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
   list(
-    orgId: string,
-    query: PlanGroupListParams | Core.RequestOptions = {},
+    params: PlanGroupListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<PlanGroupsCursor, PlanGroup> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/plangroups`, PlanGroupsCursor, {
       query,
       ...options,
@@ -83,7 +93,21 @@ export class PlanGroups extends APIResource {
    * specific organization. This operation is irreversible and removes the PlanGroup
    * along with any associated settings.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup> {
+  delete(
+    id: string,
+    params?: PlanGroupDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroup>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup>;
+  delete(
+    id: string,
+    params: PlanGroupDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroup> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/plangroups/${id}`, options);
   }
 }
@@ -216,29 +240,35 @@ export interface PlanGroup {
 
 export interface PlanGroupCreateParams {
   /**
-   * Currency code for the PlanGroup (For example, USD).
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Currency code for the PlanGroup (For example, USD).
    */
   currency: string;
 
   /**
-   * The name of the PlanGroup.
+   * Body param: The name of the PlanGroup.
    */
   name: string;
 
   /**
-   * Optional. This PlanGroup is created as bespoke for the associated Account with
-   * this Account ID.
+   * Body param: Optional. This PlanGroup is created as bespoke for the associated
+   * Account with this Account ID.
    */
   accountId?: string;
 
   /**
-   * The short code representing the PlanGroup.
+   * Body param: The short code representing the PlanGroup.
    */
   code?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -251,20 +281,20 @@ export interface PlanGroupCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The minimum spend amount for the PlanGroup.
+   * Body param: The minimum spend amount for the PlanGroup.
    */
   minimumSpend?: number;
 
   /**
-   * Optional. Product ID to attribute the PlanGroup's minimum spend for accounting
-   * purposes.
+   * Body param: Optional. Product ID to attribute the PlanGroup's minimum spend for
+   * accounting purposes.
    */
   minimumSpendAccountingProductId?: string;
 
   /**
-   * A boolean flag that determines when the minimum spend is billed. This flag
-   * overrides the setting at Organizational level for minimum spend billing in
-   * arrears/in advance.
+   * Body param: A boolean flag that determines when the minimum spend is billed.
+   * This flag overrides the setting at Organizational level for minimum spend
+   * billing in arrears/in advance.
    *
    * - **TRUE** - minimum spend is billed at the start of each billing period.
    * - **FALSE** - minimum spend is billed at the end of each billing period.
@@ -272,25 +302,25 @@ export interface PlanGroupCreateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Description of the minimum spend, displayed on the bill line item.
+   * Body param: Description of the minimum spend, displayed on the bill line item.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Standing charge amount for the PlanGroup.
+   * Body param: Standing charge amount for the PlanGroup.
    */
   standingCharge?: number;
 
   /**
-   * Optional. Product ID to attribute the PlanGroup's standing charge for accounting
-   * purposes.
+   * Body param: Optional. Product ID to attribute the PlanGroup's standing charge
+   * for accounting purposes.
    */
   standingChargeAccountingProductId?: string;
 
   /**
-   * A boolean flag that determines when the standing charge is billed. This flag
-   * overrides the setting at Organizational level for standing charge billing in
-   * arrears/in advance.
+   * Body param: A boolean flag that determines when the standing charge is billed.
+   * This flag overrides the setting at Organizational level for standing charge
+   * billing in arrears/in advance.
    *
    * - **TRUE** - standing charge is billed at the start of each billing period.
    * - **FALSE** - standing charge is billed at the end of each billing period.
@@ -298,12 +328,12 @@ export interface PlanGroupCreateParams {
   standingChargeBillInAdvance?: boolean;
 
   /**
-   * Description of the standing charge, displayed on the bill line item.
+   * Body param: Description of the standing charge, displayed on the bill line item.
    */
   standingChargeDescription?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -315,31 +345,45 @@ export interface PlanGroupCreateParams {
   version?: number;
 }
 
+export interface PlanGroupRetrieveParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface PlanGroupUpdateParams {
   /**
-   * Currency code for the PlanGroup (For example, USD).
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Currency code for the PlanGroup (For example, USD).
    */
   currency: string;
 
   /**
-   * The name of the PlanGroup.
+   * Body param: The name of the PlanGroup.
    */
   name: string;
 
   /**
-   * Optional. This PlanGroup is created as bespoke for the associated Account with
-   * this Account ID.
+   * Body param: Optional. This PlanGroup is created as bespoke for the associated
+   * Account with this Account ID.
    */
   accountId?: string;
 
   /**
-   * The short code representing the PlanGroup.
+   * Body param: The short code representing the PlanGroup.
    */
   code?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -352,20 +396,20 @@ export interface PlanGroupUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The minimum spend amount for the PlanGroup.
+   * Body param: The minimum spend amount for the PlanGroup.
    */
   minimumSpend?: number;
 
   /**
-   * Optional. Product ID to attribute the PlanGroup's minimum spend for accounting
-   * purposes.
+   * Body param: Optional. Product ID to attribute the PlanGroup's minimum spend for
+   * accounting purposes.
    */
   minimumSpendAccountingProductId?: string;
 
   /**
-   * A boolean flag that determines when the minimum spend is billed. This flag
-   * overrides the setting at Organizational level for minimum spend billing in
-   * arrears/in advance.
+   * Body param: A boolean flag that determines when the minimum spend is billed.
+   * This flag overrides the setting at Organizational level for minimum spend
+   * billing in arrears/in advance.
    *
    * - **TRUE** - minimum spend is billed at the start of each billing period.
    * - **FALSE** - minimum spend is billed at the end of each billing period.
@@ -373,25 +417,25 @@ export interface PlanGroupUpdateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Description of the minimum spend, displayed on the bill line item.
+   * Body param: Description of the minimum spend, displayed on the bill line item.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Standing charge amount for the PlanGroup.
+   * Body param: Standing charge amount for the PlanGroup.
    */
   standingCharge?: number;
 
   /**
-   * Optional. Product ID to attribute the PlanGroup's standing charge for accounting
-   * purposes.
+   * Body param: Optional. Product ID to attribute the PlanGroup's standing charge
+   * for accounting purposes.
    */
   standingChargeAccountingProductId?: string;
 
   /**
-   * A boolean flag that determines when the standing charge is billed. This flag
-   * overrides the setting at Organizational level for standing charge billing in
-   * arrears/in advance.
+   * Body param: A boolean flag that determines when the standing charge is billed.
+   * This flag overrides the setting at Organizational level for standing charge
+   * billing in arrears/in advance.
    *
    * - **TRUE** - standing charge is billed at the start of each billing period.
    * - **FALSE** - standing charge is billed at the end of each billing period.
@@ -399,12 +443,12 @@ export interface PlanGroupUpdateParams {
   standingChargeBillInAdvance?: boolean;
 
   /**
-   * Description of the standing charge, displayed on the bill line item.
+   * Body param: Description of the standing charge, displayed on the bill line item.
    */
   standingChargeDescription?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -418,14 +462,29 @@ export interface PlanGroupUpdateParams {
 
 export interface PlanGroupListParams extends CursorParams {
   /**
-   * Optional filter. The list of Account IDs to which the PlanGroups belong.
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: Optional filter. The list of Account IDs to which the PlanGroups
+   * belong.
    */
   accountId?: Array<string>;
 
   /**
-   * Optional filter. The list of PlanGroup IDs to retrieve.
+   * Query param: Optional filter. The list of PlanGroup IDs to retrieve.
    */
   ids?: Array<string>;
+}
+
+export interface PlanGroupDeleteParams {
+  /**
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 PlanGroups.PlanGroupsCursor = PlanGroupsCursor;
@@ -435,7 +494,9 @@ export declare namespace PlanGroups {
     type PlanGroup as PlanGroup,
     PlanGroupsCursor as PlanGroupsCursor,
     type PlanGroupCreateParams as PlanGroupCreateParams,
+    type PlanGroupRetrieveParams as PlanGroupRetrieveParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,
     type PlanGroupListParams as PlanGroupListParams,
+    type PlanGroupDeleteParams as PlanGroupDeleteParams,
   };
 }

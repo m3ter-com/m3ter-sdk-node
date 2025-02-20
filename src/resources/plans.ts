@@ -9,14 +9,25 @@ export class Plans extends APIResource {
   /**
    * Create a new Plan.
    */
-  create(orgId: string, body: PlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+  create(params: PlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plans`, { body, ...options });
   }
 
   /**
    * Retrieve the Plan with the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+  retrieve(id: string, params?: PlanRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  retrieve(
+    id: string,
+    params: PlanRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Plan> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/plans/${id}`, options);
   }
 
@@ -27,39 +38,41 @@ export class Plans extends APIResource {
    * endpoint to update the Plan use the `customFields` parameter to preserve those
    * Custom Fields. If you omit them from the update request, they will be lost.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: PlanUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Plan> {
+  update(id: string, params: PlanUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plans/${id}`, { body, ...options });
   }
 
   /**
    * Retrieve a list of Plans that can be filtered by Product, Account, or Plan ID.
    */
+  list(params?: PlanListParams, options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
   list(
-    orgId: string,
-    query?: PlanListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<PlansCursor, Plan>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
-  list(
-    orgId: string,
-    query: PlanListParams | Core.RequestOptions = {},
+    params: PlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<PlansCursor, Plan> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/plans`, PlansCursor, { query, ...options });
   }
 
   /**
    * Delete the Plan with the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+  delete(id: string, params?: PlanDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  delete(
+    id: string,
+    params: PlanDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Plan> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/plans/${id}`, options);
   }
 }
@@ -219,23 +232,29 @@ export interface Plan {
 
 export interface PlanCreateParams {
   /**
-   * Unique short code reference for the Plan.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Unique short code reference for the Plan.
    */
   code: string;
 
   /**
-   * Descriptive name for the Plan.
+   * Body param: Descriptive name for the Plan.
    */
   name: string;
 
   /**
-   * UUID of the PlanTemplate the Plan belongs to.
+   * Body param: UUID of the PlanTemplate the Plan belongs to.
    */
   planTemplateId: string;
 
   /**
-   * _(Optional)_. Used to specify an Account for which the Plan will be a
-   * custom/bespoke Plan:
+   * Body param: _(Optional)_. Used to specify an Account for which the Plan will be
+   * a custom/bespoke Plan:
    *
    * - Use when first creating a Plan.
    * - A custom/bespoke Plan can only be attached to the specified Account.
@@ -245,8 +264,8 @@ export interface PlanCreateParams {
   accountId?: string;
 
   /**
-   * TRUE/FALSE flag indicating whether the plan is a custom/bespoke Plan for a
-   * particular Account:
+   * Body param: TRUE/FALSE flag indicating whether the plan is a custom/bespoke Plan
+   * for a particular Account:
    *
    * - When creating a Plan, use the `accountId` request parameter to specify the
    *   Account for which the Plan will be custom/bespoke.
@@ -255,8 +274,8 @@ export interface PlanCreateParams {
   bespoke?: boolean;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -269,21 +288,22 @@ export interface PlanCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The product minimum spend amount per billing cycle for end customer Accounts on
-   * a priced Plan.
+   * Body param: The product minimum spend amount per billing cycle for end customer
+   * Accounts on a priced Plan.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    */
   minimumSpend?: number;
 
   /**
-   * Optional Product ID this plan's minimum spend should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this plan's minimum spend should be attributed
+   * to for accounting purposes
    */
   minimumSpendAccountingProductId?: string;
 
   /**
-   * When TRUE, minimum spend is billed at the start of each billing period.
+   * Body param: When TRUE, minimum spend is billed at the start of each billing
+   * period.
    *
    * When FALSE, minimum spend is billed at the end of each billing period.
    *
@@ -293,14 +313,14 @@ export interface PlanCreateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Minimum spend description _(displayed on the bill line item)_.
+   * Body param: Minimum spend description _(displayed on the bill line item)_.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Assigns a rank or position to the Plan in your order of pricing plans - lower
-   * numbers represent more basic pricing plans; higher numbers represent more
-   * premium pricing plans.
+   * Body param: Assigns a rank or position to the Plan in your order of pricing
+   * plans - lower numbers represent more basic pricing plans; higher numbers
+   * represent more premium pricing plans.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    *
@@ -309,20 +329,22 @@ export interface PlanCreateParams {
   ordinal?: number;
 
   /**
-   * The standing charge applied to bills for end customers. This is prorated.
+   * Body param: The standing charge applied to bills for end customers. This is
+   * prorated.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    */
   standingCharge?: number;
 
   /**
-   * Optional Product ID this plan's standing charge should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this plan's standing charge should be attributed
+   * to for accounting purposes
    */
   standingChargeAccountingProductId?: string;
 
   /**
-   * When TRUE, standing charge is billed at the start of each billing period.
+   * Body param: When TRUE, standing charge is billed at the start of each billing
+   * period.
    *
    * When FALSE, standing charge is billed at the end of each billing period.
    *
@@ -332,12 +354,12 @@ export interface PlanCreateParams {
   standingChargeBillInAdvance?: boolean;
 
   /**
-   * Standing charge description _(displayed on the bill line item)_.
+   * Body param: Standing charge description _(displayed on the bill line item)_.
    */
   standingChargeDescription?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -349,25 +371,39 @@ export interface PlanCreateParams {
   version?: number;
 }
 
+export interface PlanRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface PlanUpdateParams {
   /**
-   * Unique short code reference for the Plan.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Unique short code reference for the Plan.
    */
   code: string;
 
   /**
-   * Descriptive name for the Plan.
+   * Body param: Descriptive name for the Plan.
    */
   name: string;
 
   /**
-   * UUID of the PlanTemplate the Plan belongs to.
+   * Body param: UUID of the PlanTemplate the Plan belongs to.
    */
   planTemplateId: string;
 
   /**
-   * _(Optional)_. Used to specify an Account for which the Plan will be a
-   * custom/bespoke Plan:
+   * Body param: _(Optional)_. Used to specify an Account for which the Plan will be
+   * a custom/bespoke Plan:
    *
    * - Use when first creating a Plan.
    * - A custom/bespoke Plan can only be attached to the specified Account.
@@ -377,8 +413,8 @@ export interface PlanUpdateParams {
   accountId?: string;
 
   /**
-   * TRUE/FALSE flag indicating whether the plan is a custom/bespoke Plan for a
-   * particular Account:
+   * Body param: TRUE/FALSE flag indicating whether the plan is a custom/bespoke Plan
+   * for a particular Account:
    *
    * - When creating a Plan, use the `accountId` request parameter to specify the
    *   Account for which the Plan will be custom/bespoke.
@@ -387,8 +423,8 @@ export interface PlanUpdateParams {
   bespoke?: boolean;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -401,21 +437,22 @@ export interface PlanUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * The product minimum spend amount per billing cycle for end customer Accounts on
-   * a priced Plan.
+   * Body param: The product minimum spend amount per billing cycle for end customer
+   * Accounts on a priced Plan.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    */
   minimumSpend?: number;
 
   /**
-   * Optional Product ID this plan's minimum spend should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this plan's minimum spend should be attributed
+   * to for accounting purposes
    */
   minimumSpendAccountingProductId?: string;
 
   /**
-   * When TRUE, minimum spend is billed at the start of each billing period.
+   * Body param: When TRUE, minimum spend is billed at the start of each billing
+   * period.
    *
    * When FALSE, minimum spend is billed at the end of each billing period.
    *
@@ -425,14 +462,14 @@ export interface PlanUpdateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Minimum spend description _(displayed on the bill line item)_.
+   * Body param: Minimum spend description _(displayed on the bill line item)_.
    */
   minimumSpendDescription?: string;
 
   /**
-   * Assigns a rank or position to the Plan in your order of pricing plans - lower
-   * numbers represent more basic pricing plans; higher numbers represent more
-   * premium pricing plans.
+   * Body param: Assigns a rank or position to the Plan in your order of pricing
+   * plans - lower numbers represent more basic pricing plans; higher numbers
+   * represent more premium pricing plans.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    *
@@ -441,20 +478,22 @@ export interface PlanUpdateParams {
   ordinal?: number;
 
   /**
-   * The standing charge applied to bills for end customers. This is prorated.
+   * Body param: The standing charge applied to bills for end customers. This is
+   * prorated.
    *
    * _(Optional)_. Overrides PlanTemplate value.
    */
   standingCharge?: number;
 
   /**
-   * Optional Product ID this plan's standing charge should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this plan's standing charge should be attributed
+   * to for accounting purposes
    */
   standingChargeAccountingProductId?: string;
 
   /**
-   * When TRUE, standing charge is billed at the start of each billing period.
+   * Body param: When TRUE, standing charge is billed at the start of each billing
+   * period.
    *
    * When FALSE, standing charge is billed at the end of each billing period.
    *
@@ -464,12 +503,12 @@ export interface PlanUpdateParams {
   standingChargeBillInAdvance?: boolean;
 
   /**
-   * Standing charge description _(displayed on the bill line item)_.
+   * Body param: Standing charge description _(displayed on the bill line item)_.
    */
   standingChargeDescription?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -483,19 +522,33 @@ export interface PlanUpdateParams {
 
 export interface PlanListParams extends CursorParams {
   /**
-   * List of Account IDs the Plan belongs to.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List of Account IDs the Plan belongs to.
    */
   accountId?: Array<string>;
 
   /**
-   * List of Plan IDs to retrieve.
+   * Query param: List of Plan IDs to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * UUID of the Product to retrieve Plans for.
+   * Query param: UUID of the Product to retrieve Plans for.
    */
   productId?: string;
+}
+
+export interface PlanDeleteParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 Plans.PlansCursor = PlansCursor;
@@ -505,7 +558,9 @@ export declare namespace Plans {
     type Plan as Plan,
     PlansCursor as PlansCursor,
     type PlanCreateParams as PlanCreateParams,
+    type PlanRetrieveParams as PlanRetrieveParams,
     type PlanUpdateParams as PlanUpdateParams,
     type PlanListParams as PlanListParams,
+    type PlanDeleteParams as PlanDeleteParams,
   };
 }

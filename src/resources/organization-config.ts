@@ -1,13 +1,26 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../resource';
+import { isRequestOptions } from '../core';
 import * as Core from '../core';
 
 export class OrganizationConfigResource extends APIResource {
   /**
    * Retrieve the Organization-wide configuration details.
    */
-  retrieve(orgId: string, options?: Core.RequestOptions): Core.APIPromise<OrganizationConfig> {
+  retrieve(
+    params?: OrganizationConfigRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<OrganizationConfig>;
+  retrieve(options?: Core.RequestOptions): Core.APIPromise<OrganizationConfig>;
+  retrieve(
+    params: OrganizationConfigRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<OrganizationConfig> {
+    if (isRequestOptions(params)) {
+      return this.retrieve({}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/organizationconfig`, options);
   }
 
@@ -15,10 +28,10 @@ export class OrganizationConfigResource extends APIResource {
    * Update the Organization-wide configuration details.
    */
   update(
-    orgId: string,
-    body: OrganizationConfigUpdateParams,
+    params: OrganizationConfigUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<OrganizationConfig> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/organizationconfig`, { body, ...options });
   }
 }
@@ -243,9 +256,24 @@ export namespace OrganizationConfig {
   }
 }
 
+export interface OrganizationConfigRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface OrganizationConfigUpdateParams {
   /**
-   * The currency code for the Organization. For example: USD, GBP, or EUR:
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The currency code for the Organization. For example: USD, GBP, or
+   * EUR:
    *
    * - This defines the _billing currency_ for the Organization. You can override
    *   this by selecting a different billing currency at individual Account level.
@@ -262,8 +290,8 @@ export interface OrganizationConfigUpdateParams {
   currency: string;
 
   /**
-   * Optional setting that defines the billing cycle date for Accounts that are
-   * billed daily. Defines the date of the first Bill:
+   * Body param: Optional setting that defines the billing cycle date for Accounts
+   * that are billed daily. Defines the date of the first Bill:
    *
    * - For example, suppose the Plan you attach to an Account is configured for daily
    *   billing frequency and will apply to the Account from January 1st, 2022 until
@@ -276,8 +304,8 @@ export interface OrganizationConfigUpdateParams {
   dayEpoch: string;
 
   /**
-   * Enter the number of days after the Bill generation date that you want to show on
-   * Bills as the due date.
+   * Body param: Enter the number of days after the Bill generation date that you
+   * want to show on Bills as the due date.
    *
    * **Note:** If you define `daysBeforeBillDue` at individual Account level, this
    * will take precedence over any `daysBeforeBillDue` setting defined at
@@ -286,9 +314,9 @@ export interface OrganizationConfigUpdateParams {
   daysBeforeBillDue: number;
 
   /**
-   * Optional setting that defines the billing cycle date for Accounts that are
-   * billed monthly. Defines the date of the first Bill and then acts as reference
-   * for when subsequent Bills are created for the Account:
+   * Body param: Optional setting that defines the billing cycle date for Accounts
+   * that are billed monthly. Defines the date of the first Bill and then acts as
+   * reference for when subsequent Bills are created for the Account:
    *
    * - For example, suppose the Plan you attach to an Account is configured for
    *   monthly billing frequency and will apply to the Account from January 1st, 2022
@@ -302,14 +330,14 @@ export interface OrganizationConfigUpdateParams {
   monthEpoch: string;
 
   /**
-   * Sets the timezone for the Organization.
+   * Body param: Sets the timezone for the Organization.
    */
   timezone: string;
 
   /**
-   * Optional setting that defines the billing cycle date for Accounts that are
-   * billed weekly. Defines the date of the first Bill and then acts as reference for
-   * when subsequent Bills are created for the Account:
+   * Body param: Optional setting that defines the billing cycle date for Accounts
+   * that are billed weekly. Defines the date of the first Bill and then acts as
+   * reference for when subsequent Bills are created for the Account:
    *
    * - For example, suppose the Plan you attach to an Account is configured for
    *   weekly billing frequency and will apply to the Account from January 1st, 2022
@@ -322,9 +350,9 @@ export interface OrganizationConfigUpdateParams {
   weekEpoch: string;
 
   /**
-   * Optional setting that defines the billing cycle date for Accounts that are
-   * billed yearly. Defines the date of the first Bill and then acts as reference for
-   * when subsequent Bills are created for the Account:
+   * Body param: Optional setting that defines the billing cycle date for Accounts
+   * that are billed yearly. Defines the date of the first Bill and then acts as
+   * reference for when subsequent Bills are created for the Account:
    *
    * - For example, suppose the Plan you attach to an Account is configured for
    *   yearly billing frequency and will apply to the Account from January 1st, 2022
@@ -338,8 +366,8 @@ export interface OrganizationConfigUpdateParams {
   yearEpoch: string;
 
   /**
-   * Grace period before bills are auto-approved. Used in combination with
-   * `autoApproveBillsGracePeriodUnit` parameter.
+   * Body param: Grace period before bills are auto-approved. Used in combination
+   * with `autoApproveBillsGracePeriodUnit` parameter.
    *
    * **Note:** When used in combination with `autoApproveBillsGracePeriodUnit`
    * enables auto-approval of Bills for Organization, which occurs when the specified
@@ -348,9 +376,9 @@ export interface OrganizationConfigUpdateParams {
   autoApproveBillsGracePeriod?: number;
 
   /**
-   * Time unit of grace period before bills are auto-approved. Used in combination
-   * with `autoApproveBillsGracePeriod` parameter. Allowed options are MINUTES,
-   * HOURS, or DAYS.
+   * Body param: Time unit of grace period before bills are auto-approved. Used in
+   * combination with `autoApproveBillsGracePeriod` parameter. Allowed options are
+   * MINUTES, HOURS, or DAYS.
    *
    * **Note:** When used in combination with `autoApproveBillsGracePeriod` enables
    * auto-approval of Bills for Organization, which occurs when the specified time
@@ -359,8 +387,9 @@ export interface OrganizationConfigUpdateParams {
   autoApproveBillsGracePeriodUnit?: string;
 
   /**
-   * Specify whether to auto-generate statements once Bills are _approved_ or
-   * _locked_. It will not auto-generate if a bill is in _pending_ state.
+   * Body param: Specify whether to auto-generate statements once Bills are
+   * _approved_ or _locked_. It will not auto-generate if a bill is in _pending_
+   * state.
    *
    * The default value is **None**.
    *
@@ -371,8 +400,8 @@ export interface OrganizationConfigUpdateParams {
   autoGenerateStatementMode?: 'NONE' | 'JSON' | 'JSON_AND_CSV';
 
   /**
-   * Prefix to be used for sequential invoice numbers. This will be combined with the
-   * `sequenceStartNumber`.
+   * Body param: Prefix to be used for sequential invoice numbers. This will be
+   * combined with the `sequenceStartNumber`.
    *
    * **NOTES:**
    *
@@ -385,9 +414,9 @@ export interface OrganizationConfigUpdateParams {
   billPrefix?: string;
 
   /**
-   * Boolean setting to specify whether commitments _(prepayments)_ are billed in
-   * advance at the start of each billing period, or billed in arrears at the end of
-   * each billing period.
+   * Body param: Boolean setting to specify whether commitments _(prepayments)_ are
+   * billed in advance at the start of each billing period, or billed in arrears at
+   * the end of each billing period.
    *
    * - **TRUE** - bill in advance _(start of each billing period)_.
    * - **FALSE** - bill in arrears _(end of each billing period)_.
@@ -395,7 +424,8 @@ export interface OrganizationConfigUpdateParams {
   commitmentFeeBillInAdvance?: boolean;
 
   /**
-   * Boolean setting to consolidate different billing frequencies onto the same bill.
+   * Body param: Boolean setting to consolidate different billing frequencies onto
+   * the same bill.
    *
    * - **TRUE** - consolidate different billing frequencies onto the same bill.
    * - **FALSE** - bills are not consolidated.
@@ -403,8 +433,8 @@ export interface OrganizationConfigUpdateParams {
   consolidateBills?: boolean;
 
   /**
-   * Define the order in which any Prepayment or Balance amounts on Accounts are to
-   * be drawn-down against for billing. Four options:
+   * Body param: Define the order in which any Prepayment or Balance amounts on
+   * Accounts are to be drawn-down against for billing. Four options:
    *
    * - `"PREPAYMENT","BALANCE"`. Draw-down against Prepayment credit before Balance
    *   credit.
@@ -424,7 +454,8 @@ export interface OrganizationConfigUpdateParams {
   creditApplicationOrder?: Array<'PREPAYMENT' | 'BALANCE'>;
 
   /**
-   * Define currency conversion rates from _pricing currency_ to _billing currency_:
+   * Body param: Define currency conversion rates from _pricing currency_ to _billing
+   * currency_:
    *
    * - You can use the `currency` request parameter with this call to define the
    *   billing currency for your Organization - see above.
@@ -439,8 +470,8 @@ export interface OrganizationConfigUpdateParams {
   currencyConversions?: Array<OrganizationConfigUpdateParams.CurrencyConversion>;
 
   /**
-   * Organization level default `statementDefinitionId` to be used when there is no
-   * statement definition linked to the account.
+   * Body param: Organization level default `statementDefinitionId` to be used when
+   * there is no statement definition linked to the account.
    *
    * Statement definitions are used to generate bill statements, which are
    * informative backing sheets to invoices.
@@ -448,15 +479,15 @@ export interface OrganizationConfigUpdateParams {
   defaultStatementDefinitionId?: string;
 
   /**
-   * Date to use for the invoice date. Allowed values are `FIRST_DAY_OF_NEXT_PERIOD`
-   * or `LAST_DAY_OF_ARREARS`.
+   * Body param: Date to use for the invoice date. Allowed values are
+   * `FIRST_DAY_OF_NEXT_PERIOD` or `LAST_DAY_OF_ARREARS`.
    */
   externalInvoiceDate?: string;
 
   /**
-   * Boolean setting to specify whether minimum spend amounts are billed in advance
-   * at the start of each billing period, or billed in arrears at the end of each
-   * billing period.
+   * Body param: Boolean setting to specify whether minimum spend amounts are billed
+   * in advance at the start of each billing period, or billed in arrears at the end
+   * of each billing period.
    *
    * - **TRUE** - bill in advance _(start of each billing period)_.
    * - **FALSE** - bill in arrears _(end of each billing period)_.
@@ -464,8 +495,8 @@ export interface OrganizationConfigUpdateParams {
   minimumSpendBillInAdvance?: boolean;
 
   /**
-   * Sets the required interval for updating bills. It is an optional parameter that
-   * can be set as:
+   * Body param: Sets the required interval for updating bills. It is an optional
+   * parameter that can be set as:
    *
    * - **For portions of an hour (minutes)**. Two options: **0.25** (15 minutes) and
    *   **0.5** (30 minutes).
@@ -477,8 +508,8 @@ export interface OrganizationConfigUpdateParams {
   scheduledBillInterval?: number;
 
   /**
-   * The starting number to be used for sequential invoice numbers. This will be
-   * combined with the `billPrefix`.
+   * Body param: The starting number to be used for sequential invoice numbers. This
+   * will be combined with the `billPrefix`.
    *
    * For example, if you define `billPrefix` to be **INVOICE-** and you set the
    * `seqenceStartNumber` as **100**, the first Bill created after updating your
@@ -489,9 +520,9 @@ export interface OrganizationConfigUpdateParams {
   sequenceStartNumber?: number;
 
   /**
-   * Boolean setting to specify whether the standing charge is billed in advance at
-   * the start of each billing period, or billed in arrears at the end of each
-   * billing period.
+   * Body param: Boolean setting to specify whether the standing charge is billed in
+   * advance at the start of each billing period, or billed in arrears at the end of
+   * each billing period.
    *
    * - **TRUE** - bill in advance _(start of each billing period)_.
    * - **FALSE** - bill in arrears _(end of each billing period)_.
@@ -499,7 +530,8 @@ export interface OrganizationConfigUpdateParams {
   standingChargeBillInAdvance?: boolean;
 
   /**
-   * Boolean setting that supresses generating bills that have no line items.
+   * Body param: Boolean setting that supresses generating bills that have no line
+   * items.
    *
    * - **TRUE** - prevents generating bills with no line items.
    * - **FALSE** - bills are still generated even when they have no line items.
@@ -507,7 +539,7 @@ export interface OrganizationConfigUpdateParams {
   suppressedEmptyBills?: boolean;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -547,6 +579,7 @@ export namespace OrganizationConfigUpdateParams {
 export declare namespace OrganizationConfigResource {
   export {
     type OrganizationConfig as OrganizationConfig,
+    type OrganizationConfigRetrieveParams as OrganizationConfigRetrieveParams,
     type OrganizationConfigUpdateParams as OrganizationConfigUpdateParams,
   };
 }

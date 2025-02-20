@@ -22,7 +22,8 @@ export class Balances extends APIResource {
    * This endpoint allows you to create a new Balance for a specific end customer
    * Account. The Balance details should be provided in the request body.
    */
-  create(orgId: string, body: BalanceCreateParams, options?: Core.RequestOptions): Core.APIPromise<Balance> {
+  create(params: BalanceCreateParams, options?: Core.RequestOptions): Core.APIPromise<Balance> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/balances`, { body, ...options });
   }
 
@@ -31,7 +32,21 @@ export class Balances extends APIResource {
    *
    * This endpoint returns the details of the specified Balance.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Balance> {
+  retrieve(
+    id: string,
+    params?: BalanceRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Balance>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Balance>;
+  retrieve(
+    id: string,
+    params: BalanceRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Balance> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/balances/${id}`, options);
   }
 
@@ -41,12 +56,8 @@ export class Balances extends APIResource {
    * This endpoint allows you to update the details of a specific Balance. The
    * updated Balance details should be provided in the request body.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: BalanceUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Balance> {
+  update(id: string, params: BalanceUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Balance> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/balances/${id}`, { body, ...options });
   }
 
@@ -57,20 +68,16 @@ export class Balances extends APIResource {
    * You can filter the Balances by the end customer's Account UUID and end dates,
    * and paginate through them using the `pageSize` and `nextToken` parameters.
    */
+  list(params?: BalanceListParams, options?: Core.RequestOptions): Core.PagePromise<BalancesCursor, Balance>;
+  list(options?: Core.RequestOptions): Core.PagePromise<BalancesCursor, Balance>;
   list(
-    orgId: string,
-    query?: BalanceListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<BalancesCursor, Balance>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<BalancesCursor, Balance>;
-  list(
-    orgId: string,
-    query: BalanceListParams | Core.RequestOptions = {},
+    params: BalanceListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<BalancesCursor, Balance> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/balances`, BalancesCursor, { query, ...options });
   }
 
@@ -79,7 +86,17 @@ export class Balances extends APIResource {
    *
    * This endpoint allows you to delete a specific Balance with the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Balance> {
+  delete(id: string, params?: BalanceDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Balance>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Balance>;
+  delete(
+    id: string,
+    params: BalanceDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Balance> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/balances/${id}`, options);
   }
 }
@@ -219,18 +236,25 @@ export interface Balance {
 
 export interface BalanceCreateParams {
   /**
-   * The unique identifier (UUID) for the end customer Account.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the end customer Account.
    */
   accountId: string;
 
   /**
-   * The currency code used for the Balance amount. For example: USD, GBP or EUR.
+   * Body param: The currency code used for the Balance amount. For example: USD, GBP
+   * or EUR.
    */
   currency: string;
 
   /**
-   * The date _(in ISO 8601 format)_ after which the Balance will no longer be active
-   * for the Account.
+   * Body param: The date _(in ISO 8601 format)_ after which the Balance will no
+   * longer be active for the Account.
    *
    * **Note:** You can use the `rolloverEndDate` request parameter to define an
    * extended grace period for continued draw-down against the Balance if any amount
@@ -239,41 +263,41 @@ export interface BalanceCreateParams {
   endDate: string;
 
   /**
-   * The date _(in ISO 8601 format)_ when the Balance becomes active.
+   * Body param: The date _(in ISO 8601 format)_ when the Balance becomes active.
    */
   startDate: string;
 
   /**
-   * A description for the bill line items for draw-down charges against the Balance.
-   * _(Optional)._
+   * Body param: A description for the bill line items for draw-down charges against
+   * the Balance. _(Optional)._
    */
   balanceDrawDownDescription?: string;
 
   /**
-   * Unique short code for the Balance.
+   * Body param: Unique short code for the Balance.
    */
   code?: string;
 
   /**
-   * Optional Product ID this Balance Consumptions should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this Balance Consumptions should be attributed
+   * to for accounting purposes
    */
   consumptionsAccountingProductId?: string;
 
   /**
-   * A description of the Balance.
+   * Body param: A description of the Balance.
    */
   description?: string;
 
   /**
-   * Optional Product ID this Balance Fees should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Balance Fees should be attributed to for
+   * accounting purposes
    */
   feesAccountingProductId?: string;
 
   /**
-   * Specify the line item charge types that can draw-down at billing against the
-   * Balance amount. Options are:
+   * Body param: Specify the line item charge types that can draw-down at billing
+   * against the Balance amount. Options are:
    *
    * - `"MINIMUM_SPEND"`
    * - `"STANDING_CHARGE"`
@@ -293,27 +317,27 @@ export interface BalanceCreateParams {
   >;
 
   /**
-   * The official name for the Balance.
+   * Body param: The official name for the Balance.
    */
   name?: string;
 
   /**
-   * A description for Bill line items overage charges.
+   * Body param: A description for Bill line items overage charges.
    */
   overageDescription?: string;
 
   /**
-   * Define a surcharge level, as a percentage of regular usage rating, applied to
-   * overages _(usage charges that exceed the Balance amount)_. For example, if the
-   * regular usage rate is $10 per unit of usage consumed and
+   * Body param: Define a surcharge level, as a percentage of regular usage rating,
+   * applied to overages _(usage charges that exceed the Balance amount)_. For
+   * example, if the regular usage rate is $10 per unit of usage consumed and
    * `overageSurchargePercent` is set at 10%, then any usage charged above the
    * original Balance amount is charged at $11 per unit of usage.
    */
   overageSurchargePercent?: number;
 
   /**
-   * Specify the Products whose consumption charges due at billing can be drawn-down
-   * against the Balance amount.
+   * Body param: Specify the Products whose consumption charges due at billing can be
+   * drawn-down against the Balance amount.
    *
    * **Note:** If you don't specify any Products for Balance draw-down, by default
    * the consumption charges for any Product the Account consumes will be drawn-down
@@ -322,10 +346,10 @@ export interface BalanceCreateParams {
   productIds?: Array<string>;
 
   /**
-   * The maximum amount that can be carried over past the Balance end date for
-   * draw-down at billing if there is any unused Balance amount when the end date is
-   * reached. Works with `rolloverEndDate` to define the amount and duration of a
-   * Balance "grace period". _(Optional)_
+   * Body param: The maximum amount that can be carried over past the Balance end
+   * date for draw-down at billing if there is any unused Balance amount when the end
+   * date is reached. Works with `rolloverEndDate` to define the amount and duration
+   * of a Balance "grace period". _(Optional)_
    *
    * **Notes:**
    *
@@ -341,8 +365,9 @@ export interface BalanceCreateParams {
   rolloverAmount?: number;
 
   /**
-   * The end date _(in ISO 8601 format)_ for the grace period during which unused
-   * Balance amounts can be carried over and drawn-down against at billing.
+   * Body param: The end date _(in ISO 8601 format)_ for the grace period during
+   * which unused Balance amounts can be carried over and drawn-down against at
+   * billing.
    *
    * **Note:** Use `rolloverAmount` if you want to specify a maximum amount that can
    * be carried over and made available for draw-down.
@@ -350,7 +375,7 @@ export interface BalanceCreateParams {
   rolloverEndDate?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -362,20 +387,35 @@ export interface BalanceCreateParams {
   version?: number;
 }
 
+export interface BalanceRetrieveParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface BalanceUpdateParams {
   /**
-   * The unique identifier (UUID) for the end customer Account.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The unique identifier (UUID) for the end customer Account.
    */
   accountId: string;
 
   /**
-   * The currency code used for the Balance amount. For example: USD, GBP or EUR.
+   * Body param: The currency code used for the Balance amount. For example: USD, GBP
+   * or EUR.
    */
   currency: string;
 
   /**
-   * The date _(in ISO 8601 format)_ after which the Balance will no longer be active
-   * for the Account.
+   * Body param: The date _(in ISO 8601 format)_ after which the Balance will no
+   * longer be active for the Account.
    *
    * **Note:** You can use the `rolloverEndDate` request parameter to define an
    * extended grace period for continued draw-down against the Balance if any amount
@@ -384,41 +424,41 @@ export interface BalanceUpdateParams {
   endDate: string;
 
   /**
-   * The date _(in ISO 8601 format)_ when the Balance becomes active.
+   * Body param: The date _(in ISO 8601 format)_ when the Balance becomes active.
    */
   startDate: string;
 
   /**
-   * A description for the bill line items for draw-down charges against the Balance.
-   * _(Optional)._
+   * Body param: A description for the bill line items for draw-down charges against
+   * the Balance. _(Optional)._
    */
   balanceDrawDownDescription?: string;
 
   /**
-   * Unique short code for the Balance.
+   * Body param: Unique short code for the Balance.
    */
   code?: string;
 
   /**
-   * Optional Product ID this Balance Consumptions should be attributed to for
-   * accounting purposes
+   * Body param: Optional Product ID this Balance Consumptions should be attributed
+   * to for accounting purposes
    */
   consumptionsAccountingProductId?: string;
 
   /**
-   * A description of the Balance.
+   * Body param: A description of the Balance.
    */
   description?: string;
 
   /**
-   * Optional Product ID this Balance Fees should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Balance Fees should be attributed to for
+   * accounting purposes
    */
   feesAccountingProductId?: string;
 
   /**
-   * Specify the line item charge types that can draw-down at billing against the
-   * Balance amount. Options are:
+   * Body param: Specify the line item charge types that can draw-down at billing
+   * against the Balance amount. Options are:
    *
    * - `"MINIMUM_SPEND"`
    * - `"STANDING_CHARGE"`
@@ -438,27 +478,27 @@ export interface BalanceUpdateParams {
   >;
 
   /**
-   * The official name for the Balance.
+   * Body param: The official name for the Balance.
    */
   name?: string;
 
   /**
-   * A description for Bill line items overage charges.
+   * Body param: A description for Bill line items overage charges.
    */
   overageDescription?: string;
 
   /**
-   * Define a surcharge level, as a percentage of regular usage rating, applied to
-   * overages _(usage charges that exceed the Balance amount)_. For example, if the
-   * regular usage rate is $10 per unit of usage consumed and
+   * Body param: Define a surcharge level, as a percentage of regular usage rating,
+   * applied to overages _(usage charges that exceed the Balance amount)_. For
+   * example, if the regular usage rate is $10 per unit of usage consumed and
    * `overageSurchargePercent` is set at 10%, then any usage charged above the
    * original Balance amount is charged at $11 per unit of usage.
    */
   overageSurchargePercent?: number;
 
   /**
-   * Specify the Products whose consumption charges due at billing can be drawn-down
-   * against the Balance amount.
+   * Body param: Specify the Products whose consumption charges due at billing can be
+   * drawn-down against the Balance amount.
    *
    * **Note:** If you don't specify any Products for Balance draw-down, by default
    * the consumption charges for any Product the Account consumes will be drawn-down
@@ -467,10 +507,10 @@ export interface BalanceUpdateParams {
   productIds?: Array<string>;
 
   /**
-   * The maximum amount that can be carried over past the Balance end date for
-   * draw-down at billing if there is any unused Balance amount when the end date is
-   * reached. Works with `rolloverEndDate` to define the amount and duration of a
-   * Balance "grace period". _(Optional)_
+   * Body param: The maximum amount that can be carried over past the Balance end
+   * date for draw-down at billing if there is any unused Balance amount when the end
+   * date is reached. Works with `rolloverEndDate` to define the amount and duration
+   * of a Balance "grace period". _(Optional)_
    *
    * **Notes:**
    *
@@ -486,8 +526,9 @@ export interface BalanceUpdateParams {
   rolloverAmount?: number;
 
   /**
-   * The end date _(in ISO 8601 format)_ for the grace period during which unused
-   * Balance amounts can be carried over and drawn-down against at billing.
+   * Body param: The end date _(in ISO 8601 format)_ for the grace period during
+   * which unused Balance amounts can be carried over and drawn-down against at
+   * billing.
    *
    * **Note:** Use `rolloverAmount` if you want to specify a maximum amount that can
    * be carried over and made available for draw-down.
@@ -495,7 +536,7 @@ export interface BalanceUpdateParams {
   rolloverEndDate?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -509,19 +550,34 @@ export interface BalanceUpdateParams {
 
 export interface BalanceListParams extends CursorParams {
   /**
-   * The unique identifier (UUID) for the end customer's account.
+   * Path param: The unique identifier (UUID) for your organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: The unique identifier (UUID) for the end customer's account.
    */
   accountId?: string;
 
   /**
-   * Only include Balances with end dates earlier than this date.
+   * Query param: Only include Balances with end dates earlier than this date.
    */
   endDateEnd?: string;
 
   /**
-   * Only include Balances with end dates equal to or later than this date.
+   * Query param: Only include Balances with end dates equal to or later than this
+   * date.
    */
   endDateStart?: string;
+}
+
+export interface BalanceDeleteParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 Balances.BalancesCursor = BalancesCursor;
@@ -533,8 +589,10 @@ export declare namespace Balances {
     type Balance as Balance,
     BalancesCursor as BalancesCursor,
     type BalanceCreateParams as BalanceCreateParams,
+    type BalanceRetrieveParams as BalanceRetrieveParams,
     type BalanceUpdateParams as BalanceUpdateParams,
     type BalanceListParams as BalanceListParams,
+    type BalanceDeleteParams as BalanceDeleteParams,
   };
 
   export {

@@ -9,14 +9,29 @@ export class Accounts extends APIResource {
   /**
    * Create a new Account within the Organization.
    */
-  create(orgId: string, body: AccountCreateParams, options?: Core.RequestOptions): Core.APIPromise<Account> {
+  create(params: AccountCreateParams, options?: Core.RequestOptions): Core.APIPromise<Account> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/accounts`, { body, ...options });
   }
 
   /**
    * Retrieve the Account with the given Account UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Account> {
+  retrieve(
+    id: string,
+    params?: AccountRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Account>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  retrieve(
+    id: string,
+    params: AccountRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Account> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/accounts/${id}`, options);
   }
 
@@ -28,32 +43,24 @@ export class Accounts extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: AccountUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Account> {
+  update(id: string, params: AccountUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Account> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/accounts/${id}`, { body, ...options });
   }
 
   /**
    * Retrieve a list of Accounts that can be filtered by Account ID or Account Code.
    */
+  list(params?: AccountListParams, options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
   list(
-    orgId: string,
-    query?: AccountListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountsCursor, Account>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
-  list(
-    orgId: string,
-    query: AccountListParams | Core.RequestOptions = {},
+    params: AccountListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<AccountsCursor, Account> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/accounts`, AccountsCursor, { query, ...options });
   }
 
@@ -61,7 +68,17 @@ export class Accounts extends APIResource {
    * Delete the Account with the given UUID. This may fail if there are any
    * AccountPlans that reference the Account being deleted.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Account> {
+  delete(id: string, params?: AccountDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  delete(
+    id: string,
+    params: AccountDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Account> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/accounts/${id}`, options);
   }
 
@@ -69,41 +86,36 @@ export class Accounts extends APIResource {
    * Retrieve a list of Accounts that are children of the specified Account.
    */
   listChildren(
-    orgId: string,
     id: string,
-    query?: AccountListChildrenParams,
+    params?: AccountListChildrenParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account>;
-  listChildren(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  listChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
   listChildren(
-    orgId: string,
     id: string,
-    query: AccountListChildrenParams | Core.RequestOptions = {},
+    params: AccountListChildrenParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account> {
-    if (isRequestOptions(query)) {
-      return this.listChildren(orgId, id, {}, query);
+    if (isRequestOptions(params)) {
+      return this.listChildren(id, {}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/accounts/${id}/children`, { query, ...options });
   }
 
   /**
    * Search for account entities
    */
+  search(params?: AccountSearchParams, options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
+  search(options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
   search(
-    orgId: string,
-    query?: AccountSearchParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountSearchResponse>;
-  search(orgId: string, options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
-  search(
-    orgId: string,
-    query: AccountSearchParams | Core.RequestOptions = {},
+    params: AccountSearchParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<AccountSearchResponse> {
-    if (isRequestOptions(query)) {
-      return this.search(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.search({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/accounts/search`, { query, ...options });
   }
 }
@@ -301,27 +313,35 @@ export interface AccountSearchResponse {
 
 export interface AccountCreateParams {
   /**
-   * Code of the Account. This is a unique short code used for the Account.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Code of the Account. This is a unique short code used for the
+   * Account.
    */
   code: string;
 
   /**
-   * Contact email for the Account.
+   * Body param: Contact email for the Account.
    */
   emailAddress: string;
 
   /**
-   * Name of the Account.
+   * Body param: Name of the Account.
    */
   name: string;
 
   /**
-   * Contact address.
+   * Body param: Contact address.
    */
   address?: AccountCreateParams.Address;
 
   /**
-   * Specify whether to auto-generate statements once Bills are approved or locked.
+   * Body param: Specify whether to auto-generate statements once Bills are approved
+   * or locked.
    *
    * - **None**. Statements will not be auto-generated.
    * - **JSON**. Statements are auto-generated in JSON format.
@@ -330,9 +350,9 @@ export interface AccountCreateParams {
   autoGenerateStatementMode?: 'NONE' | 'JSON' | 'JSON_AND_CSV';
 
   /**
-   * Optional setting to define a _billing cycle date_, which sets the date of the
-   * first Bill and acts as a reference for when in the applied billing frequency
-   * period subsequent bills are created:
+   * Body param: Optional setting to define a _billing cycle date_, which sets the
+   * date of the first Bill and acts as a reference for when in the applied billing
+   * frequency period subsequent bills are created:
    *
    * - For example, if you attach a Plan to an Account where the Plan is configured
    *   for monthly billing frequency and you've defined the period the Plan will
@@ -348,15 +368,15 @@ export interface AccountCreateParams {
   billEpoch?: string;
 
   /**
-   * Configuration data for the Account Supported settings:
+   * Body param: Configuration data for the Account Supported settings:
    *
    * - SendBillsToThirdParties ("true"/"false")
    */
   configData?: Record<string, unknown>;
 
   /**
-   * Define the order in which any Prepayment or Balance amounts on the Account are
-   * to be drawn-down against for billing. Four options:
+   * Body param: Define the order in which any Prepayment or Balance amounts on the
+   * Account are to be drawn-down against for billing. Four options:
    *
    * - `"PREPAYMENT","BALANCE"`. Draw-down against Prepayment credit before Balance
    *   credit.
@@ -376,7 +396,8 @@ export interface AccountCreateParams {
   creditApplicationOrder?: Array<'PREPAYMENT' | 'BALANCE'>;
 
   /**
-   * Account level billing currency, such as USD or GBP. Optional attribute:
+   * Body param: Account level billing currency, such as USD or GBP. Optional
+   * attribute:
    *
    * - If you define an Account currency, this will be used for bills.
    * - If you do not define a currency, the billing currency defined at
@@ -392,8 +413,8 @@ export interface AccountCreateParams {
   currency?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -406,8 +427,8 @@ export interface AccountCreateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * Enter the number of days after the Bill generation date that you want to show on
-   * Bills as the due date.
+   * Body param: Enter the number of days after the Bill generation date that you
+   * want to show on Bills as the due date.
    *
    * **Note:** If you define `daysBeforeBillDue` at individual Account level, this
    * will take precedence over any `daysBeforeBillDue` setting defined at
@@ -416,12 +437,12 @@ export interface AccountCreateParams {
   daysBeforeBillDue?: number;
 
   /**
-   * Parent Account ID, or null if this Account does not have a parent.
+   * Body param: Parent Account ID, or null if this Account does not have a parent.
    */
   parentAccountId?: string;
 
   /**
-   * Purchase Order Number of the Account.
+   * Body param: Purchase Order Number of the Account.
    *
    * Optional attribute - allows you to set a purchase order number that comes
    * through into invoicing. For example, your financial systems might require this
@@ -430,9 +451,9 @@ export interface AccountCreateParams {
   purchaseOrderNumber?: string;
 
   /**
-   * The UUID of the statement definition used when Bill statements are generated for
-   * the Account. If no statement definition is specified for the Account, the
-   * statement definition specified at Organizational level is used.
+   * Body param: The UUID of the statement definition used when Bill statements are
+   * generated for the Account. If no statement definition is specified for the
+   * Account, the statement definition specified at Organizational level is used.
    *
    * Bill statements can be used as informative backing sheets to invoices. Based on
    * the usage breakdown defined in the statement definition, generated statements
@@ -446,7 +467,7 @@ export interface AccountCreateParams {
   statementDefinitionId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -481,29 +502,45 @@ export namespace AccountCreateParams {
   }
 }
 
+export interface AccountRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface AccountUpdateParams {
   /**
-   * Code of the Account. This is a unique short code used for the Account.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Code of the Account. This is a unique short code used for the
+   * Account.
    */
   code: string;
 
   /**
-   * Contact email for the Account.
+   * Body param: Contact email for the Account.
    */
   emailAddress: string;
 
   /**
-   * Name of the Account.
+   * Body param: Name of the Account.
    */
   name: string;
 
   /**
-   * Contact address.
+   * Body param: Contact address.
    */
   address?: AccountUpdateParams.Address;
 
   /**
-   * Specify whether to auto-generate statements once Bills are approved or locked.
+   * Body param: Specify whether to auto-generate statements once Bills are approved
+   * or locked.
    *
    * - **None**. Statements will not be auto-generated.
    * - **JSON**. Statements are auto-generated in JSON format.
@@ -512,9 +549,9 @@ export interface AccountUpdateParams {
   autoGenerateStatementMode?: 'NONE' | 'JSON' | 'JSON_AND_CSV';
 
   /**
-   * Optional setting to define a _billing cycle date_, which sets the date of the
-   * first Bill and acts as a reference for when in the applied billing frequency
-   * period subsequent bills are created:
+   * Body param: Optional setting to define a _billing cycle date_, which sets the
+   * date of the first Bill and acts as a reference for when in the applied billing
+   * frequency period subsequent bills are created:
    *
    * - For example, if you attach a Plan to an Account where the Plan is configured
    *   for monthly billing frequency and you've defined the period the Plan will
@@ -530,15 +567,15 @@ export interface AccountUpdateParams {
   billEpoch?: string;
 
   /**
-   * Configuration data for the Account Supported settings:
+   * Body param: Configuration data for the Account Supported settings:
    *
    * - SendBillsToThirdParties ("true"/"false")
    */
   configData?: Record<string, unknown>;
 
   /**
-   * Define the order in which any Prepayment or Balance amounts on the Account are
-   * to be drawn-down against for billing. Four options:
+   * Body param: Define the order in which any Prepayment or Balance amounts on the
+   * Account are to be drawn-down against for billing. Four options:
    *
    * - `"PREPAYMENT","BALANCE"`. Draw-down against Prepayment credit before Balance
    *   credit.
@@ -558,7 +595,8 @@ export interface AccountUpdateParams {
   creditApplicationOrder?: Array<'PREPAYMENT' | 'BALANCE'>;
 
   /**
-   * Account level billing currency, such as USD or GBP. Optional attribute:
+   * Body param: Account level billing currency, such as USD or GBP. Optional
+   * attribute:
    *
    * - If you define an Account currency, this will be used for bills.
    * - If you do not define a currency, the billing currency defined at
@@ -574,8 +612,8 @@ export interface AccountUpdateParams {
   currency?: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -588,8 +626,8 @@ export interface AccountUpdateParams {
   customFields?: Record<string, string | number>;
 
   /**
-   * Enter the number of days after the Bill generation date that you want to show on
-   * Bills as the due date.
+   * Body param: Enter the number of days after the Bill generation date that you
+   * want to show on Bills as the due date.
    *
    * **Note:** If you define `daysBeforeBillDue` at individual Account level, this
    * will take precedence over any `daysBeforeBillDue` setting defined at
@@ -598,12 +636,12 @@ export interface AccountUpdateParams {
   daysBeforeBillDue?: number;
 
   /**
-   * Parent Account ID, or null if this Account does not have a parent.
+   * Body param: Parent Account ID, or null if this Account does not have a parent.
    */
   parentAccountId?: string;
 
   /**
-   * Purchase Order Number of the Account.
+   * Body param: Purchase Order Number of the Account.
    *
    * Optional attribute - allows you to set a purchase order number that comes
    * through into invoicing. For example, your financial systems might require this
@@ -612,9 +650,9 @@ export interface AccountUpdateParams {
   purchaseOrderNumber?: string;
 
   /**
-   * The UUID of the statement definition used when Bill statements are generated for
-   * the Account. If no statement definition is specified for the Account, the
-   * statement definition specified at Organizational level is used.
+   * Body param: The UUID of the statement definition used when Bill statements are
+   * generated for the Account. If no statement definition is specified for the
+   * Account, the statement definition specified at Organizational level is used.
    *
    * Bill statements can be used as informative backing sheets to invoices. Based on
    * the usage breakdown defined in the statement definition, generated statements
@@ -628,7 +666,7 @@ export interface AccountUpdateParams {
   statementDefinitionId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -665,43 +703,74 @@ export namespace AccountUpdateParams {
 
 export interface AccountListParams extends CursorParams {
   /**
-   * List of Account Codes to retrieve. These are unique short codes for each
-   * Account.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List of Account Codes to retrieve. These are unique short codes for
+   * each Account.
    */
   codes?: Array<string>;
 
   /**
-   * List of Account IDs to retrieve.
+   * Query param: List of Account IDs to retrieve.
    */
   ids?: Array<string>;
 }
 
+export interface AccountDeleteParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface AccountListChildrenParams {
+  /**
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param:
+   */
   nextToken?: string | null;
 
+  /**
+   * Query param:
+   */
   pageSize?: number | null;
 }
 
 export interface AccountSearchParams {
   /**
-   * fromDocument for multi page retrievals
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Query param: fromDocument for multi page retrievals
    */
   fromDocument?: number;
 
   /**
-   * Search Operator to be used while querying search
+   * Query param: Search Operator to be used while querying search
    */
   operator?: 'AND' | 'OR';
 
   /**
-   * Number of Accounts to retrieve per page
+   * Query param: Number of Accounts to retrieve per page
    */
   pageSize?: number;
 
   /**
-   * Query for data using special syntax. Query parameters should be delimited using
-   * $ Allowed comparators are > (greater than), >= (grater or equal than), :
-   * (equal), < (less than), <= (less than or equal), ~ (contains). Allowed
+   * Query param: Query for data using special syntax. Query parameters should be
+   * delimited using $ Allowed comparators are > (greater than), >= (grater or equal
+   * than), : (equal), < (less than), <= (less than or equal), ~ (contains). Allowed
    * parameters: name, code, currency, purchaseOrderNumber, parentAccountId, codes,
    * id, createdBy, dtCreated, lastModifiedBy, ids.Query example:
    * searchQuery=name~test$currency:USD. This query is translated into: find accounts
@@ -710,12 +779,12 @@ export interface AccountSearchParams {
   searchQuery?: string;
 
   /**
-   * Name of the parameter on which sorting is performed
+   * Query param: Name of the parameter on which sorting is performed
    */
   sortBy?: string;
 
   /**
-   * Sorting order
+   * Query param: Sorting order
    */
   sortOrder?: 'ASC' | 'DESC';
 }
@@ -728,8 +797,10 @@ export declare namespace Accounts {
     type AccountSearchResponse as AccountSearchResponse,
     AccountsCursor as AccountsCursor,
     type AccountCreateParams as AccountCreateParams,
+    type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,
     type AccountListParams as AccountListParams,
+    type AccountDeleteParams as AccountDeleteParams,
     type AccountListChildrenParams as AccountListChildrenParams,
     type AccountSearchParams as AccountSearchParams,
   };
