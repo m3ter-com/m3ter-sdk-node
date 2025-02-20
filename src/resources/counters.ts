@@ -9,26 +9,37 @@ export class Counters extends APIResource {
   /**
    * Create a new Counter.
    */
-  create(orgId: string, body: CounterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+  create(params: CounterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/counters`, { body, ...options });
   }
 
   /**
    * Retrieve a Counter for the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+  retrieve(
+    id: string,
+    params?: CounterRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Counter>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Counter>;
+  retrieve(
+    id: string,
+    params: CounterRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Counter> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/counters/${id}`, options);
   }
 
   /**
    * Update Counter for the given UUID.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: CounterUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Counter> {
+  update(id: string, params: CounterUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/counters/${id}`, { body, ...options });
   }
 
@@ -36,27 +47,33 @@ export class Counters extends APIResource {
    * Retrieve a list of Counter entities that can be filtered by Product, Counter ID,
    * or Codes.
    */
+  list(params?: CounterListParams, options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
   list(
-    orgId: string,
-    query?: CounterListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CountersCursor, Counter>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
-  list(
-    orgId: string,
-    query: CounterListParams | Core.RequestOptions = {},
+    params: CounterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<CountersCursor, Counter> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/counters`, CountersCursor, { query, ...options });
   }
 
   /**
    * Delete a Counter for the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+  delete(id: string, params?: CounterDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Counter>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Counter>;
+  delete(
+    id: string,
+    params: CounterDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Counter> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/counters/${id}`, options);
   }
 }
@@ -125,30 +142,36 @@ export interface Counter {
 
 export interface CounterCreateParams {
   /**
-   * Descriptive name for the Counter.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of m3ter.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Descriptive name for the Counter.
    */
   name: string;
 
   /**
-   * User defined label for units shown on Bill line items, and indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown on Bill line items, and
+   * indicating to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Code for the Counter. A unique short code to identify the Counter.
+   * Body param: Code for the Counter. A unique short code to identify the Counter.
    */
   code?: string;
 
   /**
-   * UUID of the product the Counter belongs to. _(Optional)_ - if left blank, the
-   * Counter is Global. A Global Counter can be used to price Plans or Plan Templates
-   * belonging to any Product.
+   * Body param: UUID of the product the Counter belongs to. _(Optional)_ - if left
+   * blank, the Counter is Global. A Global Counter can be used to price Plans or
+   * Plan Templates belonging to any Product.
    */
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -160,32 +183,46 @@ export interface CounterCreateParams {
   version?: number;
 }
 
+export interface CounterRetrieveParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of m3ter.
+   */
+  orgId?: string;
+}
+
 export interface CounterUpdateParams {
   /**
-   * Descriptive name for the Counter.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of m3ter.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Descriptive name for the Counter.
    */
   name: string;
 
   /**
-   * User defined label for units shown on Bill line items, and indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown on Bill line items, and
+   * indicating to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Code for the Counter. A unique short code to identify the Counter.
+   * Body param: Code for the Counter. A unique short code to identify the Counter.
    */
   code?: string;
 
   /**
-   * UUID of the product the Counter belongs to. _(Optional)_ - if left blank, the
-   * Counter is Global. A Global Counter can be used to price Plans or Plan Templates
-   * belonging to any Product.
+   * Body param: UUID of the product the Counter belongs to. _(Optional)_ - if left
+   * blank, the Counter is Global. A Global Counter can be used to price Plans or
+   * Plan Templates belonging to any Product.
    */
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -199,20 +236,33 @@ export interface CounterUpdateParams {
 
 export interface CounterListParams extends CursorParams {
   /**
-   * List of Counter codes to retrieve. These are unique short codes to identify each
-   * Counter.
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List of Counter codes to retrieve. These are unique short codes to
+   * identify each Counter.
    */
   codes?: Array<string>;
 
   /**
-   * List of Counter IDs to retrieve.
+   * Query param: List of Counter IDs to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * List of Products UUIDs to retrieve Counters for.
+   * Query param: List of Products UUIDs to retrieve Counters for.
    */
   productId?: Array<string>;
+}
+
+export interface CounterDeleteParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of m3ter.
+   */
+  orgId?: string;
 }
 
 Counters.CountersCursor = CountersCursor;
@@ -222,7 +272,9 @@ export declare namespace Counters {
     type Counter as Counter,
     CountersCursor as CountersCursor,
     type CounterCreateParams as CounterCreateParams,
+    type CounterRetrieveParams as CounterRetrieveParams,
     type CounterUpdateParams as CounterUpdateParams,
     type CounterListParams as CounterListParams,
+    type CounterDeleteParams as CounterDeleteParams,
   };
 }

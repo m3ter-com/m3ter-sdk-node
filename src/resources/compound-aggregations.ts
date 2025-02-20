@@ -15,10 +15,10 @@ export class CompoundAggregations extends APIResource {
    * the Calculation formula.
    */
   create(
-    orgId: string,
-    body: CompoundAggregationCreateParams,
+    params: CompoundAggregationCreateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<AggregationsAPI.Aggregation> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/compoundaggregations`, { body, ...options });
   }
 
@@ -28,7 +28,21 @@ export class CompoundAggregations extends APIResource {
    * This endpoint returns a specific CompoundAggregation associated with an
    * Organization. It provides detailed information about the CompoundAggregation.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation> {
+  retrieve(
+    id: string,
+    params?: CompoundAggregationRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CompoundAggregation>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation>;
+  retrieve(
+    id: string,
+    params: CompoundAggregationRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CompoundAggregation> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/compoundaggregations/${id}`, options);
   }
 
@@ -45,11 +59,11 @@ export class CompoundAggregations extends APIResource {
    * request, they will be lost.
    */
   update(
-    orgId: string,
     id: string,
-    body: CompoundAggregationUpdateParams,
+    params: CompoundAggregationUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<AggregationsAPI.Aggregation> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/compoundaggregations/${id}`, { body, ...options });
   }
 
@@ -63,22 +77,18 @@ export class CompoundAggregations extends APIResource {
    * Product, CompoundAggregation IDs or short codes.
    */
   list(
-    orgId: string,
-    query?: CompoundAggregationListParams,
+    params?: CompoundAggregationListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
   list(
-    orgId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
-  list(
-    orgId: string,
-    query: CompoundAggregationListParams | Core.RequestOptions = {},
+    params: CompoundAggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/compoundaggregations`,
       CompoundAggregationsCursor,
@@ -94,7 +104,21 @@ export class CompoundAggregations extends APIResource {
    * CompoundAggregation that is no longer required, such as when changing pricing or
    * planning models.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation> {
+  delete(
+    id: string,
+    params?: CompoundAggregationDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CompoundAggregation>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation>;
+  delete(
+    id: string,
+    params: CompoundAggregationDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CompoundAggregation> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/compoundaggregations/${id}`, options);
   }
 }
@@ -226,10 +250,16 @@ export interface CompoundAggregation {
 
 export interface CompoundAggregationCreateParams {
   /**
-   * String that represents the formula for the calculation. This formula determines
-   * how the CompoundAggregation value is calculated. The calculation can reference
-   * simple Aggregations or Custom Fields. This field is required when creating or
-   * updating a CompoundAggregation.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: String that represents the formula for the calculation. This formula
+   * determines how the CompoundAggregation value is calculated. The calculation can
+   * reference simple Aggregations or Custom Fields. This field is required when
+   * creating or updating a CompoundAggregation.
    *
    * **NOTE:** If a simple Aggregation referenced by a Compound Aggregation has a
    * **Quantity per unit** defined or a **Rounding** defined, these will not be
@@ -241,15 +271,15 @@ export interface CompoundAggregationCreateParams {
   calculation: string;
 
   /**
-   * Descriptive name for the Aggregation.
+   * Body param: Descriptive name for the Aggregation.
    */
   name: string;
 
   /**
-   * Defines how much of a quantity equates to 1 unit. Used when setting the price
-   * per unit for billing purposes - if charging for kilobytes per second (KiBy/s) at
-   * rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and price Plan at
-   * $0.25 per unit.
+   * Body param: Defines how much of a quantity equates to 1 unit. Used when setting
+   * the price per unit for billing purposes - if charging for kilobytes per second
+   * (KiBy/s) at rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and
+   * price Plan at $0.25 per unit.
    *
    * **Note:** If `quantityPerUnit` is set to a value other than one, `rounding` is
    * typically set to `"UP"`.
@@ -257,8 +287,8 @@ export interface CompoundAggregationCreateParams {
   quantityPerUnit: number;
 
   /**
-   * Specifies how you want to deal with non-integer, fractional number Aggregation
-   * values.
+   * Body param: Specifies how you want to deal with non-integer, fractional number
+   * Aggregation values.
    *
    * **NOTES:**
    *
@@ -277,26 +307,30 @@ export interface CompoundAggregationCreateParams {
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
   /**
-   * User defined label for units shown for Bill line items, indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown for Bill line items, indicating
+   * to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Optional Product ID this Aggregation should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Aggregation should be attributed to for
+   * accounting purposes
    */
   accountingProductId?: string;
 
   /**
-   * Code of the new Aggregation. A unique short code to identify the Aggregation.
+   * Body param: Code of the new Aggregation. A unique short code to identify the
+   * Aggregation.
    */
   code?: string;
 
+  /**
+   * Body param:
+   */
   customFields?: Record<string, string | number>;
 
   /**
-   * Boolean True / False flag:
+   * Body param: Boolean True / False flag:
    *
    * - **TRUE** - set to TRUE if you want to allow null values from the simple
    *   Aggregations referenced in the Compound Aggregation to be passed in. Simple
@@ -312,7 +346,8 @@ export interface CompoundAggregationCreateParams {
   evaluateNullAggregations?: boolean;
 
   /**
-   * Unique identifier (UUID) of the Product the CompoundAggregation belongs to.
+   * Body param: Unique identifier (UUID) of the Product the CompoundAggregation
+   * belongs to.
    *
    * **Note:** Omit this parameter if you want to create a _Global_
    * CompoundAggregation.
@@ -320,7 +355,7 @@ export interface CompoundAggregationCreateParams {
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -332,12 +367,26 @@ export interface CompoundAggregationCreateParams {
   version?: number;
 }
 
+export interface CompoundAggregationRetrieveParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
+}
+
 export interface CompoundAggregationUpdateParams {
   /**
-   * String that represents the formula for the calculation. This formula determines
-   * how the CompoundAggregation value is calculated. The calculation can reference
-   * simple Aggregations or Custom Fields. This field is required when creating or
-   * updating a CompoundAggregation.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: String that represents the formula for the calculation. This formula
+   * determines how the CompoundAggregation value is calculated. The calculation can
+   * reference simple Aggregations or Custom Fields. This field is required when
+   * creating or updating a CompoundAggregation.
    *
    * **NOTE:** If a simple Aggregation referenced by a Compound Aggregation has a
    * **Quantity per unit** defined or a **Rounding** defined, these will not be
@@ -349,15 +398,15 @@ export interface CompoundAggregationUpdateParams {
   calculation: string;
 
   /**
-   * Descriptive name for the Aggregation.
+   * Body param: Descriptive name for the Aggregation.
    */
   name: string;
 
   /**
-   * Defines how much of a quantity equates to 1 unit. Used when setting the price
-   * per unit for billing purposes - if charging for kilobytes per second (KiBy/s) at
-   * rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and price Plan at
-   * $0.25 per unit.
+   * Body param: Defines how much of a quantity equates to 1 unit. Used when setting
+   * the price per unit for billing purposes - if charging for kilobytes per second
+   * (KiBy/s) at rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and
+   * price Plan at $0.25 per unit.
    *
    * **Note:** If `quantityPerUnit` is set to a value other than one, `rounding` is
    * typically set to `"UP"`.
@@ -365,8 +414,8 @@ export interface CompoundAggregationUpdateParams {
   quantityPerUnit: number;
 
   /**
-   * Specifies how you want to deal with non-integer, fractional number Aggregation
-   * values.
+   * Body param: Specifies how you want to deal with non-integer, fractional number
+   * Aggregation values.
    *
    * **NOTES:**
    *
@@ -385,26 +434,30 @@ export interface CompoundAggregationUpdateParams {
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
   /**
-   * User defined label for units shown for Bill line items, indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown for Bill line items, indicating
+   * to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Optional Product ID this Aggregation should be attributed to for accounting
-   * purposes
+   * Body param: Optional Product ID this Aggregation should be attributed to for
+   * accounting purposes
    */
   accountingProductId?: string;
 
   /**
-   * Code of the new Aggregation. A unique short code to identify the Aggregation.
+   * Body param: Code of the new Aggregation. A unique short code to identify the
+   * Aggregation.
    */
   code?: string;
 
+  /**
+   * Body param:
+   */
   customFields?: Record<string, string | number>;
 
   /**
-   * Boolean True / False flag:
+   * Body param: Boolean True / False flag:
    *
    * - **TRUE** - set to TRUE if you want to allow null values from the simple
    *   Aggregations referenced in the Compound Aggregation to be passed in. Simple
@@ -420,7 +473,8 @@ export interface CompoundAggregationUpdateParams {
   evaluateNullAggregations?: boolean;
 
   /**
-   * Unique identifier (UUID) of the Product the CompoundAggregation belongs to.
+   * Body param: Unique identifier (UUID) of the Product the CompoundAggregation
+   * belongs to.
    *
    * **Note:** Omit this parameter if you want to create a _Global_
    * CompoundAggregation.
@@ -428,7 +482,7 @@ export interface CompoundAggregationUpdateParams {
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -442,22 +496,36 @@ export interface CompoundAggregationUpdateParams {
 
 export interface CompoundAggregationListParams extends CursorParams {
   /**
-   * An optional parameter to retrieve specific CompoundAggregations based on their
-   * short codes.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: An optional parameter to retrieve specific CompoundAggregations
+   * based on their short codes.
    */
   codes?: Array<string>;
 
   /**
-   * An optional parameter to retrieve specific CompoundAggregations based on their
-   * unique identifiers (UUIDs).
+   * Query param: An optional parameter to retrieve specific CompoundAggregations
+   * based on their unique identifiers (UUIDs).
    */
   ids?: Array<string>;
 
   /**
-   * An optional parameter to filter the CompoundAggregations based on specific
-   * Product unique identifiers (UUIDs).
+   * Query param: An optional parameter to filter the CompoundAggregations based on
+   * specific Product unique identifiers (UUIDs).
    */
   productId?: Array<string>;
+}
+
+export interface CompoundAggregationDeleteParams {
+  /**
+   * The unique identifier (UUID) for your Organization. The Organization represents
+   * your company as a direct customer of our service.
+   */
+  orgId?: string;
 }
 
 CompoundAggregations.CompoundAggregationsCursor = CompoundAggregationsCursor;
@@ -467,7 +535,9 @@ export declare namespace CompoundAggregations {
     type CompoundAggregation as CompoundAggregation,
     CompoundAggregationsCursor as CompoundAggregationsCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
+    type CompoundAggregationRetrieveParams as CompoundAggregationRetrieveParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,
     type CompoundAggregationListParams as CompoundAggregationListParams,
+    type CompoundAggregationDeleteParams as CompoundAggregationDeleteParams,
   };
 }

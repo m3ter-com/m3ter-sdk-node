@@ -20,17 +20,31 @@ export class CounterAdjustments extends APIResource {
    *   day using the same Counter and you'll receive an error if you try to do this.
    */
   create(
-    orgId: string,
-    body: CounterAdjustmentCreateParams,
+    params: CounterAdjustmentCreateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<CounterAdjustment> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/counteradjustments`, { body, ...options });
   }
 
   /**
    * Retrieve a CounterAdjustment for the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment> {
+  retrieve(
+    id: string,
+    params?: CounterAdjustmentRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterAdjustment>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment>;
+  retrieve(
+    id: string,
+    params: CounterAdjustmentRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterAdjustment> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/counteradjustments/${id}`, options);
   }
 
@@ -38,11 +52,11 @@ export class CounterAdjustments extends APIResource {
    * Update a CounterAdjustment for an Account.
    */
   update(
-    orgId: string,
     id: string,
-    body: CounterAdjustmentUpdateParams,
+    params: CounterAdjustmentUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<CounterAdjustment> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/counteradjustments/${id}`, { body, ...options });
   }
 
@@ -59,22 +73,18 @@ export class CounterAdjustments extends APIResource {
    *   must also use the `accountId` query parameter.
    */
   list(
-    orgId: string,
-    query?: CounterAdjustmentListParams,
+    params?: CounterAdjustmentListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
   list(
-    orgId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
-  list(
-    orgId: string,
-    query: CounterAdjustmentListParams | Core.RequestOptions = {},
+    params: CounterAdjustmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/counteradjustments`, CounterAdjustmentsCursor, {
       query,
       ...options,
@@ -84,7 +94,21 @@ export class CounterAdjustments extends APIResource {
   /**
    * Delete a CounterAdjustment for the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment> {
+  delete(
+    id: string,
+    params?: CounterAdjustmentDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterAdjustment>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment>;
+  delete(
+    id: string,
+    params: CounterAdjustmentDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterAdjustment> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/counteradjustments/${id}`, options);
   }
 }
@@ -157,18 +181,24 @@ export interface CounterAdjustment {
 
 export interface CounterAdjustmentCreateParams {
   /**
-   * The Account ID the CounterAdjustment is created for.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The Account ID the CounterAdjustment is created for.
    */
   accountId: string;
 
   /**
-   * The ID of the Counter used for the CounterAdjustment on the Account.
+   * Body param: The ID of the Counter used for the CounterAdjustment on the Account.
    */
   counterId: string;
 
   /**
-   * The date the CounterAdjustment is created for the Account _(in ISO-8601 date
-   * format)_.
+   * Body param: The date the CounterAdjustment is created for the Account _(in
+   * ISO-8601 date format)_.
    *
    * **Note:** CounterAdjustments on Accounts are supported down to a _specific day_
    * of granularity - you cannot create more than one CounterAdjustment for any given
@@ -177,7 +207,7 @@ export interface CounterAdjustmentCreateParams {
   date: string;
 
   /**
-   * Integer Value of the Counter used for the CounterAdjustment.
+   * Body param: Integer Value of the Counter used for the CounterAdjustment.
    *
    * **Note:** Use the new absolute value for the Counter for the selected date - if
    * it was 15 and has increased to 20, enter 20; if it was 15 and has decreased to
@@ -187,12 +217,12 @@ export interface CounterAdjustmentCreateParams {
   value: number;
 
   /**
-   * Purchase Order Number for the Counter Adjustment. _(Optional)_
+   * Body param: Purchase Order Number for the Counter Adjustment. _(Optional)_
    */
   purchaseOrderNumber?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -204,20 +234,34 @@ export interface CounterAdjustmentCreateParams {
   version?: number;
 }
 
+export interface CounterAdjustmentRetrieveParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface CounterAdjustmentUpdateParams {
   /**
-   * The Account ID the CounterAdjustment is created for.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The Account ID the CounterAdjustment is created for.
    */
   accountId: string;
 
   /**
-   * The ID of the Counter used for the CounterAdjustment on the Account.
+   * Body param: The ID of the Counter used for the CounterAdjustment on the Account.
    */
   counterId: string;
 
   /**
-   * The date the CounterAdjustment is created for the Account _(in ISO-8601 date
-   * format)_.
+   * Body param: The date the CounterAdjustment is created for the Account _(in
+   * ISO-8601 date format)_.
    *
    * **Note:** CounterAdjustments on Accounts are supported down to a _specific day_
    * of granularity - you cannot create more than one CounterAdjustment for any given
@@ -226,7 +270,7 @@ export interface CounterAdjustmentUpdateParams {
   date: string;
 
   /**
-   * Integer Value of the Counter used for the CounterAdjustment.
+   * Body param: Integer Value of the Counter used for the CounterAdjustment.
    *
    * **Note:** Use the new absolute value for the Counter for the selected date - if
    * it was 15 and has increased to 20, enter 20; if it was 15 and has decreased to
@@ -236,12 +280,12 @@ export interface CounterAdjustmentUpdateParams {
   value: number;
 
   /**
-   * Purchase Order Number for the Counter Adjustment. _(Optional)_
+   * Body param: Purchase Order Number for the Counter Adjustment. _(Optional)_
    */
   purchaseOrderNumber?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -255,33 +299,55 @@ export interface CounterAdjustmentUpdateParams {
 
 export interface CounterAdjustmentListParams extends CursorParams {
   /**
-   * List CounterAdjustment items for the Account UUID.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List CounterAdjustment items for the Account UUID.
    */
   accountId?: string;
 
   /**
-   * List CounterAdjustment items for the Counter UUID.
+   * Query param: List CounterAdjustment items for the Counter UUID.
    */
   counterId?: string;
 
   /**
-   * List CounterAdjustment items for the given date.
+   * Query param: List CounterAdjustment items for the given date.
    */
   date?: string;
 
+  /**
+   * Query param:
+   */
   dateEnd?: string | null;
 
+  /**
+   * Query param:
+   */
   dateStart?: string | null;
 
   /**
-   * Only include CounterAdjustments with end dates earlier than this date.
+   * Query param: Only include CounterAdjustments with end dates earlier than this
+   * date.
    */
   endDateEnd?: string;
 
   /**
-   * Only include CounterAdjustments with end dates equal to or later than this date.
+   * Query param: Only include CounterAdjustments with end dates equal to or later
+   * than this date.
    */
   endDateStart?: string;
+}
+
+export interface CounterAdjustmentDeleteParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 CounterAdjustments.CounterAdjustmentsCursor = CounterAdjustmentsCursor;
@@ -291,7 +357,9 @@ export declare namespace CounterAdjustments {
     type CounterAdjustment as CounterAdjustment,
     CounterAdjustmentsCursor as CounterAdjustmentsCursor,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
+    type CounterAdjustmentRetrieveParams as CounterAdjustmentRetrieveParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,
     type CounterAdjustmentListParams as CounterAdjustmentListParams,
+    type CounterAdjustmentDeleteParams as CounterAdjustmentDeleteParams,
   };
 }

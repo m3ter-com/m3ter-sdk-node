@@ -9,18 +9,29 @@ export class PlanGroupLinks extends APIResource {
   /**
    * Create a new PlanGroupLink.
    */
-  create(
-    orgId: string,
-    body: PlanGroupLinkCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink> {
+  create(params: PlanGroupLinkCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plangrouplinks`, { body, ...options });
   }
 
   /**
    * Retrieve a PlanGroupLink for the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink> {
+  retrieve(
+    id: string,
+    params?: PlanGroupLinkRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroupLink>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink>;
+  retrieve(
+    id: string,
+    params: PlanGroupLinkRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroupLink> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/plangrouplinks/${id}`, options);
   }
 
@@ -28,11 +39,11 @@ export class PlanGroupLinks extends APIResource {
    * Update PlanGroupLink for the given UUID.
    */
   update(
-    orgId: string,
     id: string,
-    body: PlanGroupLinkUpdateParams,
+    params: PlanGroupLinkUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<PlanGroupLink> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plangrouplinks/${id}`, { body, ...options });
   }
 
@@ -40,19 +51,18 @@ export class PlanGroupLinks extends APIResource {
    * Retrieve a list of PlanGroupLink entities
    */
   list(
-    orgId: string,
-    query?: PlanGroupLinkListParams,
+    params?: PlanGroupLinkListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
   list(
-    orgId: string,
-    query: PlanGroupLinkListParams | Core.RequestOptions = {},
+    params: PlanGroupLinkListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/plangrouplinks`, PlanGroupLinksCursor, {
       query,
       ...options,
@@ -62,7 +72,21 @@ export class PlanGroupLinks extends APIResource {
   /**
    * Delete a PlanGroupLink for the given UUID.
    */
-  delete(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink> {
+  delete(
+    id: string,
+    params?: PlanGroupLinkDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroupLink>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink>;
+  delete(
+    id: string,
+    params: PlanGroupLinkDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroupLink> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/plangrouplinks/${id}`, options);
   }
 }
@@ -117,12 +141,23 @@ export interface PlanGroupLink {
 }
 
 export interface PlanGroupLinkCreateParams {
+  /**
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Body param:
+   */
   planGroupId: string;
 
+  /**
+   * Body param:
+   */
   planId: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -134,13 +169,31 @@ export interface PlanGroupLinkCreateParams {
   version?: number;
 }
 
+export interface PlanGroupLinkRetrieveParams {
+  /**
+   * UUID of the organization
+   */
+  orgId?: string;
+}
+
 export interface PlanGroupLinkUpdateParams {
+  /**
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Body param:
+   */
   planGroupId: string;
 
+  /**
+   * Body param:
+   */
   planId: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -154,19 +207,31 @@ export interface PlanGroupLinkUpdateParams {
 
 export interface PlanGroupLinkListParams extends CursorParams {
   /**
-   * list of IDs to retrieve
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Query param: list of IDs to retrieve
    */
   ids?: Array<string>;
 
   /**
-   * UUID of the Plan to retrieve PlanGroupLinks for
+   * Query param: UUID of the Plan to retrieve PlanGroupLinks for
    */
   plan?: string;
 
   /**
-   * UUID of the PlanGroup to retrieve PlanGroupLinks for
+   * Query param: UUID of the PlanGroup to retrieve PlanGroupLinks for
    */
   planGroup?: string;
+}
+
+export interface PlanGroupLinkDeleteParams {
+  /**
+   * UUID of the organization
+   */
+  orgId?: string;
 }
 
 PlanGroupLinks.PlanGroupLinksCursor = PlanGroupLinksCursor;
@@ -176,7 +241,9 @@ export declare namespace PlanGroupLinks {
     type PlanGroupLink as PlanGroupLink,
     PlanGroupLinksCursor as PlanGroupLinksCursor,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
+    type PlanGroupLinkRetrieveParams as PlanGroupLinkRetrieveParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,
     type PlanGroupLinkListParams as PlanGroupLinkListParams,
+    type PlanGroupLinkDeleteParams as PlanGroupLinkDeleteParams,
   };
 }

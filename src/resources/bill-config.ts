@@ -1,13 +1,23 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../resource';
+import { isRequestOptions } from '../core';
 import * as Core from '../core';
 
 export class BillConfigResource extends APIResource {
   /**
    * Retrieve the Organization-wide BillConfig.
    */
-  retrieve(orgId: string, options?: Core.RequestOptions): Core.APIPromise<BillConfig> {
+  retrieve(params?: BillConfigRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<BillConfig>;
+  retrieve(options?: Core.RequestOptions): Core.APIPromise<BillConfig>;
+  retrieve(
+    params: BillConfigRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillConfig> {
+    if (isRequestOptions(params)) {
+      return this.retrieve({}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/billconfig`, options);
   }
 
@@ -18,11 +28,8 @@ export class BillConfigResource extends APIResource {
    * with a service period end date on or before the set date will be locked and
    * cannot be updated or recalculated.
    */
-  update(
-    orgId: string,
-    body: BillConfigUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<BillConfig> {
+  update(params: BillConfigUpdateParams, options?: Core.RequestOptions): Core.APIPromise<BillConfig> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/billconfig`, { body, ...options });
   }
 }
@@ -70,16 +77,31 @@ export interface BillConfig {
   version?: number;
 }
 
+export interface BillConfigRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface BillConfigUpdateParams {
   /**
-   * The global lock date when all Bills will be locked _(in ISO 8601 format)_.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The global lock date when all Bills will be locked _(in ISO 8601
+   * format)_.
    *
    * For example: `"2024-03-01"`.
    */
   billLockDate?: string;
 
   /**
-   * The version number:
+   * Body param: The version number:
    *
    * - Default value when newly created is one.
    * - On Update, version is required and must match the existing version because a
@@ -90,5 +112,9 @@ export interface BillConfigUpdateParams {
 }
 
 export declare namespace BillConfigResource {
-  export { type BillConfig as BillConfig, type BillConfigUpdateParams as BillConfigUpdateParams };
+  export {
+    type BillConfig as BillConfig,
+    type BillConfigRetrieveParams as BillConfigRetrieveParams,
+    type BillConfigUpdateParams as BillConfigUpdateParams,
+  };
 }

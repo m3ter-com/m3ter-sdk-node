@@ -26,6 +26,7 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
     });
 
     test('they are used in the request', () => {
@@ -60,6 +61,7 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo');
     });
@@ -71,6 +73,7 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/foo?apiVersion=foo&hello=world');
     });
@@ -82,6 +85,7 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.buildURL('/foo', { hello: undefined })).toEqual('http://localhost:5000/foo');
     });
@@ -93,6 +97,7 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: (url) => {
         return Promise.resolve(
           new Response(JSON.stringify({ url, custom: true }), {
@@ -113,6 +118,7 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: defaultFetch,
     });
   });
@@ -123,6 +129,7 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: (...args) => {
         return new Promise((resolve, reject) =>
           setTimeout(
@@ -157,6 +164,7 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
     });
 
@@ -171,6 +179,7 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
@@ -181,6 +190,7 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.buildURL('/foo', null)).toEqual('http://localhost:5000/custom/path/foo');
     });
@@ -195,25 +205,41 @@ describe('instantiate client', () => {
         apiKey: 'My API Key',
         apiSecret: 'My API Secret',
         token: 'My Token',
+        orgId: 'My Org ID',
       });
       expect(client.baseURL).toEqual('https://example.com');
     });
 
     test('env variable', () => {
       process.env['M3TER_BASE_URL'] = 'https://example.com/from_env';
-      const client = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+      const client = new M3ter({
+        apiKey: 'My API Key',
+        apiSecret: 'My API Secret',
+        token: 'My Token',
+        orgId: 'My Org ID',
+      });
       expect(client.baseURL).toEqual('https://example.com/from_env');
     });
 
     test('empty env variable', () => {
       process.env['M3TER_BASE_URL'] = ''; // empty
-      const client = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+      const client = new M3ter({
+        apiKey: 'My API Key',
+        apiSecret: 'My API Secret',
+        token: 'My Token',
+        orgId: 'My Org ID',
+      });
       expect(client.baseURL).toEqual('https://api.m3ter.com');
     });
 
     test('blank env variable', () => {
       process.env['M3TER_BASE_URL'] = '  '; // blank
-      const client = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+      const client = new M3ter({
+        apiKey: 'My API Key',
+        apiSecret: 'My API Secret',
+        token: 'My Token',
+        orgId: 'My Org ID',
+      });
       expect(client.baseURL).toEqual('https://api.m3ter.com');
     });
   });
@@ -224,11 +250,17 @@ describe('instantiate client', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
     });
     expect(client.maxRetries).toEqual(4);
 
     // default
-    const client2 = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+    const client2 = new M3ter({
+      apiKey: 'My API Key',
+      apiSecret: 'My API Secret',
+      token: 'My Token',
+      orgId: 'My Org ID',
+    });
     expect(client2.maxRetries).toEqual(2);
   });
 
@@ -237,10 +269,11 @@ describe('instantiate client', () => {
     process.env['M3TER_API_KEY'] = 'My API Key';
     process.env['M3TER_API_SECRET'] = 'My API Secret';
     process.env['M3TER_API_TOKEN'] = 'My Token';
-    const client = new M3ter();
+    const client = new M3ter({ orgId: 'My Org ID' });
     expect(client.apiKey).toBe('My API Key');
     expect(client.apiSecret).toBe('My API Secret');
     expect(client.token).toBe('My Token');
+    expect(client.orgId).toBe('My Org ID');
   });
 
   test('with overridden environment variable arguments', () => {
@@ -248,15 +281,26 @@ describe('instantiate client', () => {
     process.env['M3TER_API_KEY'] = 'another My API Key';
     process.env['M3TER_API_SECRET'] = 'another My API Secret';
     process.env['M3TER_API_TOKEN'] = 'another My Token';
-    const client = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+    const client = new M3ter({
+      apiKey: 'My API Key',
+      apiSecret: 'My API Secret',
+      token: 'My Token',
+      orgId: 'My Org ID',
+    });
     expect(client.apiKey).toBe('My API Key');
     expect(client.apiSecret).toBe('My API Secret');
     expect(client.token).toBe('My Token');
+    expect(client.orgId).toBe('My Org ID');
   });
 });
 
 describe('request building', () => {
-  const client = new M3ter({ apiKey: 'My API Key', apiSecret: 'My API Secret', token: 'My Token' });
+  const client = new M3ter({
+    apiKey: 'My API Key',
+    apiSecret: 'My API Secret',
+    token: 'My Token',
+    orgId: 'My Org ID',
+  });
 
   describe('Content-Length', () => {
     test('handles multi-byte characters', () => {
@@ -302,6 +346,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       timeout: 10,
       fetch: testFetch,
     });
@@ -338,6 +383,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -368,6 +414,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -403,6 +450,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
       maxRetries: 4,
       defaultHeaders: { 'X-Stainless-Retry-Count': null },
@@ -438,6 +486,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
       maxRetries: 4,
     });
@@ -471,6 +520,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
     });
 
@@ -503,6 +553,7 @@ describe('retries', () => {
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',
       token: 'My Token',
+      orgId: 'My Org ID',
       fetch: testFetch,
     });
 

@@ -25,11 +25,11 @@ export class Transactions extends APIResource {
    * where the customer actually paid you 50 units in virtual currency X.
    */
   create(
-    orgId: string,
     balanceId: string,
-    body: TransactionCreateParams,
+    params: TransactionCreateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Transaction> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/balances/${balanceId}/transactions`, {
       body,
       ...options,
@@ -44,25 +44,20 @@ export class Transactions extends APIResource {
    * `nextToken` parameters.
    */
   list(
-    orgId: string,
     balanceId: string,
-    query?: TransactionListParams,
+    params?: TransactionListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<TransactionsCursor, Transaction>;
+  list(balanceId: string, options?: Core.RequestOptions): Core.PagePromise<TransactionsCursor, Transaction>;
   list(
-    orgId: string,
     balanceId: string,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction>;
-  list(
-    orgId: string,
-    balanceId: string,
-    query: TransactionListParams | Core.RequestOptions = {},
+    params: TransactionListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<TransactionsCursor, Transaction> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, balanceId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list(balanceId, {}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/balances/${balanceId}/transactions`,
       TransactionsCursor,
@@ -167,44 +162,54 @@ export interface Transaction {
 
 export interface TransactionCreateParams {
   /**
-   * The financial value of the transaction.
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: The financial value of the transaction.
    */
   amount: number;
 
   /**
-   * The date _(in ISO 8601 format)_ when the Balance transaction was applied.
+   * Body param: The date _(in ISO 8601 format)_ when the Balance transaction was
+   * applied.
    */
   appliedDate?: string;
 
   /**
-   * The currency code of the payment if it differs from the Balance currency. For
-   * example: USD, GBP or EUR.
+   * Body param: The currency code of the payment if it differs from the Balance
+   * currency. For example: USD, GBP or EUR.
    */
   currencyPaid?: string;
 
   /**
-   * A brief description explaining the purpose and context of the transaction.
+   * Body param: A brief description explaining the purpose and context of the
+   * transaction.
    */
   description?: string;
 
   /**
-   * The payment amount if the payment currency differs from the Balance currency.
+   * Body param: The payment amount if the payment currency differs from the Balance
+   * currency.
    */
   paid?: number;
 
   /**
-   * The date _(in ISO 8601 format)_ when the transaction occurred.
+   * Body param: The date _(in ISO 8601 format)_ when the transaction occurred.
    */
   transactionDate?: string;
 
   /**
-   * The unique identifier (UUID) of the transaction type. This is obtained from the
-   * list of created Transaction Types within the Organization Configuration.
+   * Body param: The unique identifier (UUID) of the transaction type. This is
+   * obtained from the list of created Transaction Types within the Organization
+   * Configuration.
    */
   transactionTypeId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -217,6 +222,15 @@ export interface TransactionCreateParams {
 }
 
 export interface TransactionListParams extends CursorParams {
+  /**
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param:
+   */
   transactionTypeId?: string | null;
 }
 

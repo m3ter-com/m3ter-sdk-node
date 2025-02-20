@@ -7,12 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource commitments', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.commitments.create('orgId', {
+    const responsePromise = client.commitments.create({
       accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amount: 1,
       currency: 'x',
@@ -29,7 +30,8 @@ describe('resource commitments', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.commitments.create('orgId', {
+    const response = await client.commitments.create({
+      orgId: 'orgId',
       accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amount: 1,
       currency: 'x',
@@ -66,8 +68,8 @@ describe('resource commitments', () => {
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.commitments.retrieve('orgId', 'id');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.commitments.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -77,15 +79,26 @@ describe('resource commitments', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: required and optional params', async () => {
+    const response = await client.commitments.retrieve('id', { orgId: 'orgId' });
+  });
+
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.commitments.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.commitments.retrieve('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.commitments.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.commitments.update('orgId', 'id', {
+    const responsePromise = client.commitments.update('id', {
       accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amount: 1,
       currency: 'x',
@@ -102,7 +115,8 @@ describe('resource commitments', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.commitments.update('orgId', 'id', {
+    const response = await client.commitments.update('id', {
+      orgId: 'orgId',
       accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       amount: 1,
       currency: 'x',
@@ -139,8 +153,8 @@ describe('resource commitments', () => {
     });
   });
 
-  test('list', async () => {
-    const responsePromise = client.commitments.list('orgId');
+  test('list: only required params', async () => {
+    const responsePromise = client.commitments.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -150,9 +164,24 @@ describe('resource commitments', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('list: required and optional params', async () => {
+    const response = await client.commitments.list({
+      orgId: 'orgId',
+      accountId: 'accountId',
+      contractId: 'contractId',
+      date: 'date',
+      endDateEnd: 'endDateEnd',
+      endDateStart: 'endDateStart',
+      ids: ['string'],
+      nextToken: 'nextToken',
+      pageSize: 1,
+      productId: 'productId',
+    });
+  });
+
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.commitments.list('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.commitments.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -161,8 +190,8 @@ describe('resource commitments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.commitments.list(
-        'orgId',
         {
+          orgId: 'orgId',
           accountId: 'accountId',
           contractId: 'contractId',
           date: 'date',
@@ -178,8 +207,8 @@ describe('resource commitments', () => {
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.commitments.delete('orgId', 'id');
+  test('delete: only required params', async () => {
+    const responsePromise = client.commitments.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -187,17 +216,28 @@ describe('resource commitments', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('delete: required and optional params', async () => {
+    const response = await client.commitments.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.commitments.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.commitments.delete('orgId', 'id', { path: '/_stainless_unknown_path' }),
+      client.commitments.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('search', async () => {
-    const responsePromise = client.commitments.search('orgId');
+  test('search: only required params', async () => {
+    const responsePromise = client.commitments.search();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -207,9 +247,21 @@ describe('resource commitments', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('search: required and optional params', async () => {
+    const response = await client.commitments.search({
+      orgId: 'orgId',
+      fromDocument: 0,
+      operator: 'AND',
+      pageSize: 1,
+      searchQuery: 'searchQuery',
+      sortBy: 'sortBy',
+      sortOrder: 'ASC',
+    });
+  });
+
   test('search: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.commitments.search('orgId', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.commitments.search({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -218,8 +270,8 @@ describe('resource commitments', () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
       client.commitments.search(
-        'orgId',
         {
+          orgId: 'orgId',
           fromDocument: 0,
           operator: 'AND',
           pageSize: 1,
