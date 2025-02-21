@@ -472,7 +472,8 @@ export class M3ter extends Core.APIClient {
   // This is the earliest async hook we have to obtain a token, before the `authHeaders` is called
   // on the request.
   protected override async prepareOptions(options: Core.FinalRequestOptions): Promise<void> {
-    const tokenValid = !!this.token && this.tokenExpiry && this.tokenExpiry > new Date();
+    // When manually setting the token we won't have a `tokenExpiry` so consider that valid.
+    const tokenValid = !!this.token && (!this.tokenExpiry || this.tokenExpiry > new Date());
 
     // Prevent infinite loop of token requests.
     if (!tokenValid && !options.path.endsWith('/oauth/token')) {
