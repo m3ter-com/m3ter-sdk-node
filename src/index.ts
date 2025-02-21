@@ -338,6 +338,8 @@ export class M3ter extends Core.APIClient {
   token: string | null;
   orgId: string;
 
+  tokenExpiry: Date | undefined;
+
   private _options: ClientOptions;
 
   /**
@@ -470,14 +472,22 @@ export class M3ter extends Core.APIClient {
   // This is the earliest async hook we have to obtain a token, before the `authHeaders` is called
   // on the request.
   protected override async prepareOptions(options: Core.FinalRequestOptions): Promise<void> {
+    // When manually setting the token we won't have a `tokenExpiry` so consider that valid.
+    const tokenValid = !!this.token && (!this.tokenExpiry || this.tokenExpiry > new Date());
+
     // Prevent infinite loop of token requests.
-    if (!this.token && !options.path.endsWith('/oauth/token')) {
+    if (!tokenValid && !options.path.endsWith('/oauth/token')) {
       const auth = Core.toBase64(`${this.apiKey}:${this.apiSecret}`);
       const token = await this.authentication.getBearerToken(
         { grant_type: 'client_credentials' },
         { headers: { authorization: `Basic ${auth}` } },
       );
+
       this.token = token.access_token;
+
+      // Store token expiry (minus 5 minutes) for automatic refreshing.
+      const now = new Date();
+      this.tokenExpiry = new Date(now.getTime() + token.expires_in * 1000 - 300000);
     }
   }
 
