@@ -11,15 +11,9 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource compoundAggregations', () => {
+describe('resource planGroupLinks', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.compoundAggregations.create({
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-    });
+    const responsePromise = client.planGroupLinks.create({ planGroupId: 'x', planId: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -30,24 +24,16 @@ describe('resource compoundAggregations', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.compoundAggregations.create({
+    const response = await client.planGroupLinks.create({
       orgId: 'orgId',
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      planGroupId: 'x',
+      planId: 'x',
       version: 0,
     });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.compoundAggregations.retrieve('id');
+    const responsePromise = client.planGroupLinks.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,31 +44,25 @@ describe('resource compoundAggregations', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.compoundAggregations.retrieve('id', { orgId: 'orgId' });
+    const response = await client.planGroupLinks.retrieve('id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.retrieve('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.planGroupLinks.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.planGroupLinks.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.compoundAggregations.update('id', {
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-    });
+    const responsePromise = client.planGroupLinks.update('id', { planGroupId: 'x', planId: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -93,24 +73,16 @@ describe('resource compoundAggregations', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.compoundAggregations.update('id', {
+    const response = await client.planGroupLinks.update('id', {
       orgId: 'orgId',
-      calculation: 'x',
-      name: 'x',
-      quantityPerUnit: 1,
-      rounding: 'UP',
-      unit: 'x',
-      accountingProductId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      code: 'example_code',
-      customFields: { foo: 'string' },
-      evaluateNullAggregations: true,
-      productId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      planGroupId: 'x',
+      planId: 'x',
       version: 0,
     });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.compoundAggregations.list();
+    const responsePromise = client.planGroupLinks.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -121,19 +93,19 @@ describe('resource compoundAggregations', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.compoundAggregations.list({
+    const response = await client.planGroupLinks.list({
       orgId: 'orgId',
-      codes: ['string'],
       ids: ['string'],
       nextToken: 'nextToken',
       pageSize: 1,
-      productId: ['string'],
+      plan: 'plan',
+      planGroup: 'planGroup',
     });
   });
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.compoundAggregations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.planGroupLinks.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -141,14 +113,14 @@ describe('resource compoundAggregations', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.list(
+      client.planGroupLinks.list(
         {
           orgId: 'orgId',
-          codes: ['string'],
           ids: ['string'],
           nextToken: 'nextToken',
           pageSize: 1,
-          productId: ['string'],
+          plan: 'plan',
+          planGroup: 'planGroup',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -156,7 +128,7 @@ describe('resource compoundAggregations', () => {
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.compoundAggregations.delete('id');
+    const responsePromise = client.planGroupLinks.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -167,20 +139,20 @@ describe('resource compoundAggregations', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.compoundAggregations.delete('id', { orgId: 'orgId' });
+    const response = await client.planGroupLinks.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.compoundAggregations.delete('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.planGroupLinks.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.compoundAggregations.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.planGroupLinks.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

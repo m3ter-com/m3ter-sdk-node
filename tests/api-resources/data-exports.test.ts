@@ -11,9 +11,12 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource authentication', () => {
-  test('getBearerToken: only required params', async () => {
-    const responsePromise = client.authentication.getBearerToken({ grant_type: 'client_credentials' });
+describe('resource dataExports', () => {
+  test('createAdhoc: only required params', async () => {
+    const responsePromise = client.dataExports.createAdhoc({
+      operationalDataTypes: ['BILLS'],
+      sourceType: 'USAGE',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -23,10 +26,12 @@ describe('resource authentication', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('getBearerToken: required and optional params', async () => {
-    const response = await client.authentication.getBearerToken({
-      grant_type: 'client_credentials',
-      scope: 'scope',
+  test('createAdhoc: required and optional params', async () => {
+    const response = await client.dataExports.createAdhoc({
+      orgId: 'orgId',
+      operationalDataTypes: ['BILLS'],
+      sourceType: 'USAGE',
+      version: 0,
     });
   });
 });

@@ -36,14 +36,25 @@ export class Meters extends APIResource {
    *
    * - [Reviewing Meter Options](https://www.m3ter.com/docs/guides/setting-up-usage-data-meters-and-aggregations/reviewing-meter-options).
    */
-  create(orgId: string, body: MeterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+  create(params: MeterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/meters`, { body, ...options });
   }
 
   /**
    * Retrieve the Meter with the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+  retrieve(id: string, params?: MeterRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  retrieve(
+    id: string,
+    params: MeterRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Meter> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/meters/${id}`, options);
   }
 
@@ -54,33 +65,42 @@ export class Meters extends APIResource {
    * endpoint to update the Meter use the `customFields` parameter to preserve those
    * Custom Fields. If you omit them from the update request, they will be lost.
    */
-  update(
-    orgId: string,
-    id: string,
-    body: MeterUpdateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Meter> {
+  update(id: string, params: MeterUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/meters/${id}`, { body, ...options });
   }
 
   /**
    * Retrieve a list of Meter entities
    */
+  list(params?: MeterListParams, options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
+  list(options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
   list(
-    orgId: string,
-    query?: MeterListParams,
-    options?: Core.RequestOptions,
-  ): Core.PagePromise<MetersCursor, Meter>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
-  list(
-    orgId: string,
-    query: MeterListParams | Core.RequestOptions = {},
+    params: MeterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<MetersCursor, Meter> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/meters`, MetersCursor, { query, ...options });
+  }
+
+  /**
+   * Delete the Meter with the given UUID.
+   */
+  delete(id: string, params?: MeterDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  delete(
+    id: string,
+    params: MeterDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Meter> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
+    return this._client.delete(`/organizations/${orgId}/meters/${id}`, options);
   }
 }
 
@@ -124,7 +144,7 @@ export interface Meter {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
    * Used to submit categorized raw usage data values for ingest into the platform -
@@ -238,7 +258,13 @@ export namespace Meter {
 
 export interface MeterCreateParams {
   /**
-   * Code of the Meter - unique short code used to identify the Meter.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Code of the Meter - unique short code used to identify the Meter.
    *
    * **NOTE:** Code has a maximum length of 80 characters and must not contain
    * non-printable or whitespace characters (except space), and cannot start/end with
@@ -247,17 +273,17 @@ export interface MeterCreateParams {
   code: string;
 
   /**
-   * Used to submit categorized raw usage data values for ingest into the platform -
-   * either numeric quantitative values or non-numeric data values. At least one
-   * required per Meter; maximum 15 per Meter.
+   * Body param: Used to submit categorized raw usage data values for ingest into the
+   * platform - either numeric quantitative values or non-numeric data values. At
+   * least one required per Meter; maximum 15 per Meter.
    */
   dataFields: Array<MeterCreateParams.DataField>;
 
   /**
-   * Used to submit usage data values for ingest into the platform that are the
-   * result of a calculation performed on `dataFields`, `customFields`, or system
-   * `Timestamp` fields. Raw usage data is not submitted using `derivedFields`.
-   * Maximum 15 per Meter. _(Optional)_.
+   * Body param: Used to submit usage data values for ingest into the platform that
+   * are the result of a calculation performed on `dataFields`, `customFields`, or
+   * system `Timestamp` fields. Raw usage data is not submitted using
+   * `derivedFields`. Maximum 15 per Meter. _(Optional)_.
    *
    * **Note:** Required parameter. If you want to create a Meter without Derived
    * Fields, use an empty array `[]`. If you use a `null`, you'll receive an error.
@@ -265,13 +291,13 @@ export interface MeterCreateParams {
   derivedFields: Array<MeterCreateParams.DerivedField>;
 
   /**
-   * Descriptive name for the Meter.
+   * Body param: Descriptive name for the Meter.
    */
   name: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -281,21 +307,21 @@ export interface MeterCreateParams {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
-   * UUID of the group the Meter belongs to. _(Optional)_.
+   * Body param: UUID of the group the Meter belongs to. _(Optional)_.
    */
   groupId?: string;
 
   /**
-   * UUID of the product the Meter belongs to. _(Optional)_ - if left blank, the
-   * Meter is global.
+   * Body param: UUID of the product the Meter belongs to. _(Optional)_ - if left
+   * blank, the Meter is global.
    */
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -370,9 +396,23 @@ export namespace MeterCreateParams {
   }
 }
 
+export interface MeterRetrieveParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface MeterUpdateParams {
   /**
-   * Code of the Meter - unique short code used to identify the Meter.
+   * Path param: UUID of the organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Code of the Meter - unique short code used to identify the Meter.
    *
    * **NOTE:** Code has a maximum length of 80 characters and must not contain
    * non-printable or whitespace characters (except space), and cannot start/end with
@@ -381,17 +421,17 @@ export interface MeterUpdateParams {
   code: string;
 
   /**
-   * Used to submit categorized raw usage data values for ingest into the platform -
-   * either numeric quantitative values or non-numeric data values. At least one
-   * required per Meter; maximum 15 per Meter.
+   * Body param: Used to submit categorized raw usage data values for ingest into the
+   * platform - either numeric quantitative values or non-numeric data values. At
+   * least one required per Meter; maximum 15 per Meter.
    */
   dataFields: Array<MeterUpdateParams.DataField>;
 
   /**
-   * Used to submit usage data values for ingest into the platform that are the
-   * result of a calculation performed on `dataFields`, `customFields`, or system
-   * `Timestamp` fields. Raw usage data is not submitted using `derivedFields`.
-   * Maximum 15 per Meter. _(Optional)_.
+   * Body param: Used to submit usage data values for ingest into the platform that
+   * are the result of a calculation performed on `dataFields`, `customFields`, or
+   * system `Timestamp` fields. Raw usage data is not submitted using
+   * `derivedFields`. Maximum 15 per Meter. _(Optional)_.
    *
    * **Note:** Required parameter. If you want to create a Meter without Derived
    * Fields, use an empty array `[]`. If you use a `null`, you'll receive an error.
@@ -399,13 +439,13 @@ export interface MeterUpdateParams {
   derivedFields: Array<MeterUpdateParams.DerivedField>;
 
   /**
-   * Descriptive name for the Meter.
+   * Body param: Descriptive name for the Meter.
    */
   name: string;
 
   /**
-   * User defined fields enabling you to attach custom data. The value for a custom
-   * field can be either a string or a number.
+   * Body param: User defined fields enabling you to attach custom data. The value
+   * for a custom field can be either a string or a number.
    *
    * If `customFields` can also be defined for this entity at the Organizational
    * level, `customField` values defined at individual level override values of
@@ -415,21 +455,21 @@ export interface MeterUpdateParams {
    * [Working with Custom Fields](https://www.m3ter.com/docs/guides/creating-and-managing-products/working-with-custom-fields)
    * in the m3ter documentation for more information.
    */
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
 
   /**
-   * UUID of the group the Meter belongs to. _(Optional)_.
+   * Body param: UUID of the group the Meter belongs to. _(Optional)_.
    */
   groupId?: string;
 
   /**
-   * UUID of the product the Meter belongs to. _(Optional)_ - if left blank, the
-   * Meter is global.
+   * Body param: UUID of the product the Meter belongs to. _(Optional)_ - if left
+   * blank, the Meter is global.
    */
   productId?: string;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -506,19 +546,32 @@ export namespace MeterUpdateParams {
 
 export interface MeterListParams extends CursorParams {
   /**
-   * list of codes to retrieve
+   * Path param: UUID of the organization
+   */
+  orgId?: string;
+
+  /**
+   * Query param: list of codes to retrieve
    */
   codes?: Array<string>;
 
   /**
-   * list of ids to retrieve
+   * Query param: list of ids to retrieve
    */
   ids?: Array<string>;
 
   /**
-   * The UUIDs of the products to retrieve meters for
+   * Query param: The UUIDs of the products to retrieve meters for
    */
   productId?: Array<string>;
+}
+
+export interface MeterDeleteParams {
+  /**
+   * UUID of the organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 Meters.MetersCursor = MetersCursor;
@@ -528,7 +581,9 @@ export declare namespace Meters {
     type Meter as Meter,
     MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
+    type MeterRetrieveParams as MeterRetrieveParams,
     type MeterUpdateParams as MeterUpdateParams,
     type MeterListParams as MeterListParams,
+    type MeterDeleteParams as MeterDeleteParams,
   };
 }

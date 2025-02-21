@@ -9,18 +9,29 @@ export class Aggregations extends APIResource {
   /**
    * Create a new Aggregation.
    */
-  create(
-    orgId: string,
-    body: AggregationCreateParams,
-    options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation> {
+  create(params: AggregationCreateParams, options?: Core.RequestOptions): Core.APIPromise<Aggregation> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/aggregations`, { body, ...options });
   }
 
   /**
    * Retrieve the Aggregation with the given UUID.
    */
-  retrieve(orgId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation> {
+  retrieve(
+    id: string,
+    params?: AggregationRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Aggregation>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation>;
+  retrieve(
+    id: string,
+    params: AggregationRetrieveParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Aggregation> {
+    if (isRequestOptions(params)) {
+      return this.retrieve(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
     return this._client.get(`/organizations/${orgId}/aggregations/${id}`, options);
   }
 
@@ -33,11 +44,11 @@ export class Aggregations extends APIResource {
    * will be lost.
    */
   update(
-    orgId: string,
     id: string,
-    body: AggregationUpdateParams,
+    params: AggregationUpdateParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Aggregation> {
+    const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/aggregations/${id}`, { body, ...options });
   }
 
@@ -46,23 +57,43 @@ export class Aggregations extends APIResource {
    * or Code.
    */
   list(
-    orgId: string,
-    query?: AggregationListParams,
+    params?: AggregationListParams,
     options?: Core.RequestOptions,
   ): Core.PagePromise<AggregationsCursor, Aggregation>;
-  list(orgId: string, options?: Core.RequestOptions): Core.PagePromise<AggregationsCursor, Aggregation>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AggregationsCursor, Aggregation>;
   list(
-    orgId: string,
-    query: AggregationListParams | Core.RequestOptions = {},
+    params: AggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.PagePromise<AggregationsCursor, Aggregation> {
-    if (isRequestOptions(query)) {
-      return this.list(orgId, {}, query);
+    if (isRequestOptions(params)) {
+      return this.list({}, params);
     }
+    const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(`/organizations/${orgId}/aggregations`, AggregationsCursor, {
       query,
       ...options,
     });
+  }
+
+  /**
+   * Delete the Aggregation with the given UUID.
+   */
+  delete(
+    id: string,
+    params?: AggregationDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Aggregation>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation>;
+  delete(
+    id: string,
+    params: AggregationDeleteParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<Aggregation> {
+    if (isRequestOptions(params)) {
+      return this.delete(id, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
+    return this._client.delete(`/organizations/${orgId}/aggregations/${id}`, options);
   }
 }
 
@@ -83,6 +114,8 @@ export interface Aggregation {
    *   response.
    */
   version: number;
+
+  accountingProductId?: string;
 
   /**
    * Specifies the computation method applied to usage data collected in
@@ -126,7 +159,9 @@ export interface Aggregation {
    */
   createdBy?: string;
 
-  customFields?: Record<string, unknown>;
+  customFields?: Record<string, string | number>;
+
+  customSql?: string;
 
   /**
    * Aggregation value used when no usage data is available to be aggregated.
@@ -234,7 +269,13 @@ export interface Aggregation {
 
 export interface AggregationCreateParams {
   /**
-   * Specifies the computation method applied to usage data collected in
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Specifies the computation method applied to usage data collected in
    * `targetField`. Aggregation unit value depends on the **Category** configured for
    * the selected targetField.
    *
@@ -266,22 +307,23 @@ export interface AggregationCreateParams {
   aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE';
 
   /**
-   * The UUID of the Meter used as the source of usage data for the Aggregation.
+   * Body param: The UUID of the Meter used as the source of usage data for the
+   * Aggregation.
    *
    * Each Aggregation is a child of a Meter, so the Meter must be selected.
    */
   meterId: string;
 
   /**
-   * Descriptive name for the Aggregation.
+   * Body param: Descriptive name for the Aggregation.
    */
   name: string;
 
   /**
-   * Defines how much of a quantity equates to 1 unit. Used when setting the price
-   * per unit for billing purposes - if charging for kilobytes per second (KiBy/s) at
-   * rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and price Plan at
-   * $0.25 per unit.
+   * Body param: Defines how much of a quantity equates to 1 unit. Used when setting
+   * the price per unit for billing purposes - if charging for kilobytes per second
+   * (KiBy/s) at rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and
+   * price Plan at $0.25 per unit.
    *
    * **Note:** If `quantityPerUnit` is set to a value other than one, `rounding` is
    * typically set to `"UP"`.
@@ -289,8 +331,8 @@ export interface AggregationCreateParams {
   quantityPerUnit: number;
 
   /**
-   * Specifies how you want to deal with non-integer, fractional number Aggregation
-   * values.
+   * Body param: Specifies how you want to deal with non-integer, fractional number
+   * Aggregation values.
    *
    * **NOTES:**
    *
@@ -309,27 +351,42 @@ export interface AggregationCreateParams {
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
   /**
-   * `Code` of the target `dataField` or `derivedField` on the Meter used as the
-   * basis for the Aggregation.
+   * Body param: `Code` of the target `dataField` or `derivedField` on the Meter used
+   * as the basis for the Aggregation.
    */
   targetField: string;
 
   /**
-   * User defined label for units shown for Bill line items, indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown for Bill line items, indicating
+   * to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Code of the new Aggregation. A unique short code to identify the Aggregation.
+   * Body param: Optional Product ID this Aggregation should be attributed to for
+   * accounting purposes
+   */
+  accountingProductId?: string;
+
+  /**
+   * Body param: Code of the new Aggregation. A unique short code to identify the
+   * Aggregation.
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  /**
+   * Body param:
+   */
+  customFields?: Record<string, string | number>;
 
   /**
-   * Aggregation value used when no usage data is available to be aggregated.
-   * _(Optional)_.
+   * Body param:
+   */
+  customSql?: string;
+
+  /**
+   * Body param: Aggregation value used when no usage data is available to be
+   * aggregated. _(Optional)_.
    *
    * **Note:** Set to 0, if you expect to reference the Aggregation in a Compound
    * Aggregation. This ensures that any null values are passed in correctly to the
@@ -338,8 +395,9 @@ export interface AggregationCreateParams {
   defaultValue?: number;
 
   /**
-   * _(Optional)_. Used when creating a segmented Aggregation, which segments the
-   * usage data collected by a single Meter. Works together with `segments`.
+   * Body param: _(Optional)_. Used when creating a segmented Aggregation, which
+   * segments the usage data collected by a single Meter. Works together with
+   * `segments`.
    *
    * Enter the `Codes` of the fields in the target Meter to use for segmentation
    * purposes.
@@ -351,8 +409,9 @@ export interface AggregationCreateParams {
   segmentedFields?: Array<string>;
 
   /**
-   * _(Optional)_. Used when creating a segmented Aggregation, which segments the
-   * usage data collected by a single Meter. Works together with `segmentedFields`.
+   * Body param: _(Optional)_. Used when creating a segmented Aggregation, which
+   * segments the usage data collected by a single Meter. Works together with
+   * `segmentedFields`.
    *
    * Enter the values that are to be used as the segments, read from the fields in
    * the meter pointed at by `segmentedFields`.
@@ -365,7 +424,7 @@ export interface AggregationCreateParams {
   segments?: Array<Record<string, string>>;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -377,9 +436,23 @@ export interface AggregationCreateParams {
   version?: number;
 }
 
+export interface AggregationRetrieveParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
+}
+
 export interface AggregationUpdateParams {
   /**
-   * Specifies the computation method applied to usage data collected in
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Specifies the computation method applied to usage data collected in
    * `targetField`. Aggregation unit value depends on the **Category** configured for
    * the selected targetField.
    *
@@ -411,22 +484,23 @@ export interface AggregationUpdateParams {
   aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE';
 
   /**
-   * The UUID of the Meter used as the source of usage data for the Aggregation.
+   * Body param: The UUID of the Meter used as the source of usage data for the
+   * Aggregation.
    *
    * Each Aggregation is a child of a Meter, so the Meter must be selected.
    */
   meterId: string;
 
   /**
-   * Descriptive name for the Aggregation.
+   * Body param: Descriptive name for the Aggregation.
    */
   name: string;
 
   /**
-   * Defines how much of a quantity equates to 1 unit. Used when setting the price
-   * per unit for billing purposes - if charging for kilobytes per second (KiBy/s) at
-   * rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and price Plan at
-   * $0.25 per unit.
+   * Body param: Defines how much of a quantity equates to 1 unit. Used when setting
+   * the price per unit for billing purposes - if charging for kilobytes per second
+   * (KiBy/s) at rate of $0.25 per 500 KiBy/s, then set quantityPerUnit to 500 and
+   * price Plan at $0.25 per unit.
    *
    * **Note:** If `quantityPerUnit` is set to a value other than one, `rounding` is
    * typically set to `"UP"`.
@@ -434,8 +508,8 @@ export interface AggregationUpdateParams {
   quantityPerUnit: number;
 
   /**
-   * Specifies how you want to deal with non-integer, fractional number Aggregation
-   * values.
+   * Body param: Specifies how you want to deal with non-integer, fractional number
+   * Aggregation values.
    *
    * **NOTES:**
    *
@@ -454,27 +528,42 @@ export interface AggregationUpdateParams {
   rounding: 'UP' | 'DOWN' | 'NEAREST' | 'NONE';
 
   /**
-   * `Code` of the target `dataField` or `derivedField` on the Meter used as the
-   * basis for the Aggregation.
+   * Body param: `Code` of the target `dataField` or `derivedField` on the Meter used
+   * as the basis for the Aggregation.
    */
   targetField: string;
 
   /**
-   * User defined label for units shown for Bill line items, indicating to your
-   * customers what they are being charged for.
+   * Body param: User defined label for units shown for Bill line items, indicating
+   * to your customers what they are being charged for.
    */
   unit: string;
 
   /**
-   * Code of the new Aggregation. A unique short code to identify the Aggregation.
+   * Body param: Optional Product ID this Aggregation should be attributed to for
+   * accounting purposes
+   */
+  accountingProductId?: string;
+
+  /**
+   * Body param: Code of the new Aggregation. A unique short code to identify the
+   * Aggregation.
    */
   code?: string;
 
-  customFields?: Record<string, unknown>;
+  /**
+   * Body param:
+   */
+  customFields?: Record<string, string | number>;
 
   /**
-   * Aggregation value used when no usage data is available to be aggregated.
-   * _(Optional)_.
+   * Body param:
+   */
+  customSql?: string;
+
+  /**
+   * Body param: Aggregation value used when no usage data is available to be
+   * aggregated. _(Optional)_.
    *
    * **Note:** Set to 0, if you expect to reference the Aggregation in a Compound
    * Aggregation. This ensures that any null values are passed in correctly to the
@@ -483,8 +572,9 @@ export interface AggregationUpdateParams {
   defaultValue?: number;
 
   /**
-   * _(Optional)_. Used when creating a segmented Aggregation, which segments the
-   * usage data collected by a single Meter. Works together with `segments`.
+   * Body param: _(Optional)_. Used when creating a segmented Aggregation, which
+   * segments the usage data collected by a single Meter. Works together with
+   * `segments`.
    *
    * Enter the `Codes` of the fields in the target Meter to use for segmentation
    * purposes.
@@ -496,8 +586,9 @@ export interface AggregationUpdateParams {
   segmentedFields?: Array<string>;
 
   /**
-   * _(Optional)_. Used when creating a segmented Aggregation, which segments the
-   * usage data collected by a single Meter. Works together with `segmentedFields`.
+   * Body param: _(Optional)_. Used when creating a segmented Aggregation, which
+   * segments the usage data collected by a single Meter. Works together with
+   * `segmentedFields`.
    *
    * Enter the values that are to be used as the segments, read from the fields in
    * the meter pointed at by `segmentedFields`.
@@ -510,7 +601,7 @@ export interface AggregationUpdateParams {
   segments?: Array<Record<string, string>>;
 
   /**
-   * The version number of the entity:
+   * Body param: The version number of the entity:
    *
    * - **Create entity:** Not valid for initial insertion of new entity - _do not use
    *   for Create_. On initial Create, version is set at 1 and listed in the
@@ -524,20 +615,34 @@ export interface AggregationUpdateParams {
 
 export interface AggregationListParams extends CursorParams {
   /**
-   * List of Aggregation codes to retrieve. These are unique short codes to identify
-   * each Aggregation.
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
+   */
+  orgId?: string;
+
+  /**
+   * Query param: List of Aggregation codes to retrieve. These are unique short codes
+   * to identify each Aggregation.
    */
   codes?: Array<string>;
 
   /**
-   * List of Aggregation IDs to retrieve.
+   * Query param: List of Aggregation IDs to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * The UUIDs of the Products to retrieve Aggregations for.
+   * Query param: The UUIDs of the Products to retrieve Aggregations for.
    */
   productId?: Array<string>;
+}
+
+export interface AggregationDeleteParams {
+  /**
+   * UUID of the Organization. The Organization represents your company as a direct
+   * customer of the m3ter service.
+   */
+  orgId?: string;
 }
 
 Aggregations.AggregationsCursor = AggregationsCursor;
@@ -547,7 +652,9 @@ export declare namespace Aggregations {
     type Aggregation as Aggregation,
     AggregationsCursor as AggregationsCursor,
     type AggregationCreateParams as AggregationCreateParams,
+    type AggregationRetrieveParams as AggregationRetrieveParams,
     type AggregationUpdateParams as AggregationUpdateParams,
     type AggregationListParams as AggregationListParams,
+    type AggregationDeleteParams as AggregationDeleteParams,
   };
 }
