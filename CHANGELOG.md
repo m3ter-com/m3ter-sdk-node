@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2025-02-21)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* feat: add OAuth token refreshing ([#22](https://github.com/m3ter-com/m3ter-sdk-node/issues/22)) ([39b8427](https://github.com/m3ter-com/m3ter-sdk-node/commit/39b8427ac11f4162d6b79dccc64122bf737a1702))
+
 ## 0.1.0-alpha.2 (2025-02-20)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
