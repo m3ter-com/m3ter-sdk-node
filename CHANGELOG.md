@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.4 (2025-02-24)
+
+Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
+
+### Chores
+
+* **internal:** fix devcontainers setup ([#25](https://github.com/m3ter-com/m3ter-sdk-node/issues/25)) ([3860f65](https://github.com/m3ter-com/m3ter-sdk-node/commit/3860f65cd2a08a2bcac7bfeed76a2e3983281b6c))
+
+
+### Documentation
+
+* remove redundant params from readme ([#27](https://github.com/m3ter-com/m3ter-sdk-node/issues/27)) ([507f7bd](https://github.com/m3ter-com/m3ter-sdk-node/commit/507f7bd4d5741df6072e12f942fccdf630e02e72))
+
 ## 0.1.0-alpha.3 (2025-02-21)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
