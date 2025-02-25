@@ -77,22 +77,22 @@ export class Users extends APIResource {
    * Retrieves a list of all permissions associated with a specific user in an
    * Organization using their UUID. The list can be paginated for easier management.
    */
-  listPermissions(
+  getPermissions(
     id: string,
-    params?: UserListPermissionsParams,
+    params?: UserGetPermissionsParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy>;
-  listPermissions(
+  getPermissions(
     id: string,
     options?: Core.RequestOptions,
   ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy>;
-  listPermissions(
+  getPermissions(
     id: string,
-    params: UserListPermissionsParams | Core.RequestOptions = {},
+    params: UserGetPermissionsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy> {
     if (isRequestOptions(params)) {
-      return this.listPermissions(id, {}, params);
+      return this.getPermissions(id, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/users/${id}/permissions`, { query, ...options });
@@ -125,19 +125,19 @@ export class Users extends APIResource {
    *   - If `inherited = FALSE`, then only those User Resource Groups to which the
    *     user belongs are returned.
    */
-  listUserGroups(
+  getUserGroups(
     id: string,
-    params?: UserListUserGroupsParams,
+    params?: UserGetUserGroupsParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<ResourceGroupsAPI.ResourceGroup>;
-  listUserGroups(id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroupsAPI.ResourceGroup>;
-  listUserGroups(
+  getUserGroups(id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroupsAPI.ResourceGroup>;
+  getUserGroups(
     id: string,
-    params: UserListUserGroupsParams | Core.RequestOptions = {},
+    params: UserGetUserGroupsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<ResourceGroupsAPI.ResourceGroup> {
     if (isRequestOptions(params)) {
-      return this.listUserGroups(id, {}, params);
+      return this.getUserGroups(id, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/users/${id}/usergroups`, { query, ...options });
@@ -631,7 +631,7 @@ export interface UserListParams extends CursorParams {
   ids?: Array<string>;
 }
 
-export interface UserListPermissionsParams {
+export interface UserGetPermissionsParams {
   /**
    * Path param: The unique identifier (UUID) of your Organization. The Organization
    * represents your company as a direct customer of our service.
@@ -651,7 +651,7 @@ export interface UserListPermissionsParams {
   pageSize?: number;
 }
 
-export interface UserListUserGroupsParams {
+export interface UserGetUserGroupsParams {
   /**
    * Path param: The unique identifier (UUID) of your Organization. The Organization
    * represents your company as a direct customer of our service.
@@ -697,8 +697,8 @@ export declare namespace Users {
     type UserRetrieveParams as UserRetrieveParams,
     type UserUpdateParams as UserUpdateParams,
     type UserListParams as UserListParams,
-    type UserListPermissionsParams as UserListPermissionsParams,
-    type UserListUserGroupsParams as UserListUserGroupsParams,
+    type UserGetPermissionsParams as UserGetPermissionsParams,
+    type UserGetUserGroupsParams as UserGetUserGroupsParams,
     type UserMeParams as UserMeParams,
     type UserResendPasswordParams as UserResendPasswordParams,
   };

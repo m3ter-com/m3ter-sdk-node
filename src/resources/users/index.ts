@@ -16,8 +16,8 @@ export {
   type UserRetrieveParams,
   type UserUpdateParams,
   type UserListParams,
-  type UserListPermissionsParams,
-  type UserListUserGroupsParams,
+  type UserGetPermissionsParams,
+  type UserGetUserGroupsParams,
   type UserMeParams,
   type UserResendPasswordParams,
 } from './users';
