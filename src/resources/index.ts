@@ -14,12 +14,14 @@ export {
   AccountsCursor,
   Accounts,
   type Account,
+  type AccountEndDateBillingEntitiesResponse,
   type AccountSearchResponse,
   type AccountCreateParams,
   type AccountRetrieveParams,
   type AccountUpdateParams,
   type AccountListParams,
   type AccountDeleteParams,
+  type AccountEndDateBillingEntitiesParams,
   type AccountListChildrenParams,
   type AccountSearchParams,
 } from './accounts';
@@ -55,6 +57,31 @@ export {
   type BillConfigUpdateParams,
 } from './bill-config';
 export {
+  BillJobsCursor,
+  BillJobs,
+  type BillJob,
+  type BillJobCreateParams,
+  type BillJobRetrieveParams,
+  type BillJobListParams,
+  type BillJobCancelParams,
+  type BillJobRecalculateParams,
+} from './bill-jobs';
+export {
+  BillsCursor,
+  Bills,
+  type Bill,
+  type BillApproveResponse,
+  type BillSearchResponse,
+  type BillRetrieveParams,
+  type BillListParams,
+  type BillDeleteParams,
+  type BillApproveParams,
+  type BillLatestByAccountParams,
+  type BillLockParams,
+  type BillSearchParams,
+  type BillUpdateStatusParams,
+} from './bills/bills';
+export {
   CommitmentsCursor,
   Commitments,
   type Commitment,
@@ -80,11 +107,13 @@ export {
   ContractsCursor,
   Contracts,
   type Contract,
+  type ContractEndDateBillingEntitiesResponse,
   type ContractCreateParams,
   type ContractRetrieveParams,
   type ContractUpdateParams,
   type ContractListParams,
   type ContractDeleteParams,
+  type ContractEndDateBillingEntitiesParams,
 } from './contracts';
 export {
   CounterAdjustmentsCursor,
@@ -136,13 +165,14 @@ export {
   type CurrencyListParams,
   type CurrencyDeleteParams,
 } from './currencies';
+export { CustomFields, type CustomFieldRetrieveParams, type CustomFieldUpdateParams } from './custom-fields';
 export {
   DataExports,
   type AdhocExport,
   type AdHocOperationalDataRequest,
   type AdHocUsageDataRequest,
   type DataExportCreateAdhocParams,
-} from './data-exports';
+} from './data-exports/data-exports';
 export {
   DebitReasonsCursor,
   DebitReasons,
@@ -154,6 +184,48 @@ export {
   type DebitReasonDeleteParams,
 } from './debit-reasons';
 export {
+  EventsCursor,
+  Events,
+  type Event,
+  type EventGetFieldsResponse,
+  type EventGetTypesResponse,
+  type EventRetrieveParams,
+  type EventListParams,
+  type EventGetFieldsParams,
+  type EventGetTypesParams,
+} from './events';
+export {
+  ExternalMappingsCursor,
+  ExternalMappings,
+  type ExternalMapping,
+  type ExternalMappingListByExternalEntityResponse,
+  type ExternalMappingListByM3terEntityResponse,
+  type ExternalMappingCreateParams,
+  type ExternalMappingRetrieveParams,
+  type ExternalMappingUpdateParams,
+  type ExternalMappingListParams,
+  type ExternalMappingDeleteParams,
+  type ExternalMappingListByExternalEntityParams,
+  type ExternalMappingListByM3terEntityParams,
+} from './external-mappings';
+export {
+  IntegrationConfigurationListResponsesCursor,
+  IntegrationConfigurations,
+  type IntegrationConfiguration,
+  type IntegrationConfigurationCreateResponse,
+  type IntegrationConfigurationUpdateResponse,
+  type IntegrationConfigurationListResponse,
+  type IntegrationConfigurationDeleteResponse,
+  type IntegrationConfigurationEnableResponse,
+  type IntegrationConfigurationCreateParams,
+  type IntegrationConfigurationRetrieveParams,
+  type IntegrationConfigurationUpdateParams,
+  type IntegrationConfigurationListParams,
+  type IntegrationConfigurationDeleteParams,
+  type IntegrationConfigurationEnableParams,
+  type IntegrationConfigurationGetByEntityParams,
+} from './integration-configurations';
+export {
   MetersCursor,
   Meters,
   type Meter,
@@ -164,11 +236,47 @@ export {
   type MeterDeleteParams,
 } from './meters';
 export {
+  NotificationConfigurationsCursor,
+  NotificationConfigurations,
+  type NotificationConfiguration,
+  type NotificationConfigurationCreateParams,
+  type NotificationConfigurationRetrieveParams,
+  type NotificationConfigurationUpdateParams,
+  type NotificationConfigurationListParams,
+  type NotificationConfigurationDeleteParams,
+} from './notification-configurations';
+export {
   OrganizationConfigResource,
   type OrganizationConfig,
   type OrganizationConfigRetrieveParams,
   type OrganizationConfigUpdateParams,
 } from './organization-config';
+export {
+  PermissionPoliciesCursor,
+  PermissionPolicies,
+  type PermissionPolicy,
+  type PermissionPolicyAddToServiceUserResponse,
+  type PermissionPolicyAddToSupportUserResponse,
+  type PermissionPolicyAddToUserResponse,
+  type PermissionPolicyAddToUserGroupResponse,
+  type PermissionPolicyRemoveFromServiceUserResponse,
+  type PermissionPolicyRemoveFromSupportUserResponse,
+  type PermissionPolicyRemoveFromUserResponse,
+  type PermissionPolicyRemoveFromUserGroupResponse,
+  type PermissionPolicyCreateParams,
+  type PermissionPolicyRetrieveParams,
+  type PermissionPolicyUpdateParams,
+  type PermissionPolicyListParams,
+  type PermissionPolicyDeleteParams,
+  type PermissionPolicyAddToServiceUserParams,
+  type PermissionPolicyAddToSupportUserParams,
+  type PermissionPolicyAddToUserParams,
+  type PermissionPolicyAddToUserGroupParams,
+  type PermissionPolicyRemoveFromServiceUserParams,
+  type PermissionPolicyRemoveFromSupportUserParams,
+  type PermissionPolicyRemoveFromUserParams,
+  type PermissionPolicyRemoveFromUserGroupParams,
+} from './permission-policies';
 export {
   PlanGroupLinksCursor,
   PlanGroupLinks,
@@ -230,6 +338,32 @@ export {
   type ProductDeleteParams,
 } from './products';
 export {
+  ResourceGroupsCursor,
+  ResourceGroups,
+  type ResourceGroup,
+  type ResourceGroupListContentsResponse,
+  type ResourceGroupListPermissionsResponse,
+  type ResourceGroupCreateParams,
+  type ResourceGroupRetrieveParams,
+  type ResourceGroupUpdateParams,
+  type ResourceGroupListParams,
+  type ResourceGroupDeleteParams,
+  type ResourceGroupAddResourceParams,
+  type ResourceGroupListContentsParams,
+  type ResourceGroupListPermissionsParams,
+  type ResourceGroupRemoveResourceParams,
+} from './resource-groups';
+export {
+  ScheduledEventConfigurationsCursor,
+  ScheduledEventConfigurations,
+  type ScheduledEventConfiguration,
+  type ScheduledEventConfigurationCreateParams,
+  type ScheduledEventConfigurationRetrieveParams,
+  type ScheduledEventConfigurationUpdateParams,
+  type ScheduledEventConfigurationListParams,
+  type ScheduledEventConfigurationDeleteParams,
+} from './scheduled-event-configurations';
+export {
   TransactionTypesCursor,
   TransactionTypes,
   type TransactionType,
@@ -239,3 +373,39 @@ export {
   type TransactionTypeListParams,
   type TransactionTypeDeleteParams,
 } from './transaction-types';
+export {
+  Usage,
+  type DownloadURLResponse,
+  type SubmitMeasurementsResponse,
+  type UsageQueryResponse,
+  type UsageGetFailedIngestDownloadURLParams,
+  type UsageQueryParams,
+  type UsageSubmitParams,
+} from './usage/usage';
+export {
+  UsersCursor,
+  Users,
+  type User,
+  type UserMeResponse,
+  type UserRetrieveParams,
+  type UserUpdateParams,
+  type UserListParams,
+  type UserListPermissionsParams,
+  type UserListUserGroupsParams,
+  type UserMeParams,
+  type UserResendPasswordParams,
+} from './users/users';
+export {
+  WebhooksCursor,
+  Webhooks,
+  type Webhook,
+  type WebhookCreateResponse,
+  type WebhookUpdateResponse,
+  type WebhookSetActiveResponse,
+  type WebhookCreateParams,
+  type WebhookRetrieveParams,
+  type WebhookUpdateParams,
+  type WebhookListParams,
+  type WebhookDeleteParams,
+  type WebhookSetActiveParams,
+} from './webhooks';

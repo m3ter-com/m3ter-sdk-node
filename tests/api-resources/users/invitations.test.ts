@@ -11,9 +11,13 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource transactions', () => {
+describe('resource invitations', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.balances.transactions.create('balanceId', { amount: 0 });
+    const responsePromise = client.users.invitations.create({
+      email: 'dev@stainlessapi.com',
+      firstName: 'x',
+      lastName: 'x',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -24,21 +28,51 @@ describe('resource transactions', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.balances.transactions.create('balanceId', {
+    const response = await client.users.invitations.create({
       orgId: 'orgId',
-      amount: 0,
-      appliedDate: '2019-12-27T18:11:19.117Z',
-      currencyPaid: 'currencyPaid',
-      description: 'description',
-      paid: 0,
-      transactionDate: '2019-12-27T18:11:19.117Z',
-      transactionTypeId: 'transactionTypeId',
+      email: 'dev@stainlessapi.com',
+      firstName: 'x',
+      lastName: 'x',
+      contactNumber: 'contactNumber',
+      dtEndAccess: '2019-12-27T18:11:19.117Z',
+      dtExpiry: '2019-12-27T18:11:19.117Z',
+      m3terUser: true,
+      permissionPolicyIds: ['string'],
       version: 0,
     });
   });
 
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.users.invitations.retrieve('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieve: required and optional params', async () => {
+    const response = await client.users.invitations.retrieve('id', { orgId: 'orgId' });
+  });
+
+  test('retrieve: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.users.invitations.retrieve('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.users.invitations.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('list: only required params', async () => {
-    const responsePromise = client.balances.transactions.list('balanceId');
+    const responsePromise = client.users.invitations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,60 +83,25 @@ describe('resource transactions', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.balances.transactions.list('balanceId', {
+    const response = await client.users.invitations.list({
       orgId: 'orgId',
       nextToken: 'nextToken',
       pageSize: 1,
-      transactionTypeId: 'transactionTypeId',
     });
   });
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.balances.transactions.list('balanceId', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
+    await expect(client.users.invitations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
   });
 
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.balances.transactions.list(
-        'balanceId',
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1, transactionTypeId: 'transactionTypeId' },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('summary: only required params', async () => {
-    const responsePromise = client.balances.transactions.summary('balanceId');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('summary: required and optional params', async () => {
-    const response = await client.balances.transactions.summary('balanceId', { orgId: 'orgId' });
-  });
-
-  test('summary: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.balances.transactions.summary('balanceId', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('summary: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.balances.transactions.summary(
-        'balanceId',
-        { orgId: 'orgId' },
+      client.users.invitations.list(
+        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);

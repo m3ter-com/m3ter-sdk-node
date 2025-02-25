@@ -14,6 +14,8 @@ export {
   TransactionsCursor,
   Transactions,
   type Transaction,
+  type TransactionSummaryResponse,
   type TransactionCreateParams,
   type TransactionListParams,
+  type TransactionSummaryParams,
 } from './transactions';

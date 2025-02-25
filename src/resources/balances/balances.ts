@@ -8,6 +8,8 @@ import {
   Transaction,
   TransactionCreateParams,
   TransactionListParams,
+  TransactionSummaryParams,
+  TransactionSummaryResponse,
   Transactions,
   TransactionsCursor,
 } from './transactions';
@@ -598,8 +600,10 @@ export declare namespace Balances {
   export {
     Transactions as Transactions,
     type Transaction as Transaction,
+    type TransactionSummaryResponse as TransactionSummaryResponse,
     TransactionsCursor as TransactionsCursor,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
+    type TransactionSummaryParams as TransactionSummaryParams,
   };
 }

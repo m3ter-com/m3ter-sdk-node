@@ -11,13 +11,13 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource contracts', () => {
+describe('resource destinations', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.contracts.create({
-      accountId: 'x',
-      endDate: '2019-12-27',
+    const responsePromise = client.dataExports.destinations.create({
+      bucketName: 'xxx',
+      code: 'JS!?Q0]r] ]$]',
+      iamRoleArn: 'arn:aws:iam::321669910225:role/z',
       name: 'x',
-      startDate: '2019-12-27',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,22 +29,20 @@ describe('resource contracts', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.contracts.create({
+    const response = await client.dataExports.destinations.create({
       orgId: 'orgId',
-      accountId: 'x',
-      endDate: '2019-12-27',
-      name: 'x',
-      startDate: '2019-12-27',
+      bucketName: 'xxx',
       code: 'JS!?Q0]r] ]$]',
-      customFields: { foo: 'string' },
-      description: 'description',
-      purchaseOrderNumber: 'purchaseOrderNumber',
+      iamRoleArn: 'arn:aws:iam::321669910225:role/z',
+      name: 'x',
+      partitionOrder: 'TYPE_FIRST',
+      prefix: 'prefix',
       version: 0,
     });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.contracts.retrieve('id');
+    const responsePromise = client.dataExports.destinations.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,29 +53,33 @@ describe('resource contracts', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.contracts.retrieve('id', { orgId: 'orgId' });
+    const response = await client.dataExports.destinations.retrieve('id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.dataExports.destinations.retrieve('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.dataExports.destinations.retrieve(
+        'id',
+        { orgId: 'orgId' },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.contracts.update('id', {
-      accountId: 'x',
-      endDate: '2019-12-27',
+    const responsePromise = client.dataExports.destinations.update('id', {
+      bucketName: 'xxx',
+      code: 'JS!?Q0]r] ]$]',
+      iamRoleArn: 'arn:aws:iam::321669910225:role/z',
       name: 'x',
-      startDate: '2019-12-27',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -89,22 +91,20 @@ describe('resource contracts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.contracts.update('id', {
+    const response = await client.dataExports.destinations.update('id', {
       orgId: 'orgId',
-      accountId: 'x',
-      endDate: '2019-12-27',
-      name: 'x',
-      startDate: '2019-12-27',
+      bucketName: 'xxx',
       code: 'JS!?Q0]r] ]$]',
-      customFields: { foo: 'string' },
-      description: 'description',
-      purchaseOrderNumber: 'purchaseOrderNumber',
+      iamRoleArn: 'arn:aws:iam::321669910225:role/z',
+      name: 'x',
+      partitionOrder: 'TYPE_FIRST',
+      prefix: 'prefix',
       version: 0,
     });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.contracts.list();
+    const responsePromise = client.dataExports.destinations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -115,10 +115,8 @@ describe('resource contracts', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.contracts.list({
+    const response = await client.dataExports.destinations.list({
       orgId: 'orgId',
-      accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      codes: ['string'],
       ids: ['string'],
       nextToken: 'nextToken',
       pageSize: 1,
@@ -127,7 +125,7 @@ describe('resource contracts', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.dataExports.destinations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -135,22 +133,15 @@ describe('resource contracts', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.list(
-        {
-          orgId: 'orgId',
-          accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-          codes: ['string'],
-          ids: ['string'],
-          nextToken: 'nextToken',
-          pageSize: 1,
-        },
+      client.dataExports.destinations.list(
+        { orgId: 'orgId', ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.contracts.delete('id');
+    const responsePromise = client.dataExports.destinations.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -161,43 +152,20 @@ describe('resource contracts', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.contracts.delete('id', { orgId: 'orgId' });
+    const response = await client.dataExports.destinations.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.dataExports.destinations.delete('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.dataExports.destinations.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('endDateBillingEntities: only required params', async () => {
-    const responsePromise = client.contracts.endDateBillingEntities('id', {
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('endDateBillingEntities: required and optional params', async () => {
-    const response = await client.contracts.endDateBillingEntities('id', {
-      orgId: 'orgId',
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-      applyToChildren: true,
-    });
   });
 });

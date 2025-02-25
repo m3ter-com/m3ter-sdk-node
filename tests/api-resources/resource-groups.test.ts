@@ -11,13 +11,9 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource accounts', () => {
+describe('resource resourceGroups', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.accounts.create({
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-    });
+    const responsePromise = client.resourceGroups.create('type', { name: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -28,37 +24,11 @@ describe('resource accounts', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.accounts.create({
-      orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
-      configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
-      version: 0,
-    });
+    const response = await client.resourceGroups.create('type', { orgId: 'orgId', name: 'x', version: 0 });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.accounts.retrieve('id');
+    const responsePromise = client.resourceGroups.retrieve('type', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,29 +39,25 @@ describe('resource accounts', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.accounts.retrieve('id', { orgId: 'orgId' });
+    const response = await client.resourceGroups.retrieve('type', 'id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.resourceGroups.retrieve('type', 'id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.resourceGroups.retrieve('type', 'id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.accounts.update('id', {
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-    });
+    const responsePromise = client.resourceGroups.update('type', 'id', { name: 'x' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -102,37 +68,15 @@ describe('resource accounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.accounts.update('id', {
+    const response = await client.resourceGroups.update('type', 'id', {
       orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
       name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
-      configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
       version: 0,
     });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.accounts.list();
+    const responsePromise = client.resourceGroups.list('type');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -143,10 +87,8 @@ describe('resource accounts', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.accounts.list({
+    const response = await client.resourceGroups.list('type', {
       orgId: 'orgId',
-      codes: ['string'],
-      ids: ['string'],
       nextToken: 'nextToken',
       pageSize: 1,
     });
@@ -154,7 +96,7 @@ describe('resource accounts', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.resourceGroups.list('type', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -162,15 +104,16 @@ describe('resource accounts', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.list(
-        { orgId: 'orgId', codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+      client.resourceGroups.list(
+        'type',
+        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.accounts.delete('id');
+    const responsePromise = client.resourceGroups.delete('type', 'id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -181,27 +124,27 @@ describe('resource accounts', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.accounts.delete('id', { orgId: 'orgId' });
+    const response = await client.resourceGroups.delete('type', 'id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.resourceGroups.delete('type', 'id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.resourceGroups.delete('type', 'id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('endDateBillingEntities: only required params', async () => {
-    const responsePromise = client.accounts.endDateBillingEntities('id', {
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
+  test('addResource: only required params', async () => {
+    const responsePromise = client.resourceGroups.addResource('type', 'resourceGroupId', {
+      targetId: '06f6b50c-a868-4ca6-XXXX-448e507d5248',
+      targetType: 'ITEM',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -212,17 +155,17 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('endDateBillingEntities: required and optional params', async () => {
-    const response = await client.accounts.endDateBillingEntities('id', {
+  test('addResource: required and optional params', async () => {
+    const response = await client.resourceGroups.addResource('type', 'resourceGroupId', {
       orgId: 'orgId',
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-      applyToChildren: true,
+      targetId: '06f6b50c-a868-4ca6-XXXX-448e507d5248',
+      targetType: 'ITEM',
+      version: 0,
     });
   });
 
-  test('listChildren: only required params', async () => {
-    const responsePromise = client.accounts.listChildren('id');
+  test('listContents: only required params', async () => {
+    const responsePromise = client.resourceGroups.listContents('type', 'resourceGroupId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -232,34 +175,35 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listChildren: required and optional params', async () => {
-    const response = await client.accounts.listChildren('id', {
+  test('listContents: required and optional params', async () => {
+    const response = await client.resourceGroups.listContents('type', 'resourceGroupId', {
       orgId: 'orgId',
       nextToken: 'nextToken',
       pageSize: 1,
     });
   });
 
-  test('listChildren: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.listChildren('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('listChildren: request options and params are passed correctly', async () => {
+  test('listContents: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.listChildren(
-        'id',
+      client.resourceGroups.listContents('type', 'resourceGroupId', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('listContents: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.resourceGroups.listContents(
+        'type',
+        'resourceGroupId',
         { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('search: only required params', async () => {
-    const responsePromise = client.accounts.search();
+  test('listPermissions: only required params', async () => {
+    const responsePromise = client.resourceGroups.listPermissions('type', 'resourceGroupId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -269,40 +213,53 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('search: required and optional params', async () => {
-    const response = await client.accounts.search({
+  test('listPermissions: required and optional params', async () => {
+    const response = await client.resourceGroups.listPermissions('type', 'resourceGroupId', {
       orgId: 'orgId',
-      fromDocument: 0,
-      operator: 'AND',
+      nextToken: 'nextToken',
       pageSize: 1,
-      searchQuery: 'searchQuery',
-      sortBy: 'sortBy',
-      sortOrder: 'ASC',
     });
   });
 
-  test('search: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.search({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('search: request options and params are passed correctly', async () => {
+  test('listPermissions: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.search(
-        {
-          orgId: 'orgId',
-          fromDocument: 0,
-          operator: 'AND',
-          pageSize: 1,
-          searchQuery: 'searchQuery',
-          sortBy: 'sortBy',
-          sortOrder: 'ASC',
-        },
+      client.resourceGroups.listPermissions('type', 'resourceGroupId', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('listPermissions: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.resourceGroups.listPermissions(
+        'type',
+        'resourceGroupId',
+        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('removeResource: only required params', async () => {
+    const responsePromise = client.resourceGroups.removeResource('type', 'resourceGroupId', {
+      targetId: '06f6b50c-a868-4ca6-XXXX-448e507d5248',
+      targetType: 'ITEM',
+    });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('removeResource: required and optional params', async () => {
+    const response = await client.resourceGroups.removeResource('type', 'resourceGroupId', {
+      orgId: 'orgId',
+      targetId: '06f6b50c-a868-4ca6-XXXX-448e507d5248',
+      targetType: 'ITEM',
+      version: 0,
+    });
   });
 });
