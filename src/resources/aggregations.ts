@@ -147,7 +147,7 @@ export interface Aggregation {
    * - **UNIQUE**. Uses unique values and returns a count of the number of unique
    *   values. Can be applied to a **Metadata** `targetField`.
    */
-  aggregation?: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE';
+  aggregation?: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE' | 'CUSTOM_SQL';
 
   /**
    * Code of the Aggregation. A unique short code to identify the Aggregation.
@@ -304,7 +304,7 @@ export interface AggregationCreateParams {
    * - **UNIQUE**. Uses unique values and returns a count of the number of unique
    *   values. Can be applied to a **Metadata** `targetField`.
    */
-  aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE';
+  aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE' | 'CUSTOM_SQL';
 
   /**
    * Body param: The UUID of the Meter used as the source of usage data for the
@@ -481,7 +481,7 @@ export interface AggregationUpdateParams {
    * - **UNIQUE**. Uses unique values and returns a count of the number of unique
    *   values. Can be applied to a **Metadata** `targetField`.
    */
-  aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE';
+  aggregation: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN' | 'UNIQUE' | 'CUSTOM_SQL';
 
   /**
    * Body param: The UUID of the Meter used as the source of usage data for the
