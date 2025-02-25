@@ -1,9 +1,55 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../resource';
-import * as Core from '../core';
+import { APIResource } from '../../resource';
+import * as Core from '../../core';
+import * as DestinationsAPI from './destinations';
+import {
+  DataExportDestination,
+  DataExportDestinationsCursor,
+  DestinationCreateParams,
+  DestinationCreateResponse,
+  DestinationDeleteParams,
+  DestinationDeleteResponse,
+  DestinationListParams,
+  DestinationRetrieveParams,
+  DestinationRetrieveResponse,
+  DestinationUpdateParams,
+  DestinationUpdateResponse,
+  Destinations,
+} from './destinations';
+import * as JobsAPI from './jobs';
+import {
+  DataExportJob,
+  DataExportJobsCursor,
+  JobGetDownloadURLParams,
+  JobGetDownloadURLResponse,
+  JobListParams,
+  JobRetrieveParams,
+  Jobs,
+} from './jobs';
+import * as SchedulesAPI from './schedules';
+import {
+  OperationalDataExportSchedule,
+  ScheduleCreateParams,
+  ScheduleCreateResponse,
+  ScheduleDeleteParams,
+  ScheduleDeleteResponse,
+  ScheduleListParams,
+  ScheduleListResponse,
+  ScheduleListResponsesCursor,
+  ScheduleRetrieveParams,
+  ScheduleRetrieveResponse,
+  ScheduleUpdateParams,
+  ScheduleUpdateResponse,
+  Schedules,
+  UsageDataExportSchedule,
+} from './schedules';
 
 export class DataExports extends APIResource {
+  destinations: DestinationsAPI.Destinations = new DestinationsAPI.Destinations(this._client);
+  jobs: JobsAPI.Jobs = new JobsAPI.Jobs(this._client);
+  schedules: SchedulesAPI.Schedules = new SchedulesAPI.Schedules(this._client);
+
   /**
    * Trigger an ad-hoc Data Export. Each ad-hoc Export can be configured for
    * exporting _only one of_ either Usage or Operational data:
@@ -385,11 +431,60 @@ export declare namespace DataExportCreateAdhocParams {
   }
 }
 
+DataExports.Destinations = Destinations;
+DataExports.DataExportDestinationsCursor = DataExportDestinationsCursor;
+DataExports.Jobs = Jobs;
+DataExports.DataExportJobsCursor = DataExportJobsCursor;
+DataExports.Schedules = Schedules;
+DataExports.ScheduleListResponsesCursor = ScheduleListResponsesCursor;
+
 export declare namespace DataExports {
   export {
     type AdhocExport as AdhocExport,
     type AdHocOperationalDataRequest as AdHocOperationalDataRequest,
     type AdHocUsageDataRequest as AdHocUsageDataRequest,
     type DataExportCreateAdhocParams as DataExportCreateAdhocParams,
+  };
+
+  export {
+    Destinations as Destinations,
+    type DataExportDestination as DataExportDestination,
+    type DestinationCreateResponse as DestinationCreateResponse,
+    type DestinationRetrieveResponse as DestinationRetrieveResponse,
+    type DestinationUpdateResponse as DestinationUpdateResponse,
+    type DestinationDeleteResponse as DestinationDeleteResponse,
+    DataExportDestinationsCursor as DataExportDestinationsCursor,
+    type DestinationCreateParams as DestinationCreateParams,
+    type DestinationRetrieveParams as DestinationRetrieveParams,
+    type DestinationUpdateParams as DestinationUpdateParams,
+    type DestinationListParams as DestinationListParams,
+    type DestinationDeleteParams as DestinationDeleteParams,
+  };
+
+  export {
+    Jobs as Jobs,
+    type DataExportJob as DataExportJob,
+    type JobGetDownloadURLResponse as JobGetDownloadURLResponse,
+    DataExportJobsCursor as DataExportJobsCursor,
+    type JobRetrieveParams as JobRetrieveParams,
+    type JobListParams as JobListParams,
+    type JobGetDownloadURLParams as JobGetDownloadURLParams,
+  };
+
+  export {
+    Schedules as Schedules,
+    type OperationalDataExportSchedule as OperationalDataExportSchedule,
+    type UsageDataExportSchedule as UsageDataExportSchedule,
+    type ScheduleCreateResponse as ScheduleCreateResponse,
+    type ScheduleRetrieveResponse as ScheduleRetrieveResponse,
+    type ScheduleUpdateResponse as ScheduleUpdateResponse,
+    type ScheduleListResponse as ScheduleListResponse,
+    type ScheduleDeleteResponse as ScheduleDeleteResponse,
+    ScheduleListResponsesCursor as ScheduleListResponsesCursor,
+    type ScheduleCreateParams as ScheduleCreateParams,
+    type ScheduleRetrieveParams as ScheduleRetrieveParams,
+    type ScheduleUpdateParams as ScheduleUpdateParams,
+    type ScheduleListParams as ScheduleListParams,
+    type ScheduleDeleteParams as ScheduleDeleteParams,
   };
 }

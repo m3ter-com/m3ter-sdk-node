@@ -11,54 +11,9 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource accounts', () => {
-  test('create: only required params', async () => {
-    const responsePromise = client.accounts.create({
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('create: required and optional params', async () => {
-    const response = await client.accounts.create({
-      orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
-      configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
-      version: 0,
-    });
-  });
-
+describe('resource bills', () => {
   test('retrieve: only required params', async () => {
-    const responsePromise = client.accounts.retrieve('id');
+    const responsePromise = client.bills.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,12 +24,12 @@ describe('resource accounts', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.accounts.retrieve('id', { orgId: 'orgId' });
+    const response = await client.bills.retrieve('id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.bills.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -82,57 +37,12 @@ describe('resource accounts', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.bills.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('update: only required params', async () => {
-    const responsePromise = client.accounts.update('id', {
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-    });
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('update: required and optional params', async () => {
-    const response = await client.accounts.update('id', {
-      orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
-      configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
-      version: 0,
-    });
-  });
-
   test('list: only required params', async () => {
-    const responsePromise = client.accounts.list();
+    const responsePromise = client.bills.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -143,18 +53,28 @@ describe('resource accounts', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.accounts.list({
+    const response = await client.bills.list({
       orgId: 'orgId',
-      codes: ['string'],
+      accountId: 'accountId',
+      billDate: 'billDate',
+      billDateEnd: 'billDateEnd',
+      billDateStart: 'billDateStart',
+      billingFrequency: 'billingFrequency',
+      excludeLineItems: true,
+      externalInvoiceDateEnd: 'externalInvoiceDateEnd',
+      externalInvoiceDateStart: 'externalInvoiceDateStart',
       ids: ['string'],
+      includeBillTotal: true,
+      locked: true,
       nextToken: 'nextToken',
       pageSize: 1,
+      status: 'PENDING',
     });
   });
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.bills.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -162,15 +82,31 @@ describe('resource accounts', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.list(
-        { orgId: 'orgId', codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+      client.bills.list(
+        {
+          orgId: 'orgId',
+          accountId: 'accountId',
+          billDate: 'billDate',
+          billDateEnd: 'billDateEnd',
+          billDateStart: 'billDateStart',
+          billingFrequency: 'billingFrequency',
+          excludeLineItems: true,
+          externalInvoiceDateEnd: 'externalInvoiceDateEnd',
+          externalInvoiceDateStart: 'externalInvoiceDateStart',
+          ids: ['string'],
+          includeBillTotal: true,
+          locked: true,
+          nextToken: 'nextToken',
+          pageSize: 1,
+          status: 'PENDING',
+        },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.accounts.delete('id');
+    const responsePromise = client.bills.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -181,12 +117,12 @@ describe('resource accounts', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.accounts.delete('id', { orgId: 'orgId' });
+    const response = await client.bills.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.bills.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -194,15 +130,12 @@ describe('resource accounts', () => {
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.bills.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('endDateBillingEntities: only required params', async () => {
-    const responsePromise = client.accounts.endDateBillingEntities('id', {
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-    });
+  test('approve: only required params', async () => {
+    const responsePromise = client.bills.approve({ billIds: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -212,17 +145,18 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('endDateBillingEntities: required and optional params', async () => {
-    const response = await client.accounts.endDateBillingEntities('id', {
+  test('approve: required and optional params', async () => {
+    const response = await client.bills.approve({
       orgId: 'orgId',
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-      applyToChildren: true,
+      billIds: ['string'],
+      accountIds: 'accountIds',
+      externalInvoiceDateEnd: 'externalInvoiceDateEnd',
+      externalInvoiceDateStart: 'externalInvoiceDateStart',
     });
   });
 
-  test('listChildren: only required params', async () => {
-    const responsePromise = client.accounts.listChildren('id');
+  test('latestByAccount: only required params', async () => {
+    const responsePromise = client.bills.latestByAccount('accountId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -232,34 +166,55 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listChildren: required and optional params', async () => {
-    const response = await client.accounts.listChildren('id', {
-      orgId: 'orgId',
-      nextToken: 'nextToken',
-      pageSize: 1,
-    });
+  test('latestByAccount: required and optional params', async () => {
+    const response = await client.bills.latestByAccount('accountId', { orgId: 'orgId' });
   });
 
-  test('listChildren: request options instead of params are passed correctly', async () => {
+  test('latestByAccount: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.listChildren('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(
+      client.bills.latestByAccount('accountId', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('latestByAccount: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.bills.latestByAccount('accountId', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('lock: only required params', async () => {
+    const responsePromise = client.bills.lock('id');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('lock: required and optional params', async () => {
+    const response = await client.bills.lock('id', { orgId: 'orgId' });
+  });
+
+  test('lock: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.bills.lock('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
 
-  test('listChildren: request options and params are passed correctly', async () => {
+  test('lock: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.listChildren(
-        'id',
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
+      client.bills.lock('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('search: only required params', async () => {
-    const responsePromise = client.accounts.search();
+    const responsePromise = client.bills.search();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -270,7 +225,7 @@ describe('resource accounts', () => {
   });
 
   test('search: required and optional params', async () => {
-    const response = await client.accounts.search({
+    const response = await client.bills.search({
       orgId: 'orgId',
       fromDocument: 0,
       operator: 'AND',
@@ -283,7 +238,7 @@ describe('resource accounts', () => {
 
   test('search: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.search({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.bills.search({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -291,7 +246,7 @@ describe('resource accounts', () => {
   test('search: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.search(
+      client.bills.search(
         {
           orgId: 'orgId',
           fromDocument: 0,
@@ -304,5 +259,20 @@ describe('resource accounts', () => {
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('updateStatus: only required params', async () => {
+    const responsePromise = client.bills.updateStatus('id', { status: 'PENDING' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('updateStatus: required and optional params', async () => {
+    const response = await client.bills.updateStatus('id', { orgId: 'orgId', status: 'PENDING' });
   });
 });

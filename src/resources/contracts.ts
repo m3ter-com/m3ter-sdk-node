@@ -99,6 +99,33 @@ export class Contracts extends APIResource {
     const { orgId = this._client.orgId } = params;
     return this._client.delete(`/organizations/${orgId}/contracts/${id}`, options);
   }
+
+  /**
+   * Apply the specified end-date to billing entities associated with Accounts the
+   * Contract has been added to, and apply the end-date to the Contract itself.
+   *
+   * **NOTES:**
+   *
+   * - If you want to apply the end-date to the Contract _itself_ - the Contract `id`
+   *   you use as the required PATH PARAMETER - you must also specify `CONTRACT` as a
+   *   `billingEntities` option in the request body schema.
+   * - Only the Contract whose id you specify for the PATH PARAMETER will be
+   *   end-dated. If there are other Contracts associated with the Account, these
+   *   will not be end-dated.
+   * - When you successfully end-date billing entities, the version number of each
+   *   entity is incremented.
+   */
+  endDateBillingEntities(
+    id: string,
+    params: ContractEndDateBillingEntitiesParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ContractEndDateBillingEntitiesResponse> {
+    const { orgId = this._client.orgId, ...body } = params;
+    return this._client.put(`/organizations/${orgId}/contracts/${id}/enddatebillingentities`, {
+      body,
+      ...options,
+    });
+  }
 }
 
 export class ContractsCursor extends Cursor<Contract> {}
@@ -189,6 +216,103 @@ export interface Contract {
    * meaning the Contract is active from this date onward.
    */
   startDate?: string;
+}
+
+export interface ContractEndDateBillingEntitiesResponse {
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the entities for which the update failed.
+   */
+  failedEntities?: ContractEndDateBillingEntitiesResponse.FailedEntities;
+
+  /**
+   * A message indicating the status of the operation.
+   */
+  statusMessage?: string;
+
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the updated entities.
+   */
+  updatedEntities?: ContractEndDateBillingEntitiesResponse.UpdatedEntities;
+}
+
+export namespace ContractEndDateBillingEntitiesResponse {
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the entities for which the update failed.
+   */
+  export interface FailedEntities {
+    ACCOUNTPLAN?: FailedEntities.Accountplan;
+
+    CONTRACT?: FailedEntities.Contract;
+
+    COUNTER_PRICINGS?: FailedEntities.CounterPricings;
+
+    PREPAYMENT?: FailedEntities.Prepayment;
+
+    PRICINGS?: FailedEntities.Pricings;
+  }
+
+  export namespace FailedEntities {
+    export interface Accountplan {
+      empty?: boolean;
+    }
+
+    export interface Contract {
+      empty?: boolean;
+    }
+
+    export interface CounterPricings {
+      empty?: boolean;
+    }
+
+    export interface Prepayment {
+      empty?: boolean;
+    }
+
+    export interface Pricings {
+      empty?: boolean;
+    }
+  }
+
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the updated entities.
+   */
+  export interface UpdatedEntities {
+    ACCOUNTPLAN?: UpdatedEntities.Accountplan;
+
+    CONTRACT?: UpdatedEntities.Contract;
+
+    COUNTER_PRICINGS?: UpdatedEntities.CounterPricings;
+
+    PREPAYMENT?: UpdatedEntities.Prepayment;
+
+    PRICINGS?: UpdatedEntities.Pricings;
+  }
+
+  export namespace UpdatedEntities {
+    export interface Accountplan {
+      empty?: boolean;
+    }
+
+    export interface Contract {
+      empty?: boolean;
+    }
+
+    export interface CounterPricings {
+      empty?: boolean;
+    }
+
+    export interface Prepayment {
+      empty?: boolean;
+    }
+
+    export interface Pricings {
+      empty?: boolean;
+    }
+  }
 }
 
 export interface ContractCreateParams {
@@ -378,16 +502,47 @@ export interface ContractDeleteParams {
   orgId?: string;
 }
 
+export interface ContractEndDateBillingEntitiesParams {
+  /**
+   * Path param: The unique identifier (UUID) for your Organization. The Organization
+   * represents your company as a direct customer of our service.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Defines which billing entities associated with the Account will have
+   * the specified end-date applied. For example, if you want the specified end-date
+   * to be applied to all Prepayments/Commitments created for the Account use
+   * `"PREPAYMENT"`.
+   */
+  billingEntities: Array<'CONTRACT' | 'ACCOUNTPLAN' | 'PREPAYMENT' | 'PRICINGS' | 'COUNTER_PRICINGS'>;
+
+  /**
+   * Body param: The end date and time applied to the specified billing entities _(in
+   * ISO 8601 format)_.
+   */
+  endDate: string;
+
+  /**
+   * Body param: A Boolean TRUE/FALSE flag. For Parent Accounts, set to TRUE if you
+   * want the specified end-date to be applied to any billing entities associated
+   * with Child Accounts. _(Optional)_
+   */
+  applyToChildren?: boolean;
+}
+
 Contracts.ContractsCursor = ContractsCursor;
 
 export declare namespace Contracts {
   export {
     type Contract as Contract,
+    type ContractEndDateBillingEntitiesResponse as ContractEndDateBillingEntitiesResponse,
     ContractsCursor as ContractsCursor,
     type ContractCreateParams as ContractCreateParams,
     type ContractRetrieveParams as ContractRetrieveParams,
     type ContractUpdateParams as ContractUpdateParams,
     type ContractListParams as ContractListParams,
     type ContractDeleteParams as ContractDeleteParams,
+    type ContractEndDateBillingEntitiesParams as ContractEndDateBillingEntitiesParams,
   };
 }
