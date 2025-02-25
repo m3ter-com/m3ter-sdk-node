@@ -105,19 +105,19 @@ export class Accounts extends APIResource {
   /**
    * Retrieve a list of Accounts that are children of the specified Account.
    */
-  listChildren(
+  getChildren(
     id: string,
-    params?: AccountListChildrenParams,
+    params?: AccountGetChildrenParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account>;
-  listChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
-  listChildren(
+  getChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  getChildren(
     id: string,
-    params: AccountListChildrenParams | Core.RequestOptions = {},
+    params: AccountGetChildrenParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account> {
     if (isRequestOptions(params)) {
-      return this.listChildren(id, {}, params);
+      return this.getChildren(id, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/accounts/${id}/children`, { query, ...options });
@@ -873,7 +873,7 @@ export interface AccountEndDateBillingEntitiesParams {
   applyToChildren?: boolean;
 }
 
-export interface AccountListChildrenParams {
+export interface AccountGetChildrenParams {
   /**
    * Path param: UUID of the organization. The Organization represents your company
    * as a direct customer of the m3ter service.
@@ -948,7 +948,7 @@ export declare namespace Accounts {
     type AccountListParams as AccountListParams,
     type AccountDeleteParams as AccountDeleteParams,
     type AccountEndDateBillingEntitiesParams as AccountEndDateBillingEntitiesParams,
-    type AccountListChildrenParams as AccountListChildrenParams,
+    type AccountGetChildrenParams as AccountGetChildrenParams,
     type AccountSearchParams as AccountSearchParams,
   };
 }

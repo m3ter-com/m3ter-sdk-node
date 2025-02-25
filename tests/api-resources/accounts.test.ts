@@ -221,8 +221,8 @@ describe('resource accounts', () => {
     });
   });
 
-  test('listChildren: only required params', async () => {
-    const responsePromise = client.accounts.listChildren('id');
+  test('getChildren: only required params', async () => {
+    const responsePromise = client.accounts.getChildren('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -232,25 +232,25 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listChildren: required and optional params', async () => {
-    const response = await client.accounts.listChildren('id', {
+  test('getChildren: required and optional params', async () => {
+    const response = await client.accounts.getChildren('id', {
       orgId: 'orgId',
       nextToken: 'nextToken',
       pageSize: 1,
     });
   });
 
-  test('listChildren: request options instead of params are passed correctly', async () => {
+  test('getChildren: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.listChildren('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.accounts.getChildren('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
 
-  test('listChildren: request options and params are passed correctly', async () => {
+  test('getChildren: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.listChildren(
+      client.accounts.getChildren(
         'id',
         { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },

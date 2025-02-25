@@ -98,8 +98,8 @@ describe('resource users', () => {
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('listPermissions: only required params', async () => {
-    const responsePromise = client.users.listPermissions('id');
+  test('getPermissions: only required params', async () => {
+    const responsePromise = client.users.getPermissions('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -109,25 +109,25 @@ describe('resource users', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listPermissions: required and optional params', async () => {
-    const response = await client.users.listPermissions('id', {
+  test('getPermissions: required and optional params', async () => {
+    const response = await client.users.getPermissions('id', {
       orgId: 'orgId',
       nextToken: 'nextToken',
       pageSize: 1,
     });
   });
 
-  test('listPermissions: request options instead of params are passed correctly', async () => {
+  test('getPermissions: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.listPermissions('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.users.getPermissions('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
 
-  test('listPermissions: request options and params are passed correctly', async () => {
+  test('getPermissions: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.users.listPermissions(
+      client.users.getPermissions(
         'id',
         { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
@@ -135,8 +135,8 @@ describe('resource users', () => {
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('listUserGroups: only required params', async () => {
-    const responsePromise = client.users.listUserGroups('id');
+  test('getUserGroups: only required params', async () => {
+    const responsePromise = client.users.getUserGroups('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -146,25 +146,25 @@ describe('resource users', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listUserGroups: required and optional params', async () => {
-    const response = await client.users.listUserGroups('id', {
+  test('getUserGroups: required and optional params', async () => {
+    const response = await client.users.getUserGroups('id', {
       orgId: 'orgId',
       nextToken: 'nextToken',
       pageSize: 1,
     });
   });
 
-  test('listUserGroups: request options instead of params are passed correctly', async () => {
+  test('getUserGroups: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.listUserGroups('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.users.getUserGroups('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
 
-  test('listUserGroups: request options and params are passed correctly', async () => {
+  test('getUserGroups: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.users.listUserGroups(
+      client.users.getUserGroups(
         'id',
         { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },

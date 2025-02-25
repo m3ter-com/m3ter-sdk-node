@@ -24,7 +24,7 @@ Methods:
 - <code title="get /organizations/{orgId}/accounts">client.accounts.<a href="./src/resources/accounts.ts">list</a>({ ...params }) -> AccountsCursor</code>
 - <code title="delete /organizations/{orgId}/accounts/{id}">client.accounts.<a href="./src/resources/accounts.ts">delete</a>(id, { ...params }) -> Account</code>
 - <code title="put /organizations/{orgId}/accounts/{id}/enddatebillingentities">client.accounts.<a href="./src/resources/accounts.ts">endDateBillingEntities</a>(id, { ...params }) -> AccountEndDateBillingEntitiesResponse</code>
-- <code title="get /organizations/{orgId}/accounts/{id}/children">client.accounts.<a href="./src/resources/accounts.ts">listChildren</a>(id, { ...params }) -> Account</code>
+- <code title="get /organizations/{orgId}/accounts/{id}/children">client.accounts.<a href="./src/resources/accounts.ts">getChildren</a>(id, { ...params }) -> Account</code>
 - <code title="get /organizations/{orgId}/accounts/search">client.accounts.<a href="./src/resources/accounts.ts">search</a>({ ...params }) -> AccountSearchResponse</code>
 
 # AccountPlans
@@ -389,8 +389,6 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/external-mappings.ts">ExternalMapping</a></code>
-- <code><a href="./src/resources/external-mappings.ts">ExternalMappingListByExternalEntityResponse</a></code>
-- <code><a href="./src/resources/external-mappings.ts">ExternalMappingListByM3terEntityResponse</a></code>
 
 Methods:
 
@@ -399,8 +397,8 @@ Methods:
 - <code title="put /organizations/{orgId}/externalmappings/{id}">client.externalMappings.<a href="./src/resources/external-mappings.ts">update</a>(id, { ...params }) -> ExternalMapping</code>
 - <code title="get /organizations/{orgId}/externalmappings">client.externalMappings.<a href="./src/resources/external-mappings.ts">list</a>({ ...params }) -> ExternalMappingsCursor</code>
 - <code title="delete /organizations/{orgId}/externalmappings/{id}">client.externalMappings.<a href="./src/resources/external-mappings.ts">delete</a>(id, { ...params }) -> ExternalMapping</code>
-- <code title="get /organizations/{orgId}/externalmappings/externalid/{system}/{externalTable}/{externalId}">client.externalMappings.<a href="./src/resources/external-mappings.ts">listByExternalEntity</a>(system, externalTable, externalId, { ...params }) -> ExternalMappingListByExternalEntityResponse</code>
-- <code title="get /organizations/{orgId}/externalmappings/external/{entity}/{m3terId}">client.externalMappings.<a href="./src/resources/external-mappings.ts">listByM3terEntity</a>(entity, m3terId, { ...params }) -> ExternalMappingListByM3terEntityResponse</code>
+- <code title="get /organizations/{orgId}/externalmappings/externalid/{system}/{externalTable}/{externalId}">client.externalMappings.<a href="./src/resources/external-mappings.ts">listByExternalEntity</a>(system, externalTable, externalId, { ...params }) -> ExternalMappingsCursor</code>
+- <code title="get /organizations/{orgId}/externalmappings/external/{entity}/{m3terId}">client.externalMappings.<a href="./src/resources/external-mappings.ts">listByM3terEntity</a>(entity, m3terId, { ...params }) -> ExternalMappingsCursor</code>
 
 # IntegrationConfigurations
 
@@ -582,7 +580,6 @@ Types:
 
 - <code><a href="./src/resources/resource-groups.ts">ResourceGroup</a></code>
 - <code><a href="./src/resources/resource-groups.ts">ResourceGroupListContentsResponse</a></code>
-- <code><a href="./src/resources/resource-groups.ts">ResourceGroupListPermissionsResponse</a></code>
 
 Methods:
 
@@ -592,8 +589,8 @@ Methods:
 - <code title="get /organizations/{orgId}/resourcegroups/{type}">client.resourceGroups.<a href="./src/resources/resource-groups.ts">list</a>(type, { ...params }) -> ResourceGroupsCursor</code>
 - <code title="delete /organizations/{orgId}/resourcegroups/{type}/{id}">client.resourceGroups.<a href="./src/resources/resource-groups.ts">delete</a>(type, id, { ...params }) -> ResourceGroup</code>
 - <code title="post /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/addresource">client.resourceGroups.<a href="./src/resources/resource-groups.ts">addResource</a>(type, resourceGroupId, { ...params }) -> ResourceGroup</code>
-- <code title="post /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/contents">client.resourceGroups.<a href="./src/resources/resource-groups.ts">listContents</a>(type, resourceGroupId, { ...params }) -> ResourceGroupListContentsResponse</code>
-- <code title="get /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/permissions">client.resourceGroups.<a href="./src/resources/resource-groups.ts">listPermissions</a>(type, resourceGroupId, { ...params }) -> ResourceGroupListPermissionsResponse</code>
+- <code title="post /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/contents">client.resourceGroups.<a href="./src/resources/resource-groups.ts">listContents</a>(type, resourceGroupId, { ...params }) -> ResourceGroupListContentsResponsesCursor</code>
+- <code title="get /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/permissions">client.resourceGroups.<a href="./src/resources/resource-groups.ts">listPermissions</a>(type, resourceGroupId, { ...params }) -> PermissionPoliciesCursor</code>
 - <code title="post /organizations/{orgId}/resourcegroups/{type}/{resourceGroupId}/removeresource">client.resourceGroups.<a href="./src/resources/resource-groups.ts">removeResource</a>(type, resourceGroupId, { ...params }) -> ResourceGroup</code>
 
 # ScheduledEventConfigurations
@@ -673,8 +670,8 @@ Methods:
 - <code title="get /organizations/{orgId}/users/{id}">client.users.<a href="./src/resources/users/users.ts">retrieve</a>(id, { ...params }) -> User</code>
 - <code title="put /organizations/{orgId}/users/{id}">client.users.<a href="./src/resources/users/users.ts">update</a>(id, { ...params }) -> User</code>
 - <code title="get /organizations/{orgId}/users">client.users.<a href="./src/resources/users/users.ts">list</a>({ ...params }) -> UsersCursor</code>
-- <code title="get /organizations/{orgId}/users/{id}/permissions">client.users.<a href="./src/resources/users/users.ts">listPermissions</a>(id, { ...params }) -> PermissionPolicy</code>
-- <code title="get /organizations/{orgId}/users/{id}/usergroups">client.users.<a href="./src/resources/users/users.ts">listUserGroups</a>(id, { ...params }) -> ResourceGroup</code>
+- <code title="get /organizations/{orgId}/users/{id}/permissions">client.users.<a href="./src/resources/users/users.ts">getPermissions</a>(id, { ...params }) -> PermissionPolicy</code>
+- <code title="get /organizations/{orgId}/users/{id}/usergroups">client.users.<a href="./src/resources/users/users.ts">getUserGroups</a>(id, { ...params }) -> ResourceGroup</code>
 - <code title="get /organizations/{orgId}/users/me">client.users.<a href="./src/resources/users/users.ts">me</a>({ ...params }) -> UserMeResponse</code>
 - <code title="put /organizations/{orgId}/users/{id}/password/resend">client.users.<a href="./src/resources/users/users.ts">resendPassword</a>(id, { ...params }) -> void</code>
 

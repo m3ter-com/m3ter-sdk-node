@@ -22,7 +22,7 @@ export {
   type AccountListParams,
   type AccountDeleteParams,
   type AccountEndDateBillingEntitiesParams,
-  type AccountListChildrenParams,
+  type AccountGetChildrenParams,
   type AccountSearchParams,
 } from './accounts';
 export {
@@ -198,8 +198,6 @@ export {
   ExternalMappingsCursor,
   ExternalMappings,
   type ExternalMapping,
-  type ExternalMappingListByExternalEntityResponse,
-  type ExternalMappingListByM3terEntityResponse,
   type ExternalMappingCreateParams,
   type ExternalMappingRetrieveParams,
   type ExternalMappingUpdateParams,
@@ -339,10 +337,10 @@ export {
 } from './products';
 export {
   ResourceGroupsCursor,
+  ResourceGroupListContentsResponsesCursor,
   ResourceGroups,
   type ResourceGroup,
   type ResourceGroupListContentsResponse,
-  type ResourceGroupListPermissionsResponse,
   type ResourceGroupCreateParams,
   type ResourceGroupRetrieveParams,
   type ResourceGroupUpdateParams,
@@ -390,8 +388,8 @@ export {
   type UserRetrieveParams,
   type UserUpdateParams,
   type UserListParams,
-  type UserListPermissionsParams,
-  type UserListUserGroupsParams,
+  type UserGetPermissionsParams,
+  type UserGetUserGroupsParams,
   type UserMeParams,
   type UserResendPasswordParams,
 } from './users/users';

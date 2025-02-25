@@ -122,26 +122,27 @@ export class ExternalMappings extends APIResource {
     externalId: string,
     params?: ExternalMappingListByExternalEntityParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByExternalEntityResponse>;
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
   listByExternalEntity(
     system: string,
     externalTable: string,
     externalId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByExternalEntityResponse>;
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
   listByExternalEntity(
     system: string,
     externalTable: string,
     externalId: string,
     params: ExternalMappingListByExternalEntityParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByExternalEntityResponse> {
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping> {
     if (isRequestOptions(params)) {
       return this.listByExternalEntity(system, externalTable, externalId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.get(
+    return this._client.getAPIList(
       `/organizations/${orgId}/externalmappings/externalid/${system}/${externalTable}/${externalId}`,
+      ExternalMappingsCursor,
       { query, ...options },
     );
   }
@@ -157,26 +158,27 @@ export class ExternalMappings extends APIResource {
     m3terId: string,
     params?: ExternalMappingListByM3terEntityParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByM3terEntityResponse>;
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
   listByM3terEntity(
     entity: string,
     m3terId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByM3terEntityResponse>;
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
   listByM3terEntity(
     entity: string,
     m3terId: string,
     params: ExternalMappingListByM3terEntityParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMappingListByM3terEntityResponse> {
+  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping> {
     if (isRequestOptions(params)) {
       return this.listByM3terEntity(entity, m3terId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.get(`/organizations/${orgId}/externalmappings/external/${entity}/${m3terId}`, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/externalmappings/external/${entity}/${m3terId}`,
+      ExternalMappingsCursor,
+      { query, ...options },
+    );
   }
 }
 
@@ -248,32 +250,6 @@ export interface ExternalMapping {
    * The ID of the user who last modified this item.
    */
   lastModifiedBy?: string;
-}
-
-export interface ExternalMappingListByExternalEntityResponse {
-  /**
-   * An array containing the list of requested External Mapping entities.
-   */
-  data?: Array<ExternalMapping>;
-
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * External Mappings in a paginated list.
-   */
-  nextToken?: string;
-}
-
-export interface ExternalMappingListByM3terEntityResponse {
-  /**
-   * An array containing the list of requested External Mapping entities.
-   */
-  data?: Array<ExternalMapping>;
-
-  /**
-   * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
-   * External Mappings in a paginated list.
-   */
-  nextToken?: string;
 }
 
 export interface ExternalMappingCreateParams {
@@ -428,44 +404,20 @@ export interface ExternalMappingDeleteParams {
   orgId?: string;
 }
 
-export interface ExternalMappingListByExternalEntityParams {
+export interface ExternalMappingListByExternalEntityParams extends CursorParams {
   /**
    * Path param: The unique identifier (UUID) of your Organization. The Organization
    * represents your company as a direct customer of our service.
    */
   orgId?: string;
-
-  /**
-   * Query param: The `nextToken` for multi-page retrievals. It is used to fetch the
-   * next page of External Mappings in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Query param: Specifies the maximum number of External Mappings to retrieve per
-   * page.
-   */
-  pageSize?: number;
 }
 
-export interface ExternalMappingListByM3terEntityParams {
+export interface ExternalMappingListByM3terEntityParams extends CursorParams {
   /**
    * Path param: The unique identifier (UUID) of your Organization. The Organization
    * represents your company as a direct customer of our service.
    */
   orgId?: string;
-
-  /**
-   * Query param: The `nextToken` for multi-page retrievals. It is used to fetch the
-   * next page of External Mappings in a paginated list.
-   */
-  nextToken?: string;
-
-  /**
-   * Query param: Specifies the maximum number of External Mappings to retrieve per
-   * page.
-   */
-  pageSize?: number;
 }
 
 ExternalMappings.ExternalMappingsCursor = ExternalMappingsCursor;
@@ -473,8 +425,6 @@ ExternalMappings.ExternalMappingsCursor = ExternalMappingsCursor;
 export declare namespace ExternalMappings {
   export {
     type ExternalMapping as ExternalMapping,
-    type ExternalMappingListByExternalEntityResponse as ExternalMappingListByExternalEntityResponse,
-    type ExternalMappingListByM3terEntityResponse as ExternalMappingListByM3terEntityResponse,
     ExternalMappingsCursor as ExternalMappingsCursor,
     type ExternalMappingCreateParams as ExternalMappingCreateParams,
     type ExternalMappingRetrieveParams as ExternalMappingRetrieveParams,

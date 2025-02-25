@@ -4,6 +4,7 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as PermissionPoliciesAPI from './permission-policies';
+import { PermissionPoliciesCursor } from './permission-policies';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class ResourceGroups extends APIResource {
@@ -126,26 +127,27 @@ export class ResourceGroups extends APIResource {
     resourceGroupId: string,
     params?: ResourceGroupListContentsParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListContentsResponse>;
+  ): Core.PagePromise<ResourceGroupListContentsResponsesCursor, ResourceGroupListContentsResponse>;
   listContents(
     type: string,
     resourceGroupId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListContentsResponse>;
+  ): Core.PagePromise<ResourceGroupListContentsResponsesCursor, ResourceGroupListContentsResponse>;
   listContents(
     type: string,
     resourceGroupId: string,
     params: ResourceGroupListContentsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListContentsResponse> {
+  ): Core.PagePromise<ResourceGroupListContentsResponsesCursor, ResourceGroupListContentsResponse> {
     if (isRequestOptions(params)) {
       return this.listContents(type, resourceGroupId, {}, params);
     }
     const { orgId = this._client.orgId, nextToken, pageSize } = params;
-    return this._client.post(`/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/contents`, {
-      query: { nextToken, pageSize },
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/contents`,
+      ResourceGroupListContentsResponsesCursor,
+      { query: { nextToken, pageSize }, method: 'post', ...options },
+    );
   }
 
   /**
@@ -156,26 +158,27 @@ export class ResourceGroups extends APIResource {
     resourceGroupId: string,
     params?: ResourceGroupListPermissionsParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListPermissionsResponse>;
+  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy>;
   listPermissions(
     type: string,
     resourceGroupId: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListPermissionsResponse>;
+  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy>;
   listPermissions(
     type: string,
     resourceGroupId: string,
     params: ResourceGroupListPermissionsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupListPermissionsResponse> {
+  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy> {
     if (isRequestOptions(params)) {
       return this.listPermissions(type, resourceGroupId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.get(`/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/permissions`, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/permissions`,
+      PermissionPoliciesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -196,6 +199,8 @@ export class ResourceGroups extends APIResource {
 }
 
 export class ResourceGroupsCursor extends Cursor<ResourceGroup> {}
+
+export class ResourceGroupListContentsResponsesCursor extends Cursor<ResourceGroupListContentsResponse> {}
 
 export interface ResourceGroup {
   /**
@@ -236,46 +241,32 @@ export interface ResourceGroup {
 }
 
 export interface ResourceGroupListContentsResponse {
-  data?: Array<ResourceGroupListContentsResponse.Data>;
+  /**
+   * The id of the user who created this item for the resource group.
+   */
+  createdBy?: string;
 
-  nextToken?: string;
-}
+  /**
+   * The DateTime when the item was created for the resource group.
+   */
+  dtCreated?: string;
 
-export namespace ResourceGroupListContentsResponse {
-  export interface Data {
-    /**
-     * The id of the user who created this item for the resource group.
-     */
-    createdBy?: string;
+  /**
+   * The DateTime when the resource group item was last modified.
+   */
+  dtLastModified?: string;
 
-    /**
-     * The DateTime when the item was created for the resource group.
-     */
-    dtCreated?: string;
+  /**
+   * The id of the user who last modified this item for the resource group.
+   */
+  lastModifiedBy?: string;
 
-    /**
-     * The DateTime when the resource group item was last modified.
-     */
-    dtLastModified?: string;
+  /**
+   * The UUID of the item.
+   */
+  targetId?: string;
 
-    /**
-     * The id of the user who last modified this item for the resource group.
-     */
-    lastModifiedBy?: string;
-
-    /**
-     * The UUID of the item.
-     */
-    targetId?: string;
-
-    targetType?: 'ITEM' | 'GROUP';
-  }
-}
-
-export interface ResourceGroupListPermissionsResponse {
-  data?: Array<PermissionPoliciesAPI.PermissionPolicy>;
-
-  nextToken?: string;
+  targetType?: 'ITEM' | 'GROUP';
 }
 
 export interface ResourceGroupCreateParams {
@@ -368,38 +359,18 @@ export interface ResourceGroupAddResourceParams {
   version?: number;
 }
 
-export interface ResourceGroupListContentsParams {
+export interface ResourceGroupListContentsParams extends CursorParams {
   /**
    * Path param: UUID of the organization
    */
   orgId?: string;
-
-  /**
-   * Query param: nextToken for multi page retrievals
-   */
-  nextToken?: string;
-
-  /**
-   * Query param: Number of ResourceGroupItems to retrieve per page
-   */
-  pageSize?: number;
 }
 
-export interface ResourceGroupListPermissionsParams {
+export interface ResourceGroupListPermissionsParams extends CursorParams {
   /**
    * Path param: UUID of the organization
    */
   orgId?: string;
-
-  /**
-   * Query param: nextToken for multi page retrievals
-   */
-  nextToken?: string;
-
-  /**
-   * Query param: Number of PermissionPolicy entities to retrieve per page
-   */
-  pageSize?: number;
 }
 
 export interface ResourceGroupRemoveResourceParams {
@@ -438,13 +409,14 @@ export interface ResourceGroupRemoveResourceParams {
 }
 
 ResourceGroups.ResourceGroupsCursor = ResourceGroupsCursor;
+ResourceGroups.ResourceGroupListContentsResponsesCursor = ResourceGroupListContentsResponsesCursor;
 
 export declare namespace ResourceGroups {
   export {
     type ResourceGroup as ResourceGroup,
     type ResourceGroupListContentsResponse as ResourceGroupListContentsResponse,
-    type ResourceGroupListPermissionsResponse as ResourceGroupListPermissionsResponse,
     ResourceGroupsCursor as ResourceGroupsCursor,
+    ResourceGroupListContentsResponsesCursor as ResourceGroupListContentsResponsesCursor,
     type ResourceGroupCreateParams as ResourceGroupCreateParams,
     type ResourceGroupRetrieveParams as ResourceGroupRetrieveParams,
     type ResourceGroupUpdateParams as ResourceGroupUpdateParams,
@@ -456,3 +428,5 @@ export declare namespace ResourceGroups {
     type ResourceGroupRemoveResourceParams as ResourceGroupRemoveResourceParams,
   };
 }
+
+export { PermissionPoliciesCursor };
