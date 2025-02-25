@@ -24,7 +24,7 @@ import {
   AccountDeleteParams,
   AccountEndDateBillingEntitiesParams,
   AccountEndDateBillingEntitiesResponse,
-  AccountListChildrenParams,
+  AccountGetChildrenParams,
   AccountListParams,
   AccountRetrieveParams,
   AccountSearchParams,
@@ -175,9 +175,7 @@ import {
   ExternalMappingCreateParams,
   ExternalMappingDeleteParams,
   ExternalMappingListByExternalEntityParams,
-  ExternalMappingListByExternalEntityResponse,
   ExternalMappingListByM3terEntityParams,
-  ExternalMappingListByM3terEntityResponse,
   ExternalMappingListParams,
   ExternalMappingRetrieveParams,
   ExternalMappingUpdateParams,
@@ -320,9 +318,9 @@ import {
   ResourceGroupDeleteParams,
   ResourceGroupListContentsParams,
   ResourceGroupListContentsResponse,
+  ResourceGroupListContentsResponsesCursor,
   ResourceGroupListParams,
   ResourceGroupListPermissionsParams,
-  ResourceGroupListPermissionsResponse,
   ResourceGroupRemoveResourceParams,
   ResourceGroupRetrieveParams,
   ResourceGroupUpdateParams,
@@ -406,9 +404,9 @@ import {
 } from './resources/usage/usage';
 import {
   User,
+  UserGetPermissionsParams,
+  UserGetUserGroupsParams,
   UserListParams,
-  UserListPermissionsParams,
-  UserListUserGroupsParams,
   UserMeParams,
   UserMeResponse,
   UserResendPasswordParams,
@@ -736,6 +734,7 @@ M3ter.Products = Products;
 M3ter.ProductsCursor = ProductsCursor;
 M3ter.ResourceGroups = ResourceGroups;
 M3ter.ResourceGroupsCursor = ResourceGroupsCursor;
+M3ter.ResourceGroupListContentsResponsesCursor = ResourceGroupListContentsResponsesCursor;
 M3ter.ScheduledEventConfigurations = ScheduledEventConfigurations;
 M3ter.ScheduledEventConfigurationsCursor = ScheduledEventConfigurationsCursor;
 M3ter.TransactionTypes = TransactionTypes;
@@ -769,7 +768,7 @@ export declare namespace M3ter {
     type AccountListParams as AccountListParams,
     type AccountDeleteParams as AccountDeleteParams,
     type AccountEndDateBillingEntitiesParams as AccountEndDateBillingEntitiesParams,
-    type AccountListChildrenParams as AccountListChildrenParams,
+    type AccountGetChildrenParams as AccountGetChildrenParams,
     type AccountSearchParams as AccountSearchParams,
   };
 
@@ -972,8 +971,6 @@ export declare namespace M3ter {
   export {
     ExternalMappings as ExternalMappings,
     type ExternalMapping as ExternalMapping,
-    type ExternalMappingListByExternalEntityResponse as ExternalMappingListByExternalEntityResponse,
-    type ExternalMappingListByM3terEntityResponse as ExternalMappingListByM3terEntityResponse,
     ExternalMappingsCursor as ExternalMappingsCursor,
     type ExternalMappingCreateParams as ExternalMappingCreateParams,
     type ExternalMappingRetrieveParams as ExternalMappingRetrieveParams,
@@ -1128,8 +1125,8 @@ export declare namespace M3ter {
     ResourceGroups as ResourceGroups,
     type ResourceGroup as ResourceGroup,
     type ResourceGroupListContentsResponse as ResourceGroupListContentsResponse,
-    type ResourceGroupListPermissionsResponse as ResourceGroupListPermissionsResponse,
     ResourceGroupsCursor as ResourceGroupsCursor,
+    ResourceGroupListContentsResponsesCursor as ResourceGroupListContentsResponsesCursor,
     type ResourceGroupCreateParams as ResourceGroupCreateParams,
     type ResourceGroupRetrieveParams as ResourceGroupRetrieveParams,
     type ResourceGroupUpdateParams as ResourceGroupUpdateParams,
@@ -1181,8 +1178,8 @@ export declare namespace M3ter {
     type UserRetrieveParams as UserRetrieveParams,
     type UserUpdateParams as UserUpdateParams,
     type UserListParams as UserListParams,
-    type UserListPermissionsParams as UserListPermissionsParams,
-    type UserListUserGroupsParams as UserListUserGroupsParams,
+    type UserGetPermissionsParams as UserGetPermissionsParams,
+    type UserGetUserGroupsParams as UserGetUserGroupsParams,
     type UserMeParams as UserMeParams,
     type UserResendPasswordParams as UserResendPasswordParams,
   };
