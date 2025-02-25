@@ -64,6 +64,27 @@ export class Transactions extends APIResource {
       { query, ...options },
     );
   }
+
+  /**
+   * Retrieves the Balance Transactions Summary for a given Balance.
+   */
+  summary(
+    balanceId: string,
+    params?: TransactionSummaryParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionSummaryResponse>;
+  summary(balanceId: string, options?: Core.RequestOptions): Core.APIPromise<TransactionSummaryResponse>;
+  summary(
+    balanceId: string,
+    params: TransactionSummaryParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TransactionSummaryResponse> {
+    if (isRequestOptions(params)) {
+      return this.summary(balanceId, {}, params);
+    }
+    const { orgId = this._client.orgId } = params;
+    return this._client.get(`/organizations/${orgId}/balances/${balanceId}/transactions/summary`, options);
+  }
 }
 
 export class TransactionsCursor extends Cursor<Transaction> {}
@@ -160,6 +181,14 @@ export interface Transaction {
   transactionTypeId?: string;
 }
 
+export interface TransactionSummaryResponse {
+  initialCreditAmount?: number;
+
+  totalCreditAmount?: number;
+
+  totalDebitAmount?: number;
+}
+
 export interface TransactionCreateParams {
   /**
    * Path param: The unique identifier (UUID) for your Organization. The Organization
@@ -234,13 +263,22 @@ export interface TransactionListParams extends CursorParams {
   transactionTypeId?: string | null;
 }
 
+export interface TransactionSummaryParams {
+  /**
+   * UUID of the organization
+   */
+  orgId?: string;
+}
+
 Transactions.TransactionsCursor = TransactionsCursor;
 
 export declare namespace Transactions {
   export {
     type Transaction as Transaction,
+    type TransactionSummaryResponse as TransactionSummaryResponse,
     TransactionsCursor as TransactionsCursor,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
+    type TransactionSummaryParams as TransactionSummaryParams,
   };
 }

@@ -11,13 +11,13 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource contracts', () => {
+describe('resource webhooks', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.contracts.create({
-      accountId: 'x',
-      endDate: '2019-12-27',
+    const responsePromise = client.webhooks.create({
+      credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST' },
+      description: 'x',
       name: 'x',
-      startDate: '2019-12-27',
+      url: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -29,22 +29,20 @@ describe('resource contracts', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.contracts.create({
+    const response = await client.webhooks.create({
       orgId: 'orgId',
-      accountId: 'x',
-      endDate: '2019-12-27',
+      credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST', empty: true, version: 0 },
+      description: 'x',
       name: 'x',
-      startDate: '2019-12-27',
-      code: 'JS!?Q0]r] ]$]',
-      customFields: { foo: 'string' },
-      description: 'description',
-      purchaseOrderNumber: 'purchaseOrderNumber',
+      url: 'x',
+      active: true,
+      code: 'code',
       version: 0,
     });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.contracts.retrieve('id');
+    const responsePromise = client.webhooks.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,12 +53,12 @@ describe('resource contracts', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.contracts.retrieve('id', { orgId: 'orgId' });
+    const response = await client.webhooks.retrieve('id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.webhooks.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -68,16 +66,16 @@ describe('resource contracts', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.webhooks.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.contracts.update('id', {
-      accountId: 'x',
-      endDate: '2019-12-27',
+    const responsePromise = client.webhooks.update('id', {
+      credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST' },
+      description: 'x',
       name: 'x',
-      startDate: '2019-12-27',
+      url: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -89,22 +87,20 @@ describe('resource contracts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.contracts.update('id', {
+    const response = await client.webhooks.update('id', {
       orgId: 'orgId',
-      accountId: 'x',
-      endDate: '2019-12-27',
+      credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST', empty: true, version: 0 },
+      description: 'x',
       name: 'x',
-      startDate: '2019-12-27',
-      code: 'JS!?Q0]r] ]$]',
-      customFields: { foo: 'string' },
-      description: 'description',
-      purchaseOrderNumber: 'purchaseOrderNumber',
+      url: 'x',
+      active: true,
+      code: 'code',
       version: 0,
     });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.contracts.list();
+    const responsePromise = client.webhooks.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -115,10 +111,8 @@ describe('resource contracts', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.contracts.list({
+    const response = await client.webhooks.list({
       orgId: 'orgId',
-      accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      codes: ['string'],
       ids: ['string'],
       nextToken: 'nextToken',
       pageSize: 1,
@@ -127,7 +121,7 @@ describe('resource contracts', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.webhooks.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -135,22 +129,15 @@ describe('resource contracts', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.list(
-        {
-          orgId: 'orgId',
-          accountId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-          codes: ['string'],
-          ids: ['string'],
-          nextToken: 'nextToken',
-          pageSize: 1,
-        },
+      client.webhooks.list(
+        { orgId: 'orgId', ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.contracts.delete('id');
+    const responsePromise = client.webhooks.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -161,12 +148,12 @@ describe('resource contracts', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.contracts.delete('id', { orgId: 'orgId' });
+    const response = await client.webhooks.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.contracts.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.webhooks.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -174,15 +161,12 @@ describe('resource contracts', () => {
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.contracts.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.webhooks.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('endDateBillingEntities: only required params', async () => {
-    const responsePromise = client.contracts.endDateBillingEntities('id', {
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-    });
+  test('setActive: only required params', async () => {
+    const responsePromise = client.webhooks.setActive('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -192,12 +176,21 @@ describe('resource contracts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('endDateBillingEntities: required and optional params', async () => {
-    const response = await client.contracts.endDateBillingEntities('id', {
-      orgId: 'orgId',
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-      applyToChildren: true,
-    });
+  test('setActive: required and optional params', async () => {
+    const response = await client.webhooks.setActive('id', { orgId: 'orgId', active: true });
+  });
+
+  test('setActive: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.webhooks.setActive('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('setActive: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.webhooks.setActive('id', { orgId: 'orgId', active: true }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

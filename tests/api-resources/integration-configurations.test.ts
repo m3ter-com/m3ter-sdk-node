@@ -11,12 +11,17 @@ const client = new M3ter({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource accounts', () => {
+describe('resource integrationConfigurations', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.accounts.create({
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
+    const responsePromise = client.integrationConfigurations.create({
+      configData: { foo: 'bar' },
+      credentials: { type: 'HTTP_BASIC' },
+      destination: 'destination',
+      destinationId: 'destinationId',
+      entityId: 'entityId',
+      entityType: 'entityType',
+      integrationCredentialsId: 'integrationCredentialsId',
+      name: 'name',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -28,37 +33,22 @@ describe('resource accounts', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.accounts.create({
+    const response = await client.integrationConfigurations.create({
       orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
       configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
+      credentials: { type: 'HTTP_BASIC', destination: 'WEBHOOK', empty: true, name: 'name', version: 0 },
+      destination: 'destination',
+      destinationId: 'destinationId',
+      entityId: 'entityId',
+      entityType: 'entityType',
+      integrationCredentialsId: 'integrationCredentialsId',
+      name: 'name',
       version: 0,
     });
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.accounts.retrieve('id');
+    const responsePromise = client.integrationConfigurations.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,28 +59,37 @@ describe('resource accounts', () => {
   });
 
   test('retrieve: required and optional params', async () => {
-    const response = await client.accounts.retrieve('id', { orgId: 'orgId' });
+    const response = await client.integrationConfigurations.retrieve('id', { orgId: 'orgId' });
   });
 
   test('retrieve: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.integrationConfigurations.retrieve('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.integrationConfigurations.retrieve(
+        'id',
+        { orgId: 'orgId' },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('update: only required params', async () => {
-    const responsePromise = client.accounts.update('id', {
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
+    const responsePromise = client.integrationConfigurations.update('id', {
+      configData: { foo: 'bar' },
+      credentials: { type: 'HTTP_BASIC' },
+      destination: 'destination',
+      destinationId: 'destinationId',
+      entityId: 'entityId',
+      entityType: 'entityType',
+      integrationCredentialsId: 'integrationCredentialsId',
+      name: 'name',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -102,37 +101,22 @@ describe('resource accounts', () => {
   });
 
   test('update: required and optional params', async () => {
-    const response = await client.accounts.update('id', {
+    const response = await client.integrationConfigurations.update('id', {
       orgId: 'orgId',
-      code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
-      name: 'x',
-      address: {
-        addressLine1: 'addressLine1',
-        addressLine2: 'addressLine2',
-        addressLine3: 'addressLine3',
-        addressLine4: 'addressLine4',
-        country: 'country',
-        locality: 'locality',
-        postCode: 'postCode',
-        region: 'region',
-      },
-      autoGenerateStatementMode: 'NONE',
-      billEpoch: '2019-12-27',
       configData: { foo: 'bar' },
-      creditApplicationOrder: ['PREPAYMENT'],
-      currency: 'USD',
-      customFields: { foo: 'string' },
-      daysBeforeBillDue: 1,
-      parentAccountId: 'parentAccountId',
-      purchaseOrderNumber: 'purchaseOrderNumber',
-      statementDefinitionId: 'statementDefinitionId',
+      credentials: { type: 'HTTP_BASIC', destination: 'WEBHOOK', empty: true, name: 'name', version: 0 },
+      destination: 'destination',
+      destinationId: 'destinationId',
+      entityId: 'entityId',
+      entityType: 'entityType',
+      integrationCredentialsId: 'integrationCredentialsId',
+      name: 'name',
       version: 0,
     });
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.accounts.list();
+    const responsePromise = client.integrationConfigurations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -143,10 +127,8 @@ describe('resource accounts', () => {
   });
 
   test('list: required and optional params', async () => {
-    const response = await client.accounts.list({
+    const response = await client.integrationConfigurations.list({
       orgId: 'orgId',
-      codes: ['string'],
-      ids: ['string'],
       nextToken: 'nextToken',
       pageSize: 1,
     });
@@ -154,7 +136,7 @@ describe('resource accounts', () => {
 
   test('list: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+    await expect(client.integrationConfigurations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
       M3ter.NotFoundError,
     );
   });
@@ -162,15 +144,15 @@ describe('resource accounts', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.list(
-        { orgId: 'orgId', codes: ['string'], ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+      client.integrationConfigurations.list(
+        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: only required params', async () => {
-    const responsePromise = client.accounts.delete('id');
+    const responsePromise = client.integrationConfigurations.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -181,28 +163,25 @@ describe('resource accounts', () => {
   });
 
   test('delete: required and optional params', async () => {
-    const response = await client.accounts.delete('id', { orgId: 'orgId' });
+    const response = await client.integrationConfigurations.delete('id', { orgId: 'orgId' });
   });
 
   test('delete: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
+    await expect(
+      client.integrationConfigurations.delete('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 
   test('delete: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+      client.integrationConfigurations.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('endDateBillingEntities: only required params', async () => {
-    const responsePromise = client.accounts.endDateBillingEntities('id', {
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-    });
+  test('enable: only required params', async () => {
+    const responsePromise = client.integrationConfigurations.enable('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -212,54 +191,26 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('endDateBillingEntities: required and optional params', async () => {
-    const response = await client.accounts.endDateBillingEntities('id', {
-      orgId: 'orgId',
-      billingEntities: ['CONTRACT'],
-      endDate: '2019-12-27T18:11:19.117Z',
-      applyToChildren: true,
-    });
+  test('enable: required and optional params', async () => {
+    const response = await client.integrationConfigurations.enable('id', { orgId: 'orgId' });
   });
 
-  test('listChildren: only required params', async () => {
-    const responsePromise = client.accounts.listChildren('id');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('listChildren: required and optional params', async () => {
-    const response = await client.accounts.listChildren('id', {
-      orgId: 'orgId',
-      nextToken: 'nextToken',
-      pageSize: 1,
-    });
-  });
-
-  test('listChildren: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.listChildren('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('listChildren: request options and params are passed correctly', async () => {
+  test('enable: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.listChildren(
-        'id',
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
+      client.integrationConfigurations.enable('id', { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
 
-  test('search: only required params', async () => {
-    const responsePromise = client.accounts.search();
+  test('enable: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.integrationConfigurations.enable('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('getByEntity: only required params', async () => {
+    const responsePromise = client.integrationConfigurations.getByEntity('entityType');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -269,38 +220,26 @@ describe('resource accounts', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('search: required and optional params', async () => {
-    const response = await client.accounts.search({
+  test('getByEntity: required and optional params', async () => {
+    const response = await client.integrationConfigurations.getByEntity('entityType', {
       orgId: 'orgId',
-      fromDocument: 0,
-      operator: 'AND',
-      pageSize: 1,
-      searchQuery: 'searchQuery',
-      sortBy: 'sortBy',
-      sortOrder: 'ASC',
+      entityId: 'entityId',
     });
   });
 
-  test('search: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.accounts.search({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('search: request options and params are passed correctly', async () => {
+  test('getByEntity: request options instead of params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.accounts.search(
-        {
-          orgId: 'orgId',
-          fromDocument: 0,
-          operator: 'AND',
-          pageSize: 1,
-          searchQuery: 'searchQuery',
-          sortBy: 'sortBy',
-          sortOrder: 'ASC',
-        },
+      client.integrationConfigurations.getByEntity('entityType', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('getByEntity: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.integrationConfigurations.getByEntity(
+        'entityType',
+        { orgId: 'orgId', entityId: 'entityId' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
