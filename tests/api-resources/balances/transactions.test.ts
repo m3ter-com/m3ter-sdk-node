@@ -74,4 +74,37 @@ describe('resource transactions', () => {
       ),
     ).rejects.toThrow(M3ter.NotFoundError);
   });
+
+  test('summary: only required params', async () => {
+    const responsePromise = client.balances.transactions.summary('balanceId');
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('summary: required and optional params', async () => {
+    const response = await client.balances.transactions.summary('balanceId', { orgId: 'orgId' });
+  });
+
+  test('summary: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.balances.transactions.summary('balanceId', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('summary: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.balances.transactions.summary(
+        'balanceId',
+        { orgId: 'orgId' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
 });

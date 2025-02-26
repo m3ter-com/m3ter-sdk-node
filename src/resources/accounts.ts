@@ -83,21 +83,41 @@ export class Accounts extends APIResource {
   }
 
   /**
+   * Apply the specified end-date to billing entities associated with an Account.
+   *
+   * **NOTE:**
+   *
+   * - When you successfully end-date billing entities, the version number of each
+   *   entity is incremented.
+   */
+  endDateBillingEntities(
+    id: string,
+    params: AccountEndDateBillingEntitiesParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountEndDateBillingEntitiesResponse> {
+    const { orgId = this._client.orgId, ...body } = params;
+    return this._client.put(`/organizations/${orgId}/accounts/${id}/enddatebillingentities`, {
+      body,
+      ...options,
+    });
+  }
+
+  /**
    * Retrieve a list of Accounts that are children of the specified Account.
    */
-  listChildren(
+  getChildren(
     id: string,
-    params?: AccountListChildrenParams,
+    params?: AccountGetChildrenParams,
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account>;
-  listChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
-  listChildren(
+  getChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  getChildren(
     id: string,
-    params: AccountListChildrenParams | Core.RequestOptions = {},
+    params: AccountGetChildrenParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<Account> {
     if (isRequestOptions(params)) {
-      return this.listChildren(id, {}, params);
+      return this.getChildren(id, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.get(`/organizations/${orgId}/accounts/${id}/children`, { query, ...options });
@@ -302,6 +322,103 @@ export namespace Account {
     postCode?: string;
 
     region?: string;
+  }
+}
+
+export interface AccountEndDateBillingEntitiesResponse {
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the entities for which the update failed.
+   */
+  failedEntities?: AccountEndDateBillingEntitiesResponse.FailedEntities;
+
+  /**
+   * A message indicating the status of the operation.
+   */
+  statusMessage?: string;
+
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the updated entities.
+   */
+  updatedEntities?: AccountEndDateBillingEntitiesResponse.UpdatedEntities;
+}
+
+export namespace AccountEndDateBillingEntitiesResponse {
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the entities for which the update failed.
+   */
+  export interface FailedEntities {
+    ACCOUNTPLAN?: FailedEntities.Accountplan;
+
+    CONTRACT?: FailedEntities.Contract;
+
+    COUNTER_PRICINGS?: FailedEntities.CounterPricings;
+
+    PREPAYMENT?: FailedEntities.Prepayment;
+
+    PRICINGS?: FailedEntities.Pricings;
+  }
+
+  export namespace FailedEntities {
+    export interface Accountplan {
+      empty?: boolean;
+    }
+
+    export interface Contract {
+      empty?: boolean;
+    }
+
+    export interface CounterPricings {
+      empty?: boolean;
+    }
+
+    export interface Prepayment {
+      empty?: boolean;
+    }
+
+    export interface Pricings {
+      empty?: boolean;
+    }
+  }
+
+  /**
+   * A dictionary with keys as identifiers of billing entities and values as lists
+   * containing details of the updated entities.
+   */
+  export interface UpdatedEntities {
+    ACCOUNTPLAN?: UpdatedEntities.Accountplan;
+
+    CONTRACT?: UpdatedEntities.Contract;
+
+    COUNTER_PRICINGS?: UpdatedEntities.CounterPricings;
+
+    PREPAYMENT?: UpdatedEntities.Prepayment;
+
+    PRICINGS?: UpdatedEntities.Pricings;
+  }
+
+  export namespace UpdatedEntities {
+    export interface Accountplan {
+      empty?: boolean;
+    }
+
+    export interface Contract {
+      empty?: boolean;
+    }
+
+    export interface CounterPricings {
+      empty?: boolean;
+    }
+
+    export interface Prepayment {
+      empty?: boolean;
+    }
+
+    export interface Pricings {
+      empty?: boolean;
+    }
   }
 }
 
@@ -728,7 +845,35 @@ export interface AccountDeleteParams {
   orgId?: string;
 }
 
-export interface AccountListChildrenParams {
+export interface AccountEndDateBillingEntitiesParams {
+  /**
+   * Path param: UUID of the Organization.
+   */
+  orgId?: string;
+
+  /**
+   * Body param: Defines which billing entities associated with the Account will have
+   * the specified end-date applied. For example, if you want the specified end-date
+   * to be applied to all Prepayments/Commitments created for the Account use
+   * `"PREPAYMENT"`.
+   */
+  billingEntities: Array<'CONTRACT' | 'ACCOUNTPLAN' | 'PREPAYMENT' | 'PRICINGS' | 'COUNTER_PRICINGS'>;
+
+  /**
+   * Body param: The end date and time applied to the specified billing entities _(in
+   * ISO 8601 format)_.
+   */
+  endDate: string;
+
+  /**
+   * Body param: A Boolean TRUE/FALSE flag. For Parent Accounts, set to TRUE if you
+   * want the specified end-date to be applied to any billing entities associated
+   * with Child Accounts. _(Optional)_
+   */
+  applyToChildren?: boolean;
+}
+
+export interface AccountGetChildrenParams {
   /**
    * Path param: UUID of the organization. The Organization represents your company
    * as a direct customer of the m3ter service.
@@ -794,6 +939,7 @@ Accounts.AccountsCursor = AccountsCursor;
 export declare namespace Accounts {
   export {
     type Account as Account,
+    type AccountEndDateBillingEntitiesResponse as AccountEndDateBillingEntitiesResponse,
     type AccountSearchResponse as AccountSearchResponse,
     AccountsCursor as AccountsCursor,
     type AccountCreateParams as AccountCreateParams,
@@ -801,7 +947,8 @@ export declare namespace Accounts {
     type AccountUpdateParams as AccountUpdateParams,
     type AccountListParams as AccountListParams,
     type AccountDeleteParams as AccountDeleteParams,
-    type AccountListChildrenParams as AccountListChildrenParams,
+    type AccountEndDateBillingEntitiesParams as AccountEndDateBillingEntitiesParams,
+    type AccountGetChildrenParams as AccountGetChildrenParams,
     type AccountSearchParams as AccountSearchParams,
   };
 }

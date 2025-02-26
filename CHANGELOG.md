@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-alpha.5 (2025-02-26)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
+
+### Features
+
+* **api:** add missing endpoints ([#30](https://github.com/m3ter-com/m3ter-sdk-node/issues/30)) ([da5a440](https://github.com/m3ter-com/m3ter-sdk-node/commit/da5a4401a8b205f48b20f39f3df2786c272cecd3))
+* **api:** snake case method names ([#31](https://github.com/m3ter-com/m3ter-sdk-node/issues/31)) ([edbbbd8](https://github.com/m3ter-com/m3ter-sdk-node/commit/edbbbd81e5f4dd2d46853ce195a45307eb37ab46))
+* **api:** update open api spec ([#29](https://github.com/m3ter-com/m3ter-sdk-node/issues/29)) ([cbbb0fe](https://github.com/m3ter-com/m3ter-sdk-node/commit/cbbb0fe5ee2ac2960256933e3a648403593b6c44))
+
 ## 0.1.0-alpha.4 (2025-02-24)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
