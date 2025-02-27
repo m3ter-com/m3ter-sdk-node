@@ -14,7 +14,7 @@ const client = new M3ter({
 describe('resource invitations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.users.invitations.create({
-      email: 'dev@stainlessapi.com',
+      email: 'dev@stainless.com',
       firstName: 'x',
       lastName: 'x',
     });
@@ -30,7 +30,7 @@ describe('resource invitations', () => {
   test('create: required and optional params', async () => {
     const response = await client.users.invitations.create({
       orgId: 'orgId',
-      email: 'dev@stainlessapi.com',
+      email: 'dev@stainless.com',
       firstName: 'x',
       lastName: 'x',
       contactNumber: 'contactNumber',
