@@ -15,7 +15,7 @@ describe('resource accounts', () => {
   test('create: only required params', async () => {
     const responsePromise = client.accounts.create({
       code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
+      emailAddress: 'dev@stainless.com',
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -31,7 +31,7 @@ describe('resource accounts', () => {
     const response = await client.accounts.create({
       orgId: 'orgId',
       code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
+      emailAddress: 'dev@stainless.com',
       name: 'x',
       address: {
         addressLine1: 'addressLine1',
@@ -89,7 +89,7 @@ describe('resource accounts', () => {
   test('update: only required params', async () => {
     const responsePromise = client.accounts.update('id', {
       code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
+      emailAddress: 'dev@stainless.com',
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -105,7 +105,7 @@ describe('resource accounts', () => {
     const response = await client.accounts.update('id', {
       orgId: 'orgId',
       code: 'JS!?Q0]r] ]$]',
-      emailAddress: 'dev@stainlessapi.com',
+      emailAddress: 'dev@stainless.com',
       name: 'x',
       address: {
         addressLine1: 'addressLine1',
