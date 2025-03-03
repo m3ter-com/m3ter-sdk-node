@@ -436,7 +436,10 @@ export interface ClientOptions {
    */
   token?: string | null | undefined;
 
-  orgId: string;
+  /**
+   * Defaults to process.env['M3TER_ORG_ID'].
+   */
+  orgId?: string | null | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -508,7 +511,7 @@ export class M3ter extends Core.APIClient {
   apiKey: string;
   apiSecret: string;
   token: string | null;
-  orgId: string;
+  orgId: string | null;
 
   private _options: ClientOptions;
 
@@ -518,7 +521,7 @@ export class M3ter extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['M3TER_API_KEY'] ?? undefined]
    * @param {string | undefined} [opts.apiSecret=process.env['M3TER_API_SECRET'] ?? undefined]
    * @param {string | null | undefined} [opts.token=process.env['M3TER_API_TOKEN'] ?? null]
-   * @param {string} opts.orgId
+   * @param {string | null | undefined} [opts.orgId=process.env['M3TER_ORG_ID'] ?? null]
    * @param {string} [opts.baseURL=process.env['M3TER_BASE_URL'] ?? https://api.m3ter.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -533,9 +536,9 @@ export class M3ter extends Core.APIClient {
     apiKey = Core.readEnv('M3TER_API_KEY'),
     apiSecret = Core.readEnv('M3TER_API_SECRET'),
     token = Core.readEnv('M3TER_API_TOKEN') ?? null,
-    orgId,
+    orgId = Core.readEnv('M3TER_ORG_ID') ?? null,
     ...opts
-  }: ClientOptions) {
+  }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.M3terError(
         "The M3TER_API_KEY environment variable is missing or empty; either provide it, or instantiate the M3ter client with an apiKey option, like new M3ter({ apiKey: 'My API Key' }).",
@@ -544,11 +547,6 @@ export class M3ter extends Core.APIClient {
     if (apiSecret === undefined) {
       throw new Errors.M3terError(
         "The M3TER_API_SECRET environment variable is missing or empty; either provide it, or instantiate the M3ter client with an apiSecret option, like new M3ter({ apiSecret: 'My API Secret' }).",
-      );
-    }
-    if (orgId === undefined) {
-      throw new Errors.M3terError(
-        "Missing required client option orgId; you need to instantiate the M3ter client with an orgId option, like new M3ter({ orgId: 'My Org ID' }).",
       );
     }
 

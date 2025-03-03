@@ -7,13 +7,12 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
-  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource customFields', () => {
   test('retrieve: only required params', async () => {
-    const responsePromise = client.customFields.retrieve();
+    const responsePromise = client.customFields.retrieve({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -27,22 +26,8 @@ describe('resource customFields', () => {
     const response = await client.customFields.retrieve({ orgId: 'orgId' });
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.customFields.retrieve({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.customFields.retrieve({ orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('update: only required params', async () => {
-    const responsePromise = client.customFields.update({});
+    const responsePromise = client.customFields.update({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

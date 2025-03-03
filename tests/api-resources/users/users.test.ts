@@ -7,13 +7,12 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
-  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource users', () => {
   test('retrieve: only required params', async () => {
-    const responsePromise = client.users.retrieve('id');
+    const responsePromise = client.users.retrieve('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -27,22 +26,8 @@ describe('resource users', () => {
     const response = await client.users.retrieve('id', { orgId: 'orgId' });
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('update: only required params', async () => {
-    const responsePromise = client.users.update('id', {});
+    const responsePromise = client.users.update('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,7 +47,7 @@ describe('resource users', () => {
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.users.list();
+    const responsePromise = client.users.list({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -81,25 +66,8 @@ describe('resource users', () => {
     });
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.list(
-        { orgId: 'orgId', ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('getPermissions: only required params', async () => {
-    const responsePromise = client.users.getPermissions('id');
+    const responsePromise = client.users.getPermissions('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -117,26 +85,8 @@ describe('resource users', () => {
     });
   });
 
-  test('getPermissions: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.getPermissions('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('getPermissions: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.getPermissions(
-        'id',
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('getUserGroups: only required params', async () => {
-    const responsePromise = client.users.getUserGroups('id');
+    const responsePromise = client.users.getUserGroups('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -154,26 +104,8 @@ describe('resource users', () => {
     });
   });
 
-  test('getUserGroups: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.getUserGroups('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('getUserGroups: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.getUserGroups(
-        'id',
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('me: only required params', async () => {
-    const responsePromise = client.users.me();
+    const responsePromise = client.users.me({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -187,20 +119,8 @@ describe('resource users', () => {
     const response = await client.users.me({ orgId: 'orgId' });
   });
 
-  test('me: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.me({ path: '/_stainless_unknown_path' })).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('me: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.me({ orgId: 'orgId' }, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
   test('resendPassword: only required params', async () => {
-    const responsePromise = client.users.resendPassword('id');
+    const responsePromise = client.users.resendPassword('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -212,19 +132,5 @@ describe('resource users', () => {
 
   test('resendPassword: required and optional params', async () => {
     const response = await client.users.resendPassword('id', { orgId: 'orgId' });
-  });
-
-  test('resendPassword: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.resendPassword('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('resendPassword: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.resendPassword('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

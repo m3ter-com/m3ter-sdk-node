@@ -7,13 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
-  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource permissionPolicies', () => {
   test('create: only required params', async () => {
     const responsePromise = client.permissionPolicies.create({
+      orgId: 'orgId',
       name: 'x',
       permissionPolicy: [{ action: ['ALL'], effect: 'ALLOW', resource: ['string'] }],
     });
@@ -36,7 +36,7 @@ describe('resource permissionPolicies', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.permissionPolicies.retrieve('id');
+    const responsePromise = client.permissionPolicies.retrieve('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -50,22 +50,9 @@ describe('resource permissionPolicies', () => {
     const response = await client.permissionPolicies.retrieve('id', { orgId: 'orgId' });
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.retrieve('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('update: only required params', async () => {
     const responsePromise = client.permissionPolicies.update('id', {
+      orgId: 'orgId',
       name: 'x',
       permissionPolicy: [{ action: ['ALL'], effect: 'ALLOW', resource: ['string'] }],
     });
@@ -88,7 +75,7 @@ describe('resource permissionPolicies', () => {
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.permissionPolicies.list();
+    const responsePromise = client.permissionPolicies.list({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -106,25 +93,8 @@ describe('resource permissionPolicies', () => {
     });
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.permissionPolicies.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.list(
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('delete: only required params', async () => {
-    const responsePromise = client.permissionPolicies.delete('id');
+    const responsePromise = client.permissionPolicies.delete('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -138,22 +108,9 @@ describe('resource permissionPolicies', () => {
     const response = await client.permissionPolicies.delete('id', { orgId: 'orgId' });
   });
 
-  test('delete: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.delete('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('delete: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('addToServiceUser: only required params', async () => {
     const responsePromise = client.permissionPolicies.addToServiceUser('permissionPolicyId', {
+      orgId: 'orgId',
       principalId: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -174,7 +131,9 @@ describe('resource permissionPolicies', () => {
   });
 
   test('addToSupportUser: only required params', async () => {
-    const responsePromise = client.permissionPolicies.addToSupportUser('permissionPolicyId', {});
+    const responsePromise = client.permissionPolicies.addToSupportUser('permissionPolicyId', {
+      orgId: 'orgId',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -192,7 +151,10 @@ describe('resource permissionPolicies', () => {
   });
 
   test('addToUser: only required params', async () => {
-    const responsePromise = client.permissionPolicies.addToUser('permissionPolicyId', { principalId: 'x' });
+    const responsePromise = client.permissionPolicies.addToUser('permissionPolicyId', {
+      orgId: 'orgId',
+      principalId: 'x',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -212,6 +174,7 @@ describe('resource permissionPolicies', () => {
 
   test('addToUserGroup: only required params', async () => {
     const responsePromise = client.permissionPolicies.addToUserGroup('permissionPolicyId', {
+      orgId: 'orgId',
       principalId: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -233,6 +196,7 @@ describe('resource permissionPolicies', () => {
 
   test('removeFromServiceUser: only required params', async () => {
     const responsePromise = client.permissionPolicies.removeFromServiceUser('permissionPolicyId', {
+      orgId: 'orgId',
       principalId: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -253,7 +217,9 @@ describe('resource permissionPolicies', () => {
   });
 
   test('removeFromSupportUser: only required params', async () => {
-    const responsePromise = client.permissionPolicies.removeFromSupportUser('permissionPolicyId');
+    const responsePromise = client.permissionPolicies.removeFromSupportUser('permissionPolicyId', {
+      orgId: 'orgId',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -269,28 +235,9 @@ describe('resource permissionPolicies', () => {
     });
   });
 
-  test('removeFromSupportUser: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.removeFromSupportUser('permissionPolicyId', {
-        path: '/_stainless_unknown_path',
-      }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('removeFromSupportUser: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.permissionPolicies.removeFromSupportUser(
-        'permissionPolicyId',
-        { orgId: 'orgId' },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('removeFromUser: only required params', async () => {
     const responsePromise = client.permissionPolicies.removeFromUser('permissionPolicyId', {
+      orgId: 'orgId',
       principalId: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -312,6 +259,7 @@ describe('resource permissionPolicies', () => {
 
   test('removeFromUserGroup: only required params', async () => {
     const responsePromise = client.permissionPolicies.removeFromUserGroup('permissionPolicyId', {
+      orgId: 'orgId',
       principalId: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
