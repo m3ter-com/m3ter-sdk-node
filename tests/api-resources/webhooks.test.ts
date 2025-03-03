@@ -7,13 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource webhooks', () => {
   test('create: only required params', async () => {
     const responsePromise = client.webhooks.create({
-      orgId: 'orgId',
       credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST' },
       description: 'x',
       name: 'x',
@@ -42,7 +42,7 @@ describe('resource webhooks', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.webhooks.retrieve('id', { orgId: 'orgId' });
+    const responsePromise = client.webhooks.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -56,9 +56,22 @@ describe('resource webhooks', () => {
     const response = await client.webhooks.retrieve('id', { orgId: 'orgId' });
   });
 
+  test('retrieve: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.webhooks.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.webhooks.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('update: only required params', async () => {
     const responsePromise = client.webhooks.update('id', {
-      orgId: 'orgId',
       credentials: { apiKey: 'x', secret: 'x', type: 'M3TER_SIGNED_REQUEST' },
       description: 'x',
       name: 'x',
@@ -87,7 +100,7 @@ describe('resource webhooks', () => {
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.webhooks.list({ orgId: 'orgId' });
+    const responsePromise = client.webhooks.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -106,8 +119,25 @@ describe('resource webhooks', () => {
     });
   });
 
+  test('list: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.webhooks.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.webhooks.list(
+        { orgId: 'orgId', ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('delete: only required params', async () => {
-    const responsePromise = client.webhooks.delete('id', { orgId: 'orgId' });
+    const responsePromise = client.webhooks.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -121,8 +151,22 @@ describe('resource webhooks', () => {
     const response = await client.webhooks.delete('id', { orgId: 'orgId' });
   });
 
+  test('delete: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.webhooks.delete('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.webhooks.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('setActive: only required params', async () => {
-    const responsePromise = client.webhooks.setActive('id', { orgId: 'orgId' });
+    const responsePromise = client.webhooks.setActive('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -134,5 +178,19 @@ describe('resource webhooks', () => {
 
   test('setActive: required and optional params', async () => {
     const response = await client.webhooks.setActive('id', { orgId: 'orgId', active: true });
+  });
+
+  test('setActive: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.webhooks.setActive('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('setActive: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.webhooks.setActive('id', { orgId: 'orgId', active: true }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

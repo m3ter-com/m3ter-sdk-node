@@ -7,12 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource billJobs', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.billJobs.create({ orgId: 'orgId' });
+    const responsePromise = client.billJobs.create({});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -44,7 +45,7 @@ describe('resource billJobs', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.billJobs.retrieve('id', { orgId: 'orgId' });
+    const responsePromise = client.billJobs.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -58,8 +59,22 @@ describe('resource billJobs', () => {
     const response = await client.billJobs.retrieve('id', { orgId: 'orgId' });
   });
 
+  test('retrieve: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.billJobs.retrieve('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.billJobs.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('list: only required params', async () => {
-    const responsePromise = client.billJobs.list({ orgId: 'orgId' });
+    const responsePromise = client.billJobs.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -79,8 +94,25 @@ describe('resource billJobs', () => {
     });
   });
 
+  test('list: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.billJobs.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.billJobs.list(
+        { orgId: 'orgId', active: 'active', nextToken: 'nextToken', pageSize: 1, status: 'status' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('cancel: only required params', async () => {
-    const responsePromise = client.billJobs.cancel('id', { orgId: 'orgId' });
+    const responsePromise = client.billJobs.cancel('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -94,8 +126,22 @@ describe('resource billJobs', () => {
     const response = await client.billJobs.cancel('id', { orgId: 'orgId' });
   });
 
+  test('cancel: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(client.billJobs.cancel('id', { path: '/_stainless_unknown_path' })).rejects.toThrow(
+      M3ter.NotFoundError,
+    );
+  });
+
+  test('cancel: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.billJobs.cancel('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('recalculate: only required params', async () => {
-    const responsePromise = client.billJobs.recalculate({ orgId: 'orgId', billIds: ['string'] });
+    const responsePromise = client.billJobs.recalculate({ billIds: ['string'] });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
