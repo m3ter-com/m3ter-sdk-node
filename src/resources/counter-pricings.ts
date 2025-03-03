@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class CounterPricings extends APIResource {
@@ -188,7 +189,7 @@ export interface CounterPricing {
    */
   planTemplateId?: string;
 
-  pricingBands?: Array<CounterPricing.PricingBand>;
+  pricingBands?: Array<Shared.PricingBand>;
 
   /**
    * The default value is **TRUE**.
@@ -239,35 +240,6 @@ export interface CounterPricing {
   startDate?: string;
 }
 
-export namespace CounterPricing {
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
-}
-
 export interface CounterPricingCreateParams {
   /**
    * Path param: UUID of the Organization. The Organization represents your company
@@ -283,7 +255,7 @@ export interface CounterPricingCreateParams {
   /**
    * Body param:
    */
-  pricingBands: Array<CounterPricingCreateParams.PricingBand>;
+  pricingBands: Array<Shared.PricingBand>;
 
   /**
    * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
@@ -405,35 +377,6 @@ export interface CounterPricingCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace CounterPricingCreateParams {
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
 }
 
 export interface CounterPricingRetrieveParams {
@@ -459,7 +402,7 @@ export interface CounterPricingUpdateParams {
   /**
    * Body param:
    */
-  pricingBands: Array<CounterPricingUpdateParams.PricingBand>;
+  pricingBands: Array<Shared.PricingBand>;
 
   /**
    * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
@@ -581,35 +524,6 @@ export interface CounterPricingUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace CounterPricingUpdateParams {
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
 }
 
 export interface CounterPricingListParams extends CursorParams {

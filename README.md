@@ -6,7 +6,7 @@ This library provides convenient access to the M3ter REST API from server-side T
 
 The REST API documentation can be found on [www.m3ter.com](https://www.m3ter.com). The full API of this library can be found in [api.md](api.md).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
@@ -15,7 +15,7 @@ npm install git+ssh://git@github.com:m3ter-com/m3ter-sdk-node.git
 ```
 
 > [!NOTE]
-> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install m3ter-sdk`
+> Once this package is [published to npm](https://app.stainless.com/docs/guides/publish), this will become: `npm install m3ter-sdk`
 
 ## Usage
 

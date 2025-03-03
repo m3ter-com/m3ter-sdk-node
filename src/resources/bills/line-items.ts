@@ -165,6 +165,8 @@ export interface LineItem {
    */
   dtLastModified?: string;
 
+  group?: Record<string, string>;
+
   /**
    * Boolean flag indicating whether the Bill line item has associated statement
    * usage in JSON format. When a Bill statement is generated, usage line items have

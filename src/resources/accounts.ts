@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class Accounts extends APIResource {
@@ -124,7 +125,12 @@ export class Accounts extends APIResource {
   }
 
   /**
-   * Search for account entities
+   * Search for Account entities.
+   *
+   * This endpoint executes a search query for Accounts based on the user specified
+   * search criteria. The search query is customizable, allowing for complex nested
+   * conditions and sorting. The returned list of Accounts can be paginated for
+   * easier management.
    */
   search(params?: AccountSearchParams, options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
   search(options?: Core.RequestOptions): Core.APIPromise<AccountSearchResponse>;
@@ -161,7 +167,7 @@ export interface Account {
   /**
    * Contact address.
    */
-  address?: Account.Address;
+  address?: Address;
 
   /**
    * Specify whether to auto-generate statements once Bills are approved or locked.
@@ -302,27 +308,25 @@ export interface Account {
   statementDefinitionId?: string;
 }
 
-export namespace Account {
-  /**
-   * Contact address.
-   */
-  export interface Address {
-    addressLine1?: string;
+/**
+ * Contact address.
+ */
+export interface Address {
+  addressLine1?: string;
 
-    addressLine2?: string;
+  addressLine2?: string;
 
-    addressLine3?: string;
+  addressLine3?: string;
 
-    addressLine4?: string;
+  addressLine4?: string;
 
-    country?: string;
+  country?: string;
 
-    locality?: string;
+  locality?: string;
 
-    postCode?: string;
+  postCode?: string;
 
-    region?: string;
-  }
+  region?: string;
 }
 
 export interface AccountEndDateBillingEntitiesResponse {
@@ -350,37 +354,15 @@ export namespace AccountEndDateBillingEntitiesResponse {
    * containing details of the entities for which the update failed.
    */
   export interface FailedEntities {
-    ACCOUNTPLAN?: FailedEntities.Accountplan;
+    ACCOUNTPLAN?: Shared.SetString;
 
-    CONTRACT?: FailedEntities.Contract;
+    CONTRACT?: Shared.SetString;
 
-    COUNTER_PRICINGS?: FailedEntities.CounterPricings;
+    COUNTER_PRICINGS?: Shared.SetString;
 
-    PREPAYMENT?: FailedEntities.Prepayment;
+    PREPAYMENT?: Shared.SetString;
 
-    PRICINGS?: FailedEntities.Pricings;
-  }
-
-  export namespace FailedEntities {
-    export interface Accountplan {
-      empty?: boolean;
-    }
-
-    export interface Contract {
-      empty?: boolean;
-    }
-
-    export interface CounterPricings {
-      empty?: boolean;
-    }
-
-    export interface Prepayment {
-      empty?: boolean;
-    }
-
-    export interface Pricings {
-      empty?: boolean;
-    }
+    PRICINGS?: Shared.SetString;
   }
 
   /**
@@ -388,37 +370,15 @@ export namespace AccountEndDateBillingEntitiesResponse {
    * containing details of the updated entities.
    */
   export interface UpdatedEntities {
-    ACCOUNTPLAN?: UpdatedEntities.Accountplan;
+    ACCOUNTPLAN?: Shared.SetString;
 
-    CONTRACT?: UpdatedEntities.Contract;
+    CONTRACT?: Shared.SetString;
 
-    COUNTER_PRICINGS?: UpdatedEntities.CounterPricings;
+    COUNTER_PRICINGS?: Shared.SetString;
 
-    PREPAYMENT?: UpdatedEntities.Prepayment;
+    PREPAYMENT?: Shared.SetString;
 
-    PRICINGS?: UpdatedEntities.Pricings;
-  }
-
-  export namespace UpdatedEntities {
-    export interface Accountplan {
-      empty?: boolean;
-    }
-
-    export interface Contract {
-      empty?: boolean;
-    }
-
-    export interface CounterPricings {
-      empty?: boolean;
-    }
-
-    export interface Prepayment {
-      empty?: boolean;
-    }
-
-    export interface Pricings {
-      empty?: boolean;
-    }
+    PRICINGS?: Shared.SetString;
   }
 }
 
@@ -454,7 +414,7 @@ export interface AccountCreateParams {
   /**
    * Body param: Contact address.
    */
-  address?: AccountCreateParams.Address;
+  address?: Address;
 
   /**
    * Body param: Specify whether to auto-generate statements once Bills are approved
@@ -594,29 +554,6 @@ export interface AccountCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace AccountCreateParams {
-  /**
-   * Contact address.
-   */
-  export interface Address {
-    addressLine1?: string;
-
-    addressLine2?: string;
-
-    addressLine3?: string;
-
-    addressLine4?: string;
-
-    country?: string;
-
-    locality?: string;
-
-    postCode?: string;
-
-    region?: string;
-  }
 }
 
 export interface AccountRetrieveParams {
@@ -653,7 +590,7 @@ export interface AccountUpdateParams {
   /**
    * Body param: Contact address.
    */
-  address?: AccountUpdateParams.Address;
+  address?: Address;
 
   /**
    * Body param: Specify whether to auto-generate statements once Bills are approved
@@ -793,29 +730,6 @@ export interface AccountUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace AccountUpdateParams {
-  /**
-   * Contact address.
-   */
-  export interface Address {
-    addressLine1?: string;
-
-    addressLine2?: string;
-
-    addressLine3?: string;
-
-    addressLine4?: string;
-
-    country?: string;
-
-    locality?: string;
-
-    postCode?: string;
-
-    region?: string;
-  }
 }
 
 export interface AccountListParams extends CursorParams {
@@ -893,43 +807,58 @@ export interface AccountGetChildrenParams {
 
 export interface AccountSearchParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: UUID of the Organization.
    */
   orgId?: string;
 
   /**
-   * Query param: fromDocument for multi page retrievals
+   * Query param: `fromDocument` for multi page retrievals.
    */
   fromDocument?: number;
 
   /**
-   * Query param: Search Operator to be used while querying search
+   * Query param: Search Operator to be used while querying search.
    */
   operator?: 'AND' | 'OR';
 
   /**
-   * Query param: Number of Accounts to retrieve per page
+   * Query param: Number of Accounts to retrieve per page.
+   *
+   * **NOTE:** If not defined, default is 10.
    */
   pageSize?: number;
 
   /**
-   * Query param: Query for data using special syntax. Query parameters should be
-   * delimited using $ Allowed comparators are > (greater than), >= (grater or equal
-   * than), : (equal), < (less than), <= (less than or equal), ~ (contains). Allowed
-   * parameters: name, code, currency, purchaseOrderNumber, parentAccountId, codes,
-   * id, createdBy, dtCreated, lastModifiedBy, ids.Query example:
-   * searchQuery=name~test$currency:USD. This query is translated into: find accounts
-   * that name contains 'test' AND currency is USD.
+   * Query param: Query for data using special syntax:
+   *
+   * - Query parameters should be delimited using the $ (dollar sign).
+   * - Allowed comparators are:
+   *   - (greater than) >
+   *   - (greater than or equal to) >=
+   *   - (equal to) :
+   *   - (less than) <
+   *   - (less than or equal to) <=
+   *   - (match phrase/prefix) ~
+   * - Allowed parameters are: name, code, currency, purchaseOrderNumber,
+   *   parentAccountId, codes, id, createdBy, dtCreated, lastModifiedBy, ids.
+   * - Query example:
+   *   - searchQuery=name~Premium On$currency:USD.
+   *   - This query is translated into: find accounts whose name contains the
+   *     phrase/prefix 'Premium On' AND the account currency is USD.
+   *
+   * **Note:** Using the ~ match phrase/prefix comparator. For best results, we
+   * recommend treating this as a "starts with" comparator for your search query.
    */
   searchQuery?: string;
 
   /**
-   * Query param: Name of the parameter on which sorting is performed
+   * Query param: Name of the parameter on which sorting is performed. Use any field
+   * available on the Account entity to sort by, such as `name`, `code`, and so on.
    */
   sortBy?: string;
 
   /**
-   * Query param: Sorting order
+   * Query param: Sorting order.
    */
   sortOrder?: 'ASC' | 'DESC';
 }
@@ -939,6 +868,7 @@ Accounts.AccountsCursor = AccountsCursor;
 export declare namespace Accounts {
   export {
     type Account as Account,
+    type Address as Address,
     type AccountEndDateBillingEntitiesResponse as AccountEndDateBillingEntitiesResponse,
     type AccountSearchResponse as AccountSearchResponse,
     AccountsCursor as AccountsCursor,

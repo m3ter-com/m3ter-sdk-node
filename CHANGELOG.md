@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.6 (2025-03-03)
+
+Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
+
+### Features
+
+* **api:** Spec Update + Various Fixes ([#36](https://github.com/m3ter-com/m3ter-sdk-node/issues/36)) ([0d0c5a1](https://github.com/m3ter-com/m3ter-sdk-node/commit/0d0c5a17c7d34e3b4abb5732bcca8edc2f1a9a76))
+
+
+### Documentation
+
+* update URLs from stainlessapi.com to stainless.com ([#34](https://github.com/m3ter-com/m3ter-sdk-node/issues/34)) ([7f4f8dd](https://github.com/m3ter-com/m3ter-sdk-node/commit/7f4f8ddadaea288f59b30e09f8ae1958a794362b))
+
 ## 0.1.0-alpha.5 (2025-02-26)
 
 Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)

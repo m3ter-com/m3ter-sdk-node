@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class Contracts extends APIResource {
@@ -243,37 +244,15 @@ export namespace ContractEndDateBillingEntitiesResponse {
    * containing details of the entities for which the update failed.
    */
   export interface FailedEntities {
-    ACCOUNTPLAN?: FailedEntities.Accountplan;
+    ACCOUNTPLAN?: Shared.SetString;
 
-    CONTRACT?: FailedEntities.Contract;
+    CONTRACT?: Shared.SetString;
 
-    COUNTER_PRICINGS?: FailedEntities.CounterPricings;
+    COUNTER_PRICINGS?: Shared.SetString;
 
-    PREPAYMENT?: FailedEntities.Prepayment;
+    PREPAYMENT?: Shared.SetString;
 
-    PRICINGS?: FailedEntities.Pricings;
-  }
-
-  export namespace FailedEntities {
-    export interface Accountplan {
-      empty?: boolean;
-    }
-
-    export interface Contract {
-      empty?: boolean;
-    }
-
-    export interface CounterPricings {
-      empty?: boolean;
-    }
-
-    export interface Prepayment {
-      empty?: boolean;
-    }
-
-    export interface Pricings {
-      empty?: boolean;
-    }
+    PRICINGS?: Shared.SetString;
   }
 
   /**
@@ -281,37 +260,15 @@ export namespace ContractEndDateBillingEntitiesResponse {
    * containing details of the updated entities.
    */
   export interface UpdatedEntities {
-    ACCOUNTPLAN?: UpdatedEntities.Accountplan;
+    ACCOUNTPLAN?: Shared.SetString;
 
-    CONTRACT?: UpdatedEntities.Contract;
+    CONTRACT?: Shared.SetString;
 
-    COUNTER_PRICINGS?: UpdatedEntities.CounterPricings;
+    COUNTER_PRICINGS?: Shared.SetString;
 
-    PREPAYMENT?: UpdatedEntities.Prepayment;
+    PREPAYMENT?: Shared.SetString;
 
-    PRICINGS?: UpdatedEntities.Pricings;
-  }
-
-  export namespace UpdatedEntities {
-    export interface Accountplan {
-      empty?: boolean;
-    }
-
-    export interface Contract {
-      empty?: boolean;
-    }
-
-    export interface CounterPricings {
-      empty?: boolean;
-    }
-
-    export interface Prepayment {
-      empty?: boolean;
-    }
-
-    export interface Pricings {
-      empty?: boolean;
-    }
+    PRICINGS?: Shared.SetString;
   }
 }
 
