@@ -7,7 +7,9 @@ import { Cursor, type CursorParams } from '../../pagination';
 
 export class Invitations extends APIResource {
   /**
-   * Invite User to Organization
+   * Invite a new user to your Organization.
+   *
+   * This sends an email to someone inviting them to join your m3ter Organization.
    */
   create(params: InvitationCreateParams, options?: Core.RequestOptions): Core.APIPromise<Invitation> {
     const { orgId = this._client.orgId, ...body } = params;
@@ -143,7 +145,8 @@ export interface Invitation {
 
 export interface InvitationCreateParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
    */
   orgId?: string;
 

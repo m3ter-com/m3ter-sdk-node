@@ -321,7 +321,7 @@ export interface PermissionPolicy {
   /**
    * Array containing the Permission Policies information.
    */
-  permissionPolicy?: Array<PermissionPolicy.PermissionPolicy>;
+  permissionPolicy?: Array<PermissionStatement>;
 
   /**
    * The version number. Default value when newly created is one.
@@ -329,56 +329,54 @@ export interface PermissionPolicy {
   version?: number;
 }
 
-export namespace PermissionPolicy {
-  export interface PermissionPolicy {
-    /**
-     * The actions available to users who are assigned the Permission Policy - what
-     * they can do or cannot do with respect to the specified resource.
-     *
-     * **NOTE:** Use lower case and a colon-separated format, for example, if you want
-     * to confer full CRUD, use:
-     *
-     * ```
-     * "config:create",
-     * "config:delete",
-     * "config:retrieve",
-     * "config:update"
-     * ```
-     */
-    action: Array<
-      | 'ALL'
-      | 'CONFIG_CREATE'
-      | 'CONFIG_RETRIEVE'
-      | 'CONFIG_UPDATE'
-      | 'CONFIG_DELETE'
-      | 'CONFIG_EXPORT'
-      | 'ANALYTICS_QUERY'
-      | 'MEASUREMENTS_UPLOAD'
-      | 'MEASUREMENTS_FILEUPLOAD'
-      | 'MEASUREMENTS_RETRIEVE'
-      | 'MEASUREMENTS_EXPORT'
-      | 'FORECAST_RETRIEVE'
-      | 'HEALTHSCORES_RETRIEVE'
-      | 'ANOMALIES_RETRIEVE'
-      | 'EXPORTS_DOWNLOAD'
-    >;
+export interface PermissionStatement {
+  /**
+   * The actions available to users who are assigned the Permission Policy - what
+   * they can do or cannot do with respect to the specified resource.
+   *
+   * **NOTE:** Use lower case and a colon-separated format, for example, if you want
+   * to confer full CRUD, use:
+   *
+   * ```
+   * "config:create",
+   * "config:delete",
+   * "config:retrieve",
+   * "config:update"
+   * ```
+   */
+  action: Array<
+    | 'ALL'
+    | 'CONFIG_CREATE'
+    | 'CONFIG_RETRIEVE'
+    | 'CONFIG_UPDATE'
+    | 'CONFIG_DELETE'
+    | 'CONFIG_EXPORT'
+    | 'ANALYTICS_QUERY'
+    | 'MEASUREMENTS_UPLOAD'
+    | 'MEASUREMENTS_FILEUPLOAD'
+    | 'MEASUREMENTS_RETRIEVE'
+    | 'MEASUREMENTS_EXPORT'
+    | 'FORECAST_RETRIEVE'
+    | 'HEALTHSCORES_RETRIEVE'
+    | 'ANOMALIES_RETRIEVE'
+    | 'EXPORTS_DOWNLOAD'
+  >;
 
-    /**
-     * Specifies whether or not the user is allowed to perform the action on the
-     * resource.
-     *
-     * **NOTE:** Use lower case, for example: `"allow"`. If you use upper case, you'll
-     * receive an error.
-     */
-    effect: 'ALLOW' | 'DENY';
+  /**
+   * Specifies whether or not the user is allowed to perform the action on the
+   * resource.
+   *
+   * **NOTE:** Use lower case, for example: `"allow"`. If you use upper case, you'll
+   * receive an error.
+   */
+  effect: 'ALLOW' | 'DENY';
 
-    /**
-     * See
-     * [Statements - Available Resources](https://www.m3ter.com/docs/guides/managing-organization-and-users/creating-and-managing-permissions#statements---available-resources)
-     * for a listing of available resources for Permission Policy statements.
-     */
-    resource: Array<string>;
-  }
+  /**
+   * See
+   * [Statements - Available Resources](https://www.m3ter.com/docs/guides/managing-organization-and-users/creating-and-managing-permissions#statements---available-resources)
+   * for a listing of available resources for Permission Policy statements.
+   */
+  resource: Array<string>;
 }
 
 export interface PermissionPolicyAddToServiceUserResponse {
@@ -723,7 +721,7 @@ export interface PermissionPolicyCreateParams {
   /**
    * Body param:
    */
-  permissionPolicy: Array<PermissionPolicyCreateParams.PermissionPolicy>;
+  permissionPolicy: Array<PermissionStatement>;
 
   /**
    * Body param: The version number of the entity:
@@ -735,58 +733,6 @@ export interface PermissionPolicyCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace PermissionPolicyCreateParams {
-  export interface PermissionPolicy {
-    /**
-     * The actions available to users who are assigned the Permission Policy - what
-     * they can do or cannot do with respect to the specified resource.
-     *
-     * **NOTE:** Use lower case and a colon-separated format, for example, if you want
-     * to confer full CRUD, use:
-     *
-     * ```
-     * "config:create",
-     * "config:delete",
-     * "config:retrieve",
-     * "config:update"
-     * ```
-     */
-    action: Array<
-      | 'ALL'
-      | 'CONFIG_CREATE'
-      | 'CONFIG_RETRIEVE'
-      | 'CONFIG_UPDATE'
-      | 'CONFIG_DELETE'
-      | 'CONFIG_EXPORT'
-      | 'ANALYTICS_QUERY'
-      | 'MEASUREMENTS_UPLOAD'
-      | 'MEASUREMENTS_FILEUPLOAD'
-      | 'MEASUREMENTS_RETRIEVE'
-      | 'MEASUREMENTS_EXPORT'
-      | 'FORECAST_RETRIEVE'
-      | 'HEALTHSCORES_RETRIEVE'
-      | 'ANOMALIES_RETRIEVE'
-      | 'EXPORTS_DOWNLOAD'
-    >;
-
-    /**
-     * Specifies whether or not the user is allowed to perform the action on the
-     * resource.
-     *
-     * **NOTE:** Use lower case, for example: `"allow"`. If you use upper case, you'll
-     * receive an error.
-     */
-    effect: 'ALLOW' | 'DENY';
-
-    /**
-     * See
-     * [Statements - Available Resources](https://www.m3ter.com/docs/guides/managing-organization-and-users/creating-and-managing-permissions#statements---available-resources)
-     * for a listing of available resources for Permission Policy statements.
-     */
-    resource: Array<string>;
-  }
 }
 
 export interface PermissionPolicyRetrieveParams {
@@ -810,7 +756,7 @@ export interface PermissionPolicyUpdateParams {
   /**
    * Body param:
    */
-  permissionPolicy: Array<PermissionPolicyUpdateParams.PermissionPolicy>;
+  permissionPolicy: Array<PermissionStatement>;
 
   /**
    * Body param: The version number of the entity:
@@ -822,58 +768,6 @@ export interface PermissionPolicyUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace PermissionPolicyUpdateParams {
-  export interface PermissionPolicy {
-    /**
-     * The actions available to users who are assigned the Permission Policy - what
-     * they can do or cannot do with respect to the specified resource.
-     *
-     * **NOTE:** Use lower case and a colon-separated format, for example, if you want
-     * to confer full CRUD, use:
-     *
-     * ```
-     * "config:create",
-     * "config:delete",
-     * "config:retrieve",
-     * "config:update"
-     * ```
-     */
-    action: Array<
-      | 'ALL'
-      | 'CONFIG_CREATE'
-      | 'CONFIG_RETRIEVE'
-      | 'CONFIG_UPDATE'
-      | 'CONFIG_DELETE'
-      | 'CONFIG_EXPORT'
-      | 'ANALYTICS_QUERY'
-      | 'MEASUREMENTS_UPLOAD'
-      | 'MEASUREMENTS_FILEUPLOAD'
-      | 'MEASUREMENTS_RETRIEVE'
-      | 'MEASUREMENTS_EXPORT'
-      | 'FORECAST_RETRIEVE'
-      | 'HEALTHSCORES_RETRIEVE'
-      | 'ANOMALIES_RETRIEVE'
-      | 'EXPORTS_DOWNLOAD'
-    >;
-
-    /**
-     * Specifies whether or not the user is allowed to perform the action on the
-     * resource.
-     *
-     * **NOTE:** Use lower case, for example: `"allow"`. If you use upper case, you'll
-     * receive an error.
-     */
-    effect: 'ALLOW' | 'DENY';
-
-    /**
-     * See
-     * [Statements - Available Resources](https://www.m3ter.com/docs/guides/managing-organization-and-users/creating-and-managing-permissions#statements---available-resources)
-     * for a listing of available resources for Permission Policy statements.
-     */
-    resource: Array<string>;
-  }
 }
 
 export interface PermissionPolicyListParams extends CursorParams {
@@ -1065,6 +959,7 @@ PermissionPolicies.PermissionPoliciesCursor = PermissionPoliciesCursor;
 export declare namespace PermissionPolicies {
   export {
     type PermissionPolicy as PermissionPolicy,
+    type PermissionStatement as PermissionStatement,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
     type PermissionPolicyAddToUserResponse as PermissionPolicyAddToUserResponse,

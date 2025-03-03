@@ -26,7 +26,10 @@ export class FileUploads extends APIResource {
    * - You can use the returned upload job id with other calls to the File Upload
    *   Service for any follow-up or troubleshooting.
    *
-   * **Important** The upload URL is time limited - it is valid for **_one_** minute.
+   * **Important:**
+   *
+   * - The `contentLength` request parameter is required.
+   * - The upload URL is time limited - it is valid for **_one_** minute.
    *
    * Part of the file upload service for submitting measurements data files.
    */
@@ -86,6 +89,8 @@ export interface FileUploadGenerateUploadURLParams {
   /**
    * Body param: The size of the body in bytes. For example: `"contentLength": 485`,
    * where 485 is the size in bytes of the file to upload.
+   *
+   * **NOTE:** Required.
    */
   contentLength?: number;
 }

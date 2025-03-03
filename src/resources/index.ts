@@ -1,5 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+export * from './shared';
 export {
   AccountPlansCursor,
   AccountPlans,
@@ -14,6 +15,7 @@ export {
   AccountsCursor,
   Accounts,
   type Account,
+  type Address,
   type AccountEndDateBillingEntitiesResponse,
   type AccountSearchResponse,
   type AccountCreateParams,
@@ -253,6 +255,7 @@ export {
   PermissionPoliciesCursor,
   PermissionPolicies,
   type PermissionPolicy,
+  type PermissionStatement,
   type PermissionPolicyAddToServiceUserResponse,
   type PermissionPolicyAddToSupportUserResponse,
   type PermissionPolicyAddToUserResponse,
@@ -396,6 +399,8 @@ export {
 export {
   WebhooksCursor,
   Webhooks,
+  type M3terSignedCredentialsReq,
+  type M3terSignedCredentialsResp,
   type Webhook,
   type WebhookCreateResponse,
   type WebhookUpdateResponse,

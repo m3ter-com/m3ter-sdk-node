@@ -28,7 +28,7 @@ describe('resource debitReasons', () => {
       orgId: 'orgId',
       name: 'x',
       archived: true,
-      code: '{1{}}_',
+      code: 'code',
       version: 0,
     });
   });
@@ -78,7 +78,7 @@ describe('resource debitReasons', () => {
       orgId: 'orgId',
       name: 'x',
       archived: true,
-      code: '{1{}}_',
+      code: 'code',
       version: 0,
     });
   });

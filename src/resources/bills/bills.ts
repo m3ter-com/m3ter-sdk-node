@@ -3,6 +3,7 @@
 import { APIResource } from '../../resource';
 import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
+import * as Shared from '../shared';
 import * as CreditLineItemsAPI from './credit-line-items';
 import {
   CreditLineItem,
@@ -139,6 +140,10 @@ export class Bills extends APIResource {
 
   /**
    * Retrieve the latest Bill for the given Account.
+   *
+   * This endpoint retrieves the latest Bill for the given Account in the specified
+   * Organization. It facilitates tracking of the most recent charges and consumption
+   * details.
    */
   latestByAccount(
     accountId: string,
@@ -159,7 +164,13 @@ export class Bills extends APIResource {
   }
 
   /**
-   * Lock a Bill for the given UUID
+   * Lock the specific Bill identified by the given UUID. Once a Bill is locked, no
+   * further changes can be made to it.
+   *
+   * **NOTE:** You cannot lock a Bill whose current status is `PENDING`. You will
+   * receive an error message if you try to do this. You must first use the
+   * [Approve Bills](https://www.m3ter.com/docs/api#tag/Bill/operation/ApproveBills)
+   * call to approve a Bill before you can lock it.
    */
   lock(id: string, params?: BillLockParams, options?: Core.RequestOptions): Core.APIPromise<Bill>;
   lock(id: string, options?: Core.RequestOptions): Core.APIPromise<Bill>;
@@ -176,7 +187,12 @@ export class Bills extends APIResource {
   }
 
   /**
-   * Search for bill entities
+   * Search for Bill entities.
+   *
+   * This endpoint executes a search query for Bills based on the user specified
+   * search criteria. The search query is customizable, allowing for complex nested
+   * conditions and sorting. The returned list of Bills can be paginated for easier
+   * management.
    */
   search(params?: BillSearchParams, options?: Core.RequestOptions): Core.APIPromise<BillSearchResponse>;
   search(options?: Core.RequestOptions): Core.APIPromise<BillSearchResponse>;
@@ -192,7 +208,10 @@ export class Bills extends APIResource {
   }
 
   /**
-   * Update Bill Status for the given UUID
+   * Updates the status of a specified Bill with the given Bill ID.
+   *
+   * This endpoint allows you to transition a Bill's status through various stages,
+   * such as from "Pending" to "Approved".
    */
   updateStatus(
     id: string,
@@ -257,7 +276,7 @@ export interface Bill {
 
   currency?: string;
 
-  currencyConversions?: Array<Bill.CurrencyConversion>;
+  currencyConversions?: Array<Shared.CurrencyConversion>;
 
   /**
    * The date and time _(in ISO 8601 format)_ when the Bill was first created.
@@ -346,29 +365,6 @@ export interface Bill {
 }
 
 export namespace Bill {
-  /**
-   * An array of currency conversion rates from Bill currency to Organization
-   * currency. For example, if Account is billed in GBP and Organization is set to
-   * USD, Bill line items are calculated in GBP and then converted to USD using the
-   * defined rate.
-   */
-  export interface CurrencyConversion {
-    /**
-     * Currency to convert from. For example: GBP.
-     */
-    from: string;
-
-    /**
-     * Currency to convert to. For example: USD.
-     */
-    to: string;
-
-    /**
-     * Conversion rate between currencies.
-     */
-    multiplier?: number;
-  }
-
   export interface LineItem {
     /**
      * The average unit price across all tiers / pricing bands.
@@ -449,6 +445,8 @@ export namespace Bill {
     aggregationId?: string;
 
     balanceId?: string;
+
+    chargeId?: string;
 
     /**
      * If part of a Parent/Child account billing hierarchy, this is the code for the
@@ -752,62 +750,84 @@ export interface BillApproveParams {
 
 export interface BillLatestByAccountParams {
   /**
-   * UUID of the organization
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
    */
   orgId?: string;
 }
 
 export interface BillLockParams {
   /**
-   * UUID of the organization
+   * The unique identifier (UUID) of your Organization. The Organization represents
+   * your company as a direct customer of our service.
    */
   orgId?: string;
 }
 
 export interface BillSearchParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
    */
   orgId?: string;
 
   /**
-   * Query param: fromDocument for multi page retrievals
+   * Query param: `fromDocument` for multi page retrievals.
    */
   fromDocument?: number;
 
   /**
-   * Query param: Search Operator to be used while querying search
+   * Query param: Search Operator to be used while querying search.
    */
   operator?: 'AND' | 'OR';
 
   /**
-   * Query param: Number of Commitments to retrieve per page
+   * Query param: Number of Bills to retrieve per page.
+   *
+   * **NOTE:** If not defined, default is 10.
    */
   pageSize?: number;
 
   /**
-   * Query param: Query for data using special syntax. Query parameters should be
-   * delimited using
-   * $.Allowed comparators are > (greater than), >= (grater than or equal), : (equal), < (less than), <= (less than or equal), ~ (contains). Allowed parameters: accountId, locked, billDate, startDate, endDate, dueDate, billingFrequency, externalInvoiceDateStart, externalInvoiceDateEnd, id, createdBy, dtCreated, lastModifiedBy, ids.Query example: searchQuery=startDate>2023-01-01$accountId:999cb15f-3e8a-4146-b4be-28d0aaedf275.
-   * This query is translated into: find bills that startDate is older than
-   * 2023-01-01 AND accountId is equal to 999cb15f-3e8a-4146-b4be-28d0aaedf275.
+   * Query param: Query for data using special syntax:
+   *
+   * - Query parameters should be delimited using $ (dollar sign).
+   * - Allowed comparators are:
+   *   - (greater than) >
+   *   - (greater than or equal to) >=
+   *   - (equal to) :
+   *   - (less than) <
+   *   - (less than or equal to) <=
+   *   - (match phrase/prefix) ~
+   * - Allowed parameters: accountId, locked, billDate, startDate, endDate, dueDate,
+   *   billingFrequency, id, createdBy, dtCreated, lastModifiedBy, ids.
+   * - Query example:
+   *   - searchQuery=startDate>2023-01-01$accountId:62eaad67-5790-407e-b853-881564f0e543.
+   *   - This query is translated into: find Bills that startDate is older than
+   *     2023-01-01 AND accountId is equal to 62eaad67-5790-407e-b853-881564f0e543.
+   *
+   * **Note:** Using the ~ match phrase/prefix comparator. For best results, we
+   * recommend treating this as a "starts with" comparator for your search query.
    */
   searchQuery?: string;
 
   /**
-   * Query param: Name of the parameter on which sorting is performed
+   * Query param: Name of the parameter on which sorting is performed. Use any field
+   * available on the Bill entity to sort by, such as `accountId`, `endDate`, and so
+   * on.
    */
   sortBy?: string;
 
   /**
-   * Query param: Sorting order
+   * Query param: Sorting order.
    */
   sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface BillUpdateStatusParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
    */
   orgId?: string;
 
