@@ -1,3 +1,11 @@
+# Shared
+
+Types:
+
+- <code><a href="./src/resources/shared.ts">CurrencyConversion</a></code>
+- <code><a href="./src/resources/shared.ts">PricingBand</a></code>
+- <code><a href="./src/resources/shared.ts">SetString</a></code>
+
 # Authentication
 
 Types:
@@ -13,6 +21,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/accounts.ts">Account</a></code>
+- <code><a href="./src/resources/accounts.ts">Address</a></code>
 - <code><a href="./src/resources/accounts.ts">AccountEndDateBillingEntitiesResponse</a></code>
 - <code><a href="./src/resources/accounts.ts">AccountSearchResponse</a></code>
 
@@ -465,6 +474,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicy</a></code>
+- <code><a href="./src/resources/permission-policies.ts">PermissionStatement</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToServiceUserResponse</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToSupportUserResponse</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToUserResponse</a></code>
@@ -691,6 +701,8 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/webhooks.ts">M3terSignedCredentialsReq</a></code>
+- <code><a href="./src/resources/webhooks.ts">M3terSignedCredentialsResp</a></code>
 - <code><a href="./src/resources/webhooks.ts">Webhook</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookCreateResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookUpdateResponse</a></code>

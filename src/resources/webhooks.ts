@@ -122,6 +122,115 @@ export class Webhooks extends APIResource {
 
 export class WebhooksCursor extends Cursor<Webhook> {}
 
+export interface M3terSignedCredentialsReq {
+  /**
+   * The API key provided by m3ter. This key is part of the credential set required
+   * for signing requests and authenticating with m3ter services.
+   */
+  apiKey: string;
+
+  /**
+   * The secret associated with the API key. This secret is used in conjunction with
+   * the API key to generate a signature for secure authentication.
+   */
+  secret: string;
+
+  /**
+   * Specifies the authorization type. For this schema, it is exclusively set to
+   * M3TER_SIGNED_REQUEST.
+   */
+  type: 'M3TER_SIGNED_REQUEST';
+
+  /**
+   * A flag to indicate whether the credentials are empty.
+   *
+   * - TRUE - empty credentials.
+   * - FALSE - credential details required.
+   */
+  empty?: boolean;
+
+  /**
+   * The version number of the entity:
+   *
+   * - **Create entity:** Not valid for initial insertion of new entity - _do not use
+   *   for Create_. On initial Create, version is set at 1 and listed in the
+   *   response.
+   * - **Update Entity:** On Update, version is required and must match the existing
+   *   version because a check is performed to ensure sequential versioning is
+   *   preserved. Version is incremented by 1 and listed in the response.
+   */
+  version?: number;
+}
+
+export interface M3terSignedCredentialsResp {
+  /**
+   * The UUID of the entity.
+   */
+  id: string;
+
+  /**
+   * the system the integration is for
+   */
+  destination: string;
+
+  /**
+   * the type of credentials
+   */
+  type: string;
+
+  /**
+   * The version number:
+   *
+   * - **Create:** On initial Create to insert a new entity, the version is set at 1
+   *   in the response.
+   * - **Update:** On successful Update, the version is incremented by 1 in the
+   *   response.
+   */
+  version: number;
+
+  /**
+   * The API key provided by m3ter. This key is part of the credential set required
+   * for signing requests and authenticating with m3ter services.
+   */
+  apiKey?: string;
+
+  /**
+   * The ID of the user who created this item.
+   */
+  createdBy?: string;
+
+  /**
+   * the destinationId the integration is for
+   */
+  destinationId?: string;
+
+  /**
+   * The DateTime when this item was created _(in ISO-8601 format)_.
+   */
+  dtCreated?: string;
+
+  /**
+   * The DateTime when this item was last modified _(in ISO-8601 format)_.
+   */
+  dtLastModified?: string;
+
+  /**
+   * The ID of the user who last modified this item.
+   */
+  lastModifiedBy?: string;
+
+  /**
+   * the name of the credentials
+   */
+  name?: string;
+
+  /**
+   * The secret associated with the API key. This secret is used in conjunction with
+   * the API key to generate a signature for secure authentication.
+   */
+  secret?: string;
+}
+
 export interface Webhook {
   /**
    * The UUID of the entity.
@@ -148,9 +257,9 @@ export interface Webhook {
   createdBy?: string;
 
   /**
-   * This schema defines the credentials required for m3ter request signing.
+   * Response representing a set of credentials used for signing m3ter requests.
    */
-  credentials?: Webhook.Credentials;
+  credentials?: M3terSignedCredentialsResp;
 
   description?: string;
 
@@ -177,18 +286,11 @@ export interface Webhook {
   url?: string;
 }
 
-export namespace Webhook {
+export interface WebhookCreateResponse {
   /**
    * This schema defines the credentials required for m3ter request signing.
    */
-  export interface Credentials {}
-}
-
-export interface WebhookCreateResponse {
-  /**
-   * The credentials required for the webhook.
-   */
-  credentials: WebhookCreateResponse.Credentials;
+  credentials: M3terSignedCredentialsReq;
 
   description: string;
 
@@ -214,20 +316,13 @@ export interface WebhookCreateResponse {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace WebhookCreateResponse {
-  /**
-   * The credentials required for the webhook.
-   */
-  export interface Credentials {}
 }
 
 export interface WebhookUpdateResponse {
   /**
-   * The credentials required for the webhook.
+   * This schema defines the credentials required for m3ter request signing.
    */
-  credentials: WebhookUpdateResponse.Credentials;
+  credentials: M3terSignedCredentialsReq;
 
   description: string;
 
@@ -253,20 +348,13 @@ export interface WebhookUpdateResponse {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace WebhookUpdateResponse {
-  /**
-   * The credentials required for the webhook.
-   */
-  export interface Credentials {}
 }
 
 export interface WebhookSetActiveResponse {
   /**
-   * The credentials required for the webhook.
+   * This schema defines the credentials required for m3ter request signing.
    */
-  credentials: WebhookSetActiveResponse.Credentials;
+  credentials: M3terSignedCredentialsReq;
 
   description: string;
 
@@ -292,13 +380,6 @@ export interface WebhookSetActiveResponse {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace WebhookSetActiveResponse {
-  /**
-   * The credentials required for the webhook.
-   */
-  export interface Credentials {}
 }
 
 export interface WebhookCreateParams {
@@ -309,9 +390,10 @@ export interface WebhookCreateParams {
   orgId?: string;
 
   /**
-   * Body param: The credentials required for the webhook.
+   * Body param: This schema defines the credentials required for m3ter request
+   * signing.
    */
-  credentials: WebhookCreateParams.Credentials;
+  credentials: M3terSignedCredentialsReq;
 
   /**
    * Body param:
@@ -349,13 +431,6 @@ export interface WebhookCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace WebhookCreateParams {
-  /**
-   * The credentials required for the webhook.
-   */
-  export interface Credentials {}
 }
 
 export interface WebhookRetrieveParams {
@@ -372,9 +447,10 @@ export interface WebhookUpdateParams {
   orgId?: string;
 
   /**
-   * Body param: The credentials required for the webhook.
+   * Body param: This schema defines the credentials required for m3ter request
+   * signing.
    */
-  credentials: WebhookUpdateParams.Credentials;
+  credentials: M3terSignedCredentialsReq;
 
   /**
    * Body param:
@@ -412,13 +488,6 @@ export interface WebhookUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace WebhookUpdateParams {
-  /**
-   * The credentials required for the webhook.
-   */
-  export interface Credentials {}
 }
 
 export interface WebhookListParams extends CursorParams {
@@ -458,6 +527,8 @@ Webhooks.WebhooksCursor = WebhooksCursor;
 
 export declare namespace Webhooks {
   export {
+    type M3terSignedCredentialsReq as M3terSignedCredentialsReq,
+    type M3terSignedCredentialsResp as M3terSignedCredentialsResp,
     type Webhook as Webhook,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,

@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class BillJobs extends APIResource {
@@ -205,7 +206,7 @@ export interface BillJob {
    * USD, Bill line items are calculated in GBP and then converted to USD using the
    * defined rate.
    */
-  currencyConversions?: Array<BillJob.CurrencyConversion>;
+  currencyConversions?: Array<Shared.CurrencyConversion>;
 
   /**
    * The starting date _(epoch)_ for Daily billing frequency _(in ISO 8601 format)_,
@@ -312,31 +313,6 @@ export interface BillJob {
   yearEpoch?: string;
 }
 
-export namespace BillJob {
-  /**
-   * An array of currency conversion rates from Bill currency to Organization
-   * currency. For example, if Account is billed in GBP and Organization is set to
-   * USD, Bill line items are calculated in GBP and then converted to USD using the
-   * defined rate.
-   */
-  export interface CurrencyConversion {
-    /**
-     * Currency to convert from. For example: GBP.
-     */
-    from: string;
-
-    /**
-     * Currency to convert to. For example: USD.
-     */
-    to: string;
-
-    /**
-     * Conversion rate between currencies.
-     */
-    multiplier?: number;
-  }
-}
-
 export interface BillJobCreateParams {
   /**
    * Path param: The unique identifier (UUID) for your Organization. The Organization
@@ -394,7 +370,7 @@ export interface BillJobCreateParams {
    * is set to USD, Bill line items are calculated in GBP and then converted to USD
    * using the defined rate.
    */
-  currencyConversions?: Array<BillJobCreateParams.CurrencyConversion>;
+  currencyConversions?: Array<Shared.CurrencyConversion>;
 
   /**
    * Body param: The starting date _(epoch)_ for Daily billing frequency _(in ISO
@@ -478,31 +454,6 @@ export interface BillJobCreateParams {
    * 8601 format)_, determining the first Bill date for yearly Bills.
    */
   yearEpoch?: string;
-}
-
-export namespace BillJobCreateParams {
-  /**
-   * An array of currency conversion rates from Bill currency to Organization
-   * currency. For example, if Account is billed in GBP and Organization is set to
-   * USD, Bill line items are calculated in GBP and then converted to USD using the
-   * defined rate.
-   */
-  export interface CurrencyConversion {
-    /**
-     * Currency to convert from. For example: GBP.
-     */
-    from: string;
-
-    /**
-     * Currency to convert to. For example: USD.
-     */
-    to: string;
-
-    /**
-     * Conversion rate between currencies.
-     */
-    multiplier?: number;
-  }
 }
 
 export interface BillJobRetrieveParams {

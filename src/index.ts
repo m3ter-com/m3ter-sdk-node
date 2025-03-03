@@ -32,6 +32,7 @@ import {
   AccountUpdateParams,
   Accounts,
   AccountsCursor,
+  Address,
 } from './resources/accounts';
 import {
   Aggregation,
@@ -250,6 +251,7 @@ import {
   PermissionPolicyRemoveFromUserResponse,
   PermissionPolicyRetrieveParams,
   PermissionPolicyUpdateParams,
+  PermissionStatement,
 } from './resources/permission-policies';
 import {
   PlanGroupLink,
@@ -348,6 +350,8 @@ import {
   TransactionTypesCursor,
 } from './resources/transaction-types';
 import {
+  M3terSignedCredentialsReq,
+  M3terSignedCredentialsResp,
   Webhook,
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -759,6 +763,7 @@ export declare namespace M3ter {
   export {
     Accounts as Accounts,
     type Account as Account,
+    type Address as Address,
     type AccountEndDateBillingEntitiesResponse as AccountEndDateBillingEntitiesResponse,
     type AccountSearchResponse as AccountSearchResponse,
     AccountsCursor as AccountsCursor,
@@ -1031,6 +1036,7 @@ export declare namespace M3ter {
   export {
     PermissionPolicies as PermissionPolicies,
     type PermissionPolicy as PermissionPolicy,
+    type PermissionStatement as PermissionStatement,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
     type PermissionPolicyAddToUserResponse as PermissionPolicyAddToUserResponse,
@@ -1186,6 +1192,8 @@ export declare namespace M3ter {
 
   export {
     Webhooks as Webhooks,
+    type M3terSignedCredentialsReq as M3terSignedCredentialsReq,
+    type M3terSignedCredentialsResp as M3terSignedCredentialsResp,
     type Webhook as Webhook,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,
@@ -1198,6 +1206,10 @@ export declare namespace M3ter {
     type WebhookDeleteParams as WebhookDeleteParams,
     type WebhookSetActiveParams as WebhookSetActiveParams,
   };
+
+  export type CurrencyConversion = API.CurrencyConversion;
+  export type PricingBand = API.PricingBand;
+  export type SetString = API.SetString;
 }
 
 export { toFile, fileFromPath } from './uploads';
