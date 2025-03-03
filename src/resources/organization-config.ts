@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 
 export class OrganizationConfigResource extends APIResource {
   /**
@@ -127,7 +128,7 @@ export interface OrganizationConfig {
    * line items are calculated in GBP and then converted to USD using the defined
    * rate.
    */
-  currencyConversions?: Array<OrganizationConfig.CurrencyConversion>;
+  currencyConversions?: Array<Shared.CurrencyConversion>;
 
   /**
    * The first bill date _(in ISO-8601 format)_ for daily billing periods.
@@ -229,31 +230,6 @@ export interface OrganizationConfig {
    * The first bill date _(in ISO-8601 format)_ for yearly billing periods.
    */
   yearEpoch?: string;
-}
-
-export namespace OrganizationConfig {
-  /**
-   * An array of currency conversion rates from Bill currency to Organization
-   * currency. For example, if Account is billed in GBP and Organization is set to
-   * USD, Bill line items are calculated in GBP and then converted to USD using the
-   * defined rate.
-   */
-  export interface CurrencyConversion {
-    /**
-     * Currency to convert from. For example: GBP.
-     */
-    from: string;
-
-    /**
-     * Currency to convert to. For example: USD.
-     */
-    to: string;
-
-    /**
-     * Conversion rate between currencies.
-     */
-    multiplier?: number;
-  }
 }
 
 export interface OrganizationConfigRetrieveParams {
@@ -467,7 +443,7 @@ export interface OrganizationConfigUpdateParams {
    *   If you haven't defined a currency conversion rate from pricing to billing
    *   currency, billing will fail for the Account.
    */
-  currencyConversions?: Array<OrganizationConfigUpdateParams.CurrencyConversion>;
+  currencyConversions?: Array<Shared.CurrencyConversion>;
 
   /**
    * Body param: Organization level default `statementDefinitionId` to be used when
@@ -549,31 +525,6 @@ export interface OrganizationConfigUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace OrganizationConfigUpdateParams {
-  /**
-   * An array of currency conversion rates from Bill currency to Organization
-   * currency. For example, if Account is billed in GBP and Organization is set to
-   * USD, Bill line items are calculated in GBP and then converted to USD using the
-   * defined rate.
-   */
-  export interface CurrencyConversion {
-    /**
-     * Currency to convert from. For example: GBP.
-     */
-    from: string;
-
-    /**
-     * Currency to convert to. For example: USD.
-     */
-    to: string;
-
-    /**
-     * Conversion rate between currencies.
-     */
-    multiplier?: number;
-  }
 }
 
 export declare namespace OrganizationConfigResource {

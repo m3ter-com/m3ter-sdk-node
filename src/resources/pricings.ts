@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as Shared from './shared';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class Pricings extends APIResource {
@@ -199,7 +200,7 @@ export interface Pricing {
    * The Prepayment/Balance overage pricing in pricing bands for the case of a
    * **Tiered** pricing structure.
    */
-  overagePricingBands?: Array<Pricing.OveragePricingBand>;
+  overagePricingBands?: Array<Shared.PricingBand>;
 
   /**
    * UUID of the Plan the Pricing is created for.
@@ -211,7 +212,7 @@ export interface Pricing {
    */
   planTemplateId?: string;
 
-  pricingBands?: Array<Pricing.PricingBand>;
+  pricingBands?: Array<Shared.PricingBand>;
 
   /**
    * Name of the segment for which you are defining a Pricing.
@@ -257,62 +258,6 @@ export interface Pricing {
   type?: 'DEBIT' | 'PRODUCT_CREDIT' | 'GLOBAL_CREDIT';
 }
 
-export namespace Pricing {
-  export interface OveragePricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
-
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
-}
-
 export interface PricingCreateParams {
   /**
    * Path param: UUID of the organization. The Organization represents your company
@@ -323,7 +268,7 @@ export interface PricingCreateParams {
   /**
    * Body param:
    */
-  pricingBands: Array<PricingCreateParams.PricingBand>;
+  pricingBands: Array<Shared.PricingBand>;
 
   /**
    * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
@@ -412,7 +357,7 @@ export interface PricingCreateParams {
    * Body param: Specify Prepayment/Balance overage pricing in pricing bands for the
    * case of a **Tiered** pricing structure.
    */
-  overagePricingBands?: Array<PricingCreateParams.OveragePricingBand>;
+  overagePricingBands?: Array<Shared.PricingBand>;
 
   /**
    * Body param: UUID of the Plan the Pricing is created for.
@@ -482,62 +427,6 @@ export interface PricingCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace PricingCreateParams {
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
-
-  export interface OveragePricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
 }
 
 export interface PricingRetrieveParams {
@@ -558,7 +447,7 @@ export interface PricingUpdateParams {
   /**
    * Body param:
    */
-  pricingBands: Array<PricingUpdateParams.PricingBand>;
+  pricingBands: Array<Shared.PricingBand>;
 
   /**
    * Body param: The start date _(in ISO-8601 format)_ for when the Pricing starts to
@@ -647,7 +536,7 @@ export interface PricingUpdateParams {
    * Body param: Specify Prepayment/Balance overage pricing in pricing bands for the
    * case of a **Tiered** pricing structure.
    */
-  overagePricingBands?: Array<PricingUpdateParams.OveragePricingBand>;
+  overagePricingBands?: Array<Shared.PricingBand>;
 
   /**
    * Body param: UUID of the Plan the Pricing is created for.
@@ -717,62 +606,6 @@ export interface PricingUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace PricingUpdateParams {
-  export interface PricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
-
-  export interface OveragePricingBand {
-    /**
-     * Fixed price charged for the Pricing band.
-     */
-    fixedPrice: number;
-
-    /**
-     * Lower limit for the Pricing band.
-     */
-    lowerLimit: number;
-
-    /**
-     * Unit price charged for the Pricing band.
-     */
-    unitPrice: number;
-
-    /**
-     * The ID for the Pricing band.
-     */
-    id?: string;
-
-    /**
-     * **OBSOLETE - this is deprecated and no longer used.**
-     */
-    creditTypeId?: string;
-  }
 }
 
 export interface PricingListParams extends CursorParams {

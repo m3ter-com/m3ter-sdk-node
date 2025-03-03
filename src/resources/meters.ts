@@ -71,7 +71,8 @@ export class Meters extends APIResource {
   }
 
   /**
-   * Retrieve a list of Meter entities
+   * Retrieve a list of Meters that can be filtered by Product, Meter ID, or Meter
+   * short code.
    */
   list(params?: MeterListParams, options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
   list(options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
@@ -546,22 +547,24 @@ export namespace MeterUpdateParams {
 
 export interface MeterListParams extends CursorParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: UUID of the Organization. The Organization represents your company
+   * as a direct customer of the m3ter service.
    */
   orgId?: string;
 
   /**
-   * Query param: list of codes to retrieve
+   * Query param: List of Meter codes to retrieve. These are the unique short codes
+   * that identify each Meter.
    */
   codes?: Array<string>;
 
   /**
-   * Query param: list of ids to retrieve
+   * Query param: List of Meter IDs to retrieve.
    */
   ids?: Array<string>;
 
   /**
-   * Query param: The UUIDs of the products to retrieve meters for
+   * Query param: The UUIDs of the Products to retrieve Meters for.
    */
   productId?: Array<string>;
 }

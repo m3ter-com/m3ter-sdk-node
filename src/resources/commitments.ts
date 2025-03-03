@@ -972,22 +972,25 @@ export interface CommitmentDeleteParams {
 
 export interface CommitmentSearchParams {
   /**
-   * Path param: UUID of the organization
+   * Path param: The unique identifier (UUID) of your Organization. The Organization
+   * represents your company as a direct customer of our service.
    */
   orgId?: string;
 
   /**
-   * Query param: fromDocument for multi page retrievals
+   * Query param: `fromDocument` for multi page retrievals.
    */
   fromDocument?: number;
 
   /**
-   * Query param: Search Operator to be used while querying search
+   * Query param: Search Operator to be used while querying search.
    */
   operator?: 'AND' | 'OR';
 
   /**
-   * Query param: Number of Commitments to retrieve per page
+   * Query param: Number of Commitments to retrieve per page.
+   *
+   * **NOTE:** If not defined, default is 10.
    */
   pageSize?: number;
 
@@ -1023,7 +1026,7 @@ export interface CommitmentSearchParams {
   sortBy?: string;
 
   /**
-   * Query param: Sorting order
+   * Query param: Sorting order.
    */
   sortOrder?: 'ASC' | 'DESC';
 }
