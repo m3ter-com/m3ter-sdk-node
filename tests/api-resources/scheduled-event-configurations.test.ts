@@ -7,13 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
+  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource scheduledEventConfigurations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.scheduledEventConfigurations.create({
-      orgId: 'orgId',
       entity: 'Bill',
       field: 'endDate',
       name: 'scheduled.bill.enddateEvent',
@@ -40,7 +40,7 @@ describe('resource scheduledEventConfigurations', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.scheduledEventConfigurations.retrieve('id', { orgId: 'orgId' });
+    const responsePromise = client.scheduledEventConfigurations.retrieve('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,9 +54,26 @@ describe('resource scheduledEventConfigurations', () => {
     const response = await client.scheduledEventConfigurations.retrieve('id', { orgId: 'orgId' });
   });
 
+  test('retrieve: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.retrieve('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('retrieve: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.retrieve(
+        'id',
+        { orgId: 'orgId' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('update: only required params', async () => {
     const responsePromise = client.scheduledEventConfigurations.update('id', {
-      orgId: 'orgId',
       entity: 'Bill',
       field: 'endDate',
       name: 'scheduled.bill.enddateEvent',
@@ -83,7 +100,7 @@ describe('resource scheduledEventConfigurations', () => {
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.scheduledEventConfigurations.list({ orgId: 'orgId' });
+    const responsePromise = client.scheduledEventConfigurations.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -102,8 +119,25 @@ describe('resource scheduledEventConfigurations', () => {
     });
   });
 
+  test('list: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.list({ path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.list(
+        { orgId: 'orgId', ids: ['string'], nextToken: 'nextToken', pageSize: 1 },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
   test('delete: only required params', async () => {
-    const responsePromise = client.scheduledEventConfigurations.delete('id', { orgId: 'orgId' });
+    const responsePromise = client.scheduledEventConfigurations.delete('id');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -115,5 +149,23 @@ describe('resource scheduledEventConfigurations', () => {
 
   test('delete: required and optional params', async () => {
     const response = await client.scheduledEventConfigurations.delete('id', { orgId: 'orgId' });
+  });
+
+  test('delete: request options instead of params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.delete('id', { path: '/_stainless_unknown_path' }),
+    ).rejects.toThrow(M3ter.NotFoundError);
+  });
+
+  test('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.scheduledEventConfigurations.delete(
+        'id',
+        { orgId: 'orgId' },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });
