@@ -348,8 +348,10 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportSchedule</a></code>
-- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportSchedule</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportScheduleRequest</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportScheduleResponse</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportScheduleRequest</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportScheduleResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleCreateResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleRetrieveResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleUpdateResponse</a></code>

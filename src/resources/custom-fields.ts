@@ -50,22 +50,22 @@ export interface CustomFields {
   /**
    * CustomFields added to Account entities.
    */
-  account?: Record<string, unknown>;
+  account?: Record<string, string | number>;
 
   /**
    * CustomFields added to accountPlan entities.
    */
-  accountPlan?: Record<string, unknown>;
+  accountPlan?: Record<string, string | number>;
 
   /**
    * CustomFields added to simple Aggregation entities.
    */
-  aggregation?: Record<string, unknown>;
+  aggregation?: Record<string, string | number>;
 
   /**
    * CustomFields added to Compound Aggregation entities.
    */
-  compoundAggregation?: Record<string, unknown>;
+  compoundAggregation?: Record<string, string | number>;
 
   /**
    * The id of the user who created this custom field.
@@ -91,27 +91,27 @@ export interface CustomFields {
   /**
    * CustomFields added to Meter entities.
    */
-  meter?: Record<string, unknown>;
+  meter?: Record<string, string | number>;
 
   /**
    * CustomFields added to the Organization.
    */
-  organization?: Record<string, unknown>;
+  organization?: Record<string, string | number>;
 
   /**
    * CustomFields added to Plan entities.
    */
-  plan?: Record<string, unknown>;
+  plan?: Record<string, string | number>;
 
   /**
    * CustomFields added to planTemplate entities.
    */
-  planTemplate?: Record<string, unknown>;
+  planTemplate?: Record<string, string | number>;
 
   /**
    * CustomFields added to Product entities.
    */
-  product?: Record<string, unknown>;
+  product?: Record<string, string | number>;
 }
 
 export interface CustomFieldRetrieveParams {
@@ -132,47 +132,47 @@ export interface CustomFieldUpdateParams {
   /**
    * Body param: Updates to Account entity CustomFields.
    */
-  account?: Record<string, unknown>;
+  account?: Record<string, string | number>;
 
   /**
    * Body param: Updates to accountPlan entity CustomFields.
    */
-  accountPlan?: Record<string, unknown>;
+  accountPlan?: Record<string, string | number>;
 
   /**
    * Body param: Updates to simple Aggregation entity CustomFields.
    */
-  aggregation?: Record<string, unknown>;
+  aggregation?: Record<string, string | number>;
 
   /**
    * Body param: Updates to Compound Aggregation entity CustomFields.
    */
-  compoundAggregation?: Record<string, unknown>;
+  compoundAggregation?: Record<string, string | number>;
 
   /**
    * Body param: Updates to Meter entity CustomFields.
    */
-  meter?: Record<string, unknown>;
+  meter?: Record<string, string | number>;
 
   /**
    * Body param: Updates to Organization CustomFields.
    */
-  organization?: Record<string, unknown>;
+  organization?: Record<string, string | number>;
 
   /**
    * Body param: Updates to Plan entity CustomFields.
    */
-  plan?: Record<string, unknown>;
+  plan?: Record<string, string | number>;
 
   /**
    * Body param: Updates to planTemplate entity CustomFields.
    */
-  planTemplate?: Record<string, unknown>;
+  planTemplate?: Record<string, string | number>;
 
   /**
    * Body param: Updates to Product entity CustomFields.
    */
-  product?: Record<string, unknown>;
+  product?: Record<string, string | number>;
 
   /**
    * Body param: The version number of the entity:

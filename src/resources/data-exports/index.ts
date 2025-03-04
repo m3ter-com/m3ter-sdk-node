@@ -33,8 +33,10 @@ export {
 export {
   ScheduleListResponsesCursor,
   Schedules,
-  type OperationalDataExportSchedule,
-  type UsageDataExportSchedule,
+  type OperationalDataExportScheduleRequest,
+  type OperationalDataExportScheduleResponse,
+  type UsageDataExportScheduleRequest,
+  type UsageDataExportScheduleResponse,
   type ScheduleCreateResponse,
   type ScheduleRetrieveResponse,
   type ScheduleUpdateResponse,
