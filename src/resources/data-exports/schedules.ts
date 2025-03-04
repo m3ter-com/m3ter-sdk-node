@@ -155,7 +155,47 @@ export class Schedules extends APIResource {
 
 export class ScheduleListResponsesCursor extends Cursor<ScheduleListResponse> {}
 
-export interface OperationalDataExportSchedule {
+export interface OperationalDataExportScheduleRequest {
+  /**
+   * A list of the entities whose operational data is included in the data export.
+   */
+  operationalDataTypes: Array<
+    | 'BILLS'
+    | 'COMMITMENTS'
+    | 'ACCOUNTS'
+    | 'BALANCES'
+    | 'CONTRACTS'
+    | 'ACCOUNT_PLANS'
+    | 'AGGREGATIONS'
+    | 'PLANS'
+    | 'PRICING'
+    | 'PRICING_BANDS'
+    | 'BILL_LINE_ITEMS'
+    | 'METERS'
+    | 'PRODUCTS'
+    | 'COMPOUND_AGGREGATIONS'
+    | 'PLAN_GROUPS'
+    | 'PLAN_GROUP_LINKS'
+    | 'PLAN_TEMPLATES'
+    | 'BALANCE_TRANSACTIONS'
+  >;
+
+  sourceType: 'USAGE' | 'OPERATIONAL';
+
+  /**
+   * The version number of the entity:
+   *
+   * - **Create entity:** Not valid for initial insertion of new entity - _do not use
+   *   for Create_. On initial Create, version is set at 1 and listed in the
+   *   response.
+   * - **Update Entity:** On Update, version is required and must match the existing
+   *   version because a check is performed to ensure sequential versioning is
+   *   preserved. Version is incremented by 1 and listed in the response.
+   */
+  version?: number;
+}
+
+export interface OperationalDataExportScheduleResponse {
   /**
    * The id of the schedule.
    */
@@ -196,7 +236,108 @@ export interface OperationalDataExportSchedule {
   >;
 }
 
-export interface UsageDataExportSchedule {
+export interface UsageDataExportScheduleRequest {
+  /**
+   * Specifies the time period for the aggregation of usage data included each time
+   * the Data Export Schedule runs:
+   *
+   * - **ORIGINAL**. Usage data is _not aggregated_. If you select to not aggregate,
+   *   then raw usage data measurements collected by all Data Field types and any
+   *   Derived Fields on the selected Meters are included in the export. This is the
+   *   _Default_.
+   *
+   * If you want to aggregate usage data for the Export Schedule you must define an
+   * `aggregationFrequency`:
+   *
+   * - **HOUR**. Aggregated hourly.
+   * - **DAY**. Aggregated daily.
+   * - **WEEK**. Aggregated weekly.
+   * - **MONTH**. Aggregated monthly.
+   *
+   * - If you select to aggregate usage data for a Export Schedule, then only the
+   *   aggregated usage data collected by numeric Data Fields of type **MEASURE**,
+   *   **INCOME**, or **COST** on selected Meters are included in the export.
+   *
+   * **NOTE**: If you define an `aggregationFrequency` other than **ORIGINAL** and do
+   * not define an `aggregation` method, then you'll receive and error.
+   */
+  aggregationFrequency: 'ORIGINAL' | 'HOUR' | 'DAY' | 'WEEK' | 'MONTH';
+
+  sourceType: 'USAGE' | 'OPERATIONAL';
+
+  /**
+   * Define a time period to control the range of usage data you want the data export
+   * to contain when it runs:
+   *
+   * - **TODAY**. Data collected for the current day up until the time the export
+   *   runs.
+   * - **YESTERDAY**. Data collected for the day before the export runs - that is,
+   *   the 24 hour period from midnight to midnight of the day before.
+   * - **WEEK_TO_DATE**. Data collected for the period covering the current week to
+   *   the date and time the export runs, and weeks run Monday to Monday.
+   * - **CURRENT_MONTH**. Data collected for the current month in which the export is
+   *   ran up to and including the date and time the export runs.
+   * - **LAST_30_DAYS**. Data collected for the 30 days prior to the date the export
+   *   is ran.
+   * - **LAST_35_DAYS**. Data collected for the 35 days prior to the date the export
+   *   is ran.
+   * - **PREVIOUS_WEEK**. Data collected for the previous full week period, and weeks
+   *   run Monday to Monday.
+   * - **PREVIOUS_MONTH**. Data collected for the previous full month period.
+   *
+   * For more details and examples, see the
+   * [Time Period](https://www.m3ter.com/docs/guides/data-exports/creating-export-schedules#time-period)
+   * section in our main User Documentation.
+   */
+  timePeriod:
+    | 'TODAY'
+    | 'YESTERDAY'
+    | 'WEEK_TO_DATE'
+    | 'CURRENT_MONTH'
+    | 'LAST_30_DAYS'
+    | 'LAST_35_DAYS'
+    | 'PREVIOUS_WEEK'
+    | 'PREVIOUS_MONTH';
+
+  /**
+   * List of account IDs for which the usage data will be exported.
+   */
+  accountIds?: Array<string>;
+
+  /**
+   * Specifies the aggregation method applied to usage data collected in the numeric
+   * Data Fields of Meters included for the Data Export Schedule - that is, Data
+   * Fields of type **MEASURE**, **INCOME**, or **COST**:
+   *
+   * - **SUM**. Adds the values.
+   * - **MIN**. Uses the minimum value.
+   * - **MAX**. Uses the maximum value.
+   * - **COUNT**. Counts the number of values.
+   * - **LATEST**. Uses the most recent value. Note: Based on the timestamp `ts`
+   *   value of usage data measurement submissions. If using this method, please
+   *   ensure _distinct_ `ts` values are used for usage data measurement submissions.
+   */
+  aggregation?: 'SUM' | 'MIN' | 'MAX' | 'COUNT' | 'LATEST' | 'MEAN';
+
+  /**
+   * List of meter IDs for which the usage data will be exported.
+   */
+  meterIds?: Array<string>;
+
+  /**
+   * The version number of the entity:
+   *
+   * - **Create entity:** Not valid for initial insertion of new entity - _do not use
+   *   for Create_. On initial Create, version is set at 1 and listed in the
+   *   response.
+   * - **Update Entity:** On Update, version is required and must match the existing
+   *   version because a check is performed to ensure sequential versioning is
+   *   preserved. Version is incremented by 1 and listed in the response.
+   */
+  version?: number;
+}
+
+export interface UsageDataExportScheduleResponse {
   /**
    * The id of the schedule
    */
@@ -301,17 +442,19 @@ export interface UsageDataExportSchedule {
 /**
  * Response representing an operational data export configuration.
  */
-export type ScheduleCreateResponse = OperationalDataExportSchedule | UsageDataExportSchedule;
+export type ScheduleCreateResponse = OperationalDataExportScheduleResponse | UsageDataExportScheduleResponse;
 
 /**
  * Response representing an operational data export configuration.
  */
-export type ScheduleRetrieveResponse = OperationalDataExportSchedule | UsageDataExportSchedule;
+export type ScheduleRetrieveResponse =
+  | OperationalDataExportScheduleResponse
+  | UsageDataExportScheduleResponse;
 
 /**
  * Response representing an operational data export configuration.
  */
-export type ScheduleUpdateResponse = OperationalDataExportSchedule | UsageDataExportSchedule;
+export type ScheduleUpdateResponse = OperationalDataExportScheduleResponse | UsageDataExportScheduleResponse;
 
 export interface ScheduleListResponse {
   /**
@@ -380,14 +523,14 @@ export interface ScheduleListResponse {
 /**
  * Response representing an operational data export configuration.
  */
-export type ScheduleDeleteResponse = OperationalDataExportSchedule | UsageDataExportSchedule;
+export type ScheduleDeleteResponse = OperationalDataExportScheduleResponse | UsageDataExportScheduleResponse;
 
 export type ScheduleCreateParams =
-  | ScheduleCreateParams.OperationalDataExportConfigurationRequest
-  | ScheduleCreateParams.UsageDataExportConfigurationRequest;
+  | ScheduleCreateParams.OperationalDataExportScheduleRequest
+  | ScheduleCreateParams.UsageDataExportScheduleRequest;
 
 export declare namespace ScheduleCreateParams {
-  export interface OperationalDataExportConfigurationRequest {
+  export interface OperationalDataExportScheduleRequest {
     /**
      * Path param: UUID of the organization
      */
@@ -436,7 +579,7 @@ export declare namespace ScheduleCreateParams {
     version?: number;
   }
 
-  export interface UsageDataExportConfigurationRequest {
+  export interface UsageDataExportScheduleRequest {
     /**
      * Path param: UUID of the organization
      */
@@ -554,11 +697,11 @@ export interface ScheduleRetrieveParams {
 }
 
 export type ScheduleUpdateParams =
-  | ScheduleUpdateParams.OperationalDataExportConfigurationRequest
-  | ScheduleUpdateParams.UsageDataExportConfigurationRequest;
+  | ScheduleUpdateParams.OperationalDataExportScheduleRequest
+  | ScheduleUpdateParams.UsageDataExportScheduleRequest;
 
 export declare namespace ScheduleUpdateParams {
-  export interface OperationalDataExportConfigurationRequest {
+  export interface OperationalDataExportScheduleRequest {
     /**
      * Path param: UUID of the organization
      */
@@ -607,7 +750,7 @@ export declare namespace ScheduleUpdateParams {
     version?: number;
   }
 
-  export interface UsageDataExportConfigurationRequest {
+  export interface UsageDataExportScheduleRequest {
     /**
      * Path param: UUID of the organization
      */
@@ -740,8 +883,10 @@ Schedules.ScheduleListResponsesCursor = ScheduleListResponsesCursor;
 
 export declare namespace Schedules {
   export {
-    type OperationalDataExportSchedule as OperationalDataExportSchedule,
-    type UsageDataExportSchedule as UsageDataExportSchedule,
+    type OperationalDataExportScheduleRequest as OperationalDataExportScheduleRequest,
+    type OperationalDataExportScheduleResponse as OperationalDataExportScheduleResponse,
+    type UsageDataExportScheduleRequest as UsageDataExportScheduleRequest,
+    type UsageDataExportScheduleResponse as UsageDataExportScheduleResponse,
     type ScheduleCreateResponse as ScheduleCreateResponse,
     type ScheduleRetrieveResponse as ScheduleRetrieveResponse,
     type ScheduleUpdateResponse as ScheduleUpdateResponse,
