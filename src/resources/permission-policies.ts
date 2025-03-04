@@ -379,6 +379,22 @@ export interface PermissionStatement {
   resource: Array<string>;
 }
 
+export interface PrincipalPermissionRequest {
+  principalId: string;
+
+  /**
+   * The version number of the entity:
+   *
+   * - **Create entity:** Not valid for initial insertion of new entity - _do not use
+   *   for Create_. On initial Create, version is set at 1 and listed in the
+   *   response.
+   * - **Update Entity:** On Update, version is required and must match the existing
+   *   version because a check is performed to ensure sequential versioning is
+   *   preserved. Version is incremented by 1 and listed in the response.
+   */
+  version?: number;
+}
+
 export interface PermissionPolicyAddToServiceUserResponse {
   id?: string;
 
@@ -960,6 +976,7 @@ export declare namespace PermissionPolicies {
   export {
     type PermissionPolicy as PermissionPolicy,
     type PermissionStatement as PermissionStatement,
+    type PrincipalPermissionRequest as PrincipalPermissionRequest,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
     type PermissionPolicyAddToUserResponse as PermissionPolicyAddToUserResponse,

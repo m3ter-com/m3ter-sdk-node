@@ -3,6 +3,7 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
+import * as MetersAPI from './meters';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class Meters extends APIResource {
@@ -107,6 +108,33 @@ export class Meters extends APIResource {
 
 export class MetersCursor extends Cursor<Meter> {}
 
+export interface DataField {
+  /**
+   * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
+   */
+  category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
+
+  /**
+   * Short code to identify the field
+   *
+   * **NOTE:** Code has a maximum length of 80 characters and can only contain
+   * letters, numbers, underscore, and the dollar character, and must not start with
+   * a number.
+   */
+  code: string;
+
+  /**
+   * Descriptive name of the field.
+   */
+  name: string;
+
+  /**
+   * The units to measure the data with. Should conform to _Unified Code for Units of
+   * Measure_ (UCUM). Required only for numeric field categories.
+   */
+  unit?: string;
+}
+
 export interface Meter {
   /**
    * The UUID of the entity.
@@ -152,7 +180,7 @@ export interface Meter {
    * either numeric quantitative values or non-numeric data values. At least one
    * required per Meter; maximum 15 per Meter.
    */
-  dataFields?: Array<Meter.DataField>;
+  dataFields?: Array<DataField>;
 
   /**
    * Used to submit usage data values for ingest into the platform that are the
@@ -195,65 +223,13 @@ export interface Meter {
 }
 
 export namespace Meter {
-  export interface DataField {
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
-  }
-
-  export interface DerivedField {
+  export interface DerivedField extends MetersAPI.DataField {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
      * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
      */
     calculation: string;
-
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
   }
 }
 
@@ -278,7 +254,7 @@ export interface MeterCreateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<MeterCreateParams.DataField>;
+  dataFields: Array<DataField>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -335,65 +311,13 @@ export interface MeterCreateParams {
 }
 
 export namespace MeterCreateParams {
-  export interface DataField {
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
-  }
-
-  export interface DerivedField {
+  export interface DerivedField extends MetersAPI.DataField {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
      * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
      */
     calculation: string;
-
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
   }
 }
 
@@ -426,7 +350,7 @@ export interface MeterUpdateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<MeterUpdateParams.DataField>;
+  dataFields: Array<DataField>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -483,65 +407,13 @@ export interface MeterUpdateParams {
 }
 
 export namespace MeterUpdateParams {
-  export interface DataField {
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
-  }
-
-  export interface DerivedField {
+  export interface DerivedField extends MetersAPI.DataField {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
      * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
      */
     calculation: string;
-
-    /**
-     * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
-     */
-    category: 'WHO' | 'WHERE' | 'WHAT' | 'OTHER' | 'METADATA' | 'MEASURE' | 'INCOME' | 'COST';
-
-    /**
-     * Short code to identify the field
-     *
-     * **NOTE:** Code has a maximum length of 80 characters and can only contain
-     * letters, numbers, underscore, and the dollar character, and must not start with
-     * a number.
-     */
-    code: string;
-
-    /**
-     * Descriptive name of the field.
-     */
-    name: string;
-
-    /**
-     * The units to measure the data with. Should conform to _Unified Code for Units of
-     * Measure_ (UCUM). Required only for numeric field categories.
-     */
-    unit?: string;
   }
 }
 
@@ -581,6 +453,7 @@ Meters.MetersCursor = MetersCursor;
 
 export declare namespace Meters {
   export {
+    type DataField as DataField,
     type Meter as Meter,
     MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,

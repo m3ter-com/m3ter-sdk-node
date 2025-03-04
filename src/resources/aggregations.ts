@@ -9,7 +9,10 @@ export class Aggregations extends APIResource {
   /**
    * Create a new Aggregation.
    */
-  create(params: AggregationCreateParams, options?: Core.RequestOptions): Core.APIPromise<Aggregation> {
+  create(
+    params: AggregationCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AggregationResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/aggregations`, { body, ...options });
   }
@@ -21,13 +24,13 @@ export class Aggregations extends APIResource {
     id: string,
     params?: AggregationRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation>;
+  ): Core.APIPromise<AggregationResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<AggregationResponse>;
   retrieve(
     id: string,
     params: AggregationRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation> {
+  ): Core.APIPromise<AggregationResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -47,7 +50,7 @@ export class Aggregations extends APIResource {
     id: string,
     params: AggregationUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation> {
+  ): Core.APIPromise<AggregationResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/aggregations/${id}`, { body, ...options });
   }
@@ -59,17 +62,17 @@ export class Aggregations extends APIResource {
   list(
     params?: AggregationListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AggregationsCursor, Aggregation>;
-  list(options?: Core.RequestOptions): Core.PagePromise<AggregationsCursor, Aggregation>;
+  ): Core.PagePromise<AggregationResponsesCursor, AggregationResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AggregationResponsesCursor, AggregationResponse>;
   list(
     params: AggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AggregationsCursor, Aggregation> {
+  ): Core.PagePromise<AggregationResponsesCursor, AggregationResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/aggregations`, AggregationsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/aggregations`, AggregationResponsesCursor, {
       query,
       ...options,
     });
@@ -82,13 +85,13 @@ export class Aggregations extends APIResource {
     id: string,
     params?: AggregationDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Aggregation>;
+  ): Core.APIPromise<AggregationResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<AggregationResponse>;
   delete(
     id: string,
     params: AggregationDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Aggregation> {
+  ): Core.APIPromise<AggregationResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -97,9 +100,9 @@ export class Aggregations extends APIResource {
   }
 }
 
-export class AggregationsCursor extends Cursor<Aggregation> {}
+export class AggregationResponsesCursor extends Cursor<AggregationResponse> {}
 
-export interface Aggregation {
+export interface AggregationResponse {
   /**
    * The UUID of the entity.
    */
@@ -645,12 +648,12 @@ export interface AggregationDeleteParams {
   orgId?: string;
 }
 
-Aggregations.AggregationsCursor = AggregationsCursor;
+Aggregations.AggregationResponsesCursor = AggregationResponsesCursor;
 
 export declare namespace Aggregations {
   export {
-    type Aggregation as Aggregation,
-    AggregationsCursor as AggregationsCursor,
+    type AggregationResponse as AggregationResponse,
+    AggregationResponsesCursor as AggregationResponsesCursor,
     type AggregationCreateParams as AggregationCreateParams,
     type AggregationRetrieveParams as AggregationRetrieveParams,
     type AggregationUpdateParams as AggregationUpdateParams,
