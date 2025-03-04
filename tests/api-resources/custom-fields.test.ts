@@ -55,15 +55,15 @@ describe('resource customFields', () => {
   test('update: required and optional params', async () => {
     const response = await client.customFields.update({
       orgId: 'orgId',
-      account: { foo: 'bar' },
-      accountPlan: { foo: 'bar' },
-      aggregation: { foo: 'bar' },
-      compoundAggregation: { foo: 'bar' },
-      meter: { foo: 'bar' },
-      organization: { foo: 'bar' },
-      plan: { foo: 'bar' },
-      planTemplate: { foo: 'bar' },
-      product: { foo: 'bar' },
+      account: { foo: 'string' },
+      accountPlan: { foo: 'string' },
+      aggregation: { foo: 'string' },
+      compoundAggregation: { foo: 'string' },
+      meter: { foo: 'string' },
+      organization: { foo: 'string' },
+      plan: { foo: 'string' },
+      planTemplate: { foo: 'string' },
+      product: { foo: 'string' },
       version: 0,
     });
   });

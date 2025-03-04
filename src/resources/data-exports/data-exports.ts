@@ -29,7 +29,8 @@ import {
 } from './jobs';
 import * as SchedulesAPI from './schedules';
 import {
-  OperationalDataExportSchedule,
+  OperationalDataExportScheduleRequest,
+  OperationalDataExportScheduleResponse,
   ScheduleCreateParams,
   ScheduleCreateResponse,
   ScheduleDeleteParams,
@@ -42,7 +43,8 @@ import {
   ScheduleUpdateParams,
   ScheduleUpdateResponse,
   Schedules,
-  UsageDataExportSchedule,
+  UsageDataExportScheduleRequest,
+  UsageDataExportScheduleResponse,
 } from './schedules';
 
 export class DataExports extends APIResource {
@@ -473,8 +475,10 @@ export declare namespace DataExports {
 
   export {
     Schedules as Schedules,
-    type OperationalDataExportSchedule as OperationalDataExportSchedule,
-    type UsageDataExportSchedule as UsageDataExportSchedule,
+    type OperationalDataExportScheduleRequest as OperationalDataExportScheduleRequest,
+    type OperationalDataExportScheduleResponse as OperationalDataExportScheduleResponse,
+    type UsageDataExportScheduleRequest as UsageDataExportScheduleRequest,
+    type UsageDataExportScheduleResponse as UsageDataExportScheduleResponse,
     type ScheduleCreateResponse as ScheduleCreateResponse,
     type ScheduleRetrieveResponse as ScheduleRetrieveResponse,
     type ScheduleUpdateResponse as ScheduleUpdateResponse,
