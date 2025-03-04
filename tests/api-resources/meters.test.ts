@@ -16,7 +16,7 @@ describe('resource meters', () => {
     const responsePromise = client.meters.create({
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
-      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x' }],
+      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', calculation: 'x' }],
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -33,7 +33,7 @@ describe('resource meters', () => {
       orgId: 'orgId',
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
-      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
+      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x', calculation: 'x' }],
       name: 'x',
       customFields: { foo: 'string' },
       groupId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
@@ -75,7 +75,7 @@ describe('resource meters', () => {
     const responsePromise = client.meters.update('id', {
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x' }],
-      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x' }],
+      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', calculation: 'x' }],
       name: 'x',
     });
     const rawResponse = await responsePromise.asResponse();
@@ -92,7 +92,7 @@ describe('resource meters', () => {
       orgId: 'orgId',
       code: 'JS!?Q0]r] ]$]',
       dataFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
-      derivedFields: [{ calculation: 'x', category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x' }],
+      derivedFields: [{ category: 'WHO', code: '{1{}}_', name: 'x', unit: 'x', calculation: 'x' }],
       name: 'x',
       customFields: { foo: 'string' },
       groupId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
