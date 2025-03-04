@@ -17,7 +17,7 @@ export class CompoundAggregations extends APIResource {
   create(
     params: CompoundAggregationCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AggregationsAPI.Aggregation> {
+  ): Core.APIPromise<AggregationsAPI.AggregationResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/compoundaggregations`, { body, ...options });
   }
@@ -62,7 +62,7 @@ export class CompoundAggregations extends APIResource {
     id: string,
     params: CompoundAggregationUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AggregationsAPI.Aggregation> {
+  ): Core.APIPromise<AggregationsAPI.AggregationResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/compoundaggregations/${id}`, { body, ...options });
   }

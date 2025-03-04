@@ -28,9 +28,9 @@ export {
   type AccountSearchParams,
 } from './accounts';
 export {
-  AggregationsCursor,
+  AggregationResponsesCursor,
   Aggregations,
-  type Aggregation,
+  type AggregationResponse,
   type AggregationCreateParams,
   type AggregationRetrieveParams,
   type AggregationUpdateParams,
@@ -87,6 +87,7 @@ export {
   CommitmentsCursor,
   Commitments,
   type Commitment,
+  type CommitmentFee,
   type CommitmentSearchResponse,
   type CommitmentCreateParams,
   type CommitmentRetrieveParams,
@@ -228,6 +229,7 @@ export {
 export {
   MetersCursor,
   Meters,
+  type DataField,
   type Meter,
   type MeterCreateParams,
   type MeterRetrieveParams,
@@ -256,6 +258,7 @@ export {
   PermissionPolicies,
   type PermissionPolicy,
   type PermissionStatement,
+  type PrincipalPermissionRequest,
   type PermissionPolicyAddToServiceUserResponse,
   type PermissionPolicyAddToSupportUserResponse,
   type PermissionPolicyAddToUserResponse,

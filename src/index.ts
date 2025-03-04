@@ -35,14 +35,14 @@ import {
   Address,
 } from './resources/accounts';
 import {
-  Aggregation,
   AggregationCreateParams,
   AggregationDeleteParams,
   AggregationListParams,
+  AggregationResponse,
+  AggregationResponsesCursor,
   AggregationRetrieveParams,
   AggregationUpdateParams,
   Aggregations,
-  AggregationsCursor,
 } from './resources/aggregations';
 import {
   Authentication,
@@ -69,6 +69,7 @@ import {
   Commitment,
   CommitmentCreateParams,
   CommitmentDeleteParams,
+  CommitmentFee,
   CommitmentListParams,
   CommitmentRetrieveParams,
   CommitmentSearchParams,
@@ -201,6 +202,7 @@ import {
   IntegrationConfigurations,
 } from './resources/integration-configurations';
 import {
+  DataField,
   Meter,
   MeterCreateParams,
   MeterDeleteParams,
@@ -252,6 +254,7 @@ import {
   PermissionPolicyRetrieveParams,
   PermissionPolicyUpdateParams,
   PermissionStatement,
+  PrincipalPermissionRequest,
 } from './resources/permission-policies';
 import {
   PlanGroupLink,
@@ -717,7 +720,7 @@ M3ter.AccountsCursor = AccountsCursor;
 M3ter.AccountPlans = AccountPlans;
 M3ter.AccountPlansCursor = AccountPlansCursor;
 M3ter.Aggregations = Aggregations;
-M3ter.AggregationsCursor = AggregationsCursor;
+M3ter.AggregationResponsesCursor = AggregationResponsesCursor;
 M3ter.Balances = Balances;
 M3ter.BalancesCursor = BalancesCursor;
 M3ter.Bills = Bills;
@@ -823,8 +826,8 @@ export declare namespace M3ter {
 
   export {
     Aggregations as Aggregations,
-    type Aggregation as Aggregation,
-    AggregationsCursor as AggregationsCursor,
+    type AggregationResponse as AggregationResponse,
+    AggregationResponsesCursor as AggregationResponsesCursor,
     type AggregationCreateParams as AggregationCreateParams,
     type AggregationRetrieveParams as AggregationRetrieveParams,
     type AggregationUpdateParams as AggregationUpdateParams,
@@ -869,6 +872,7 @@ export declare namespace M3ter {
   export {
     Commitments as Commitments,
     type Commitment as Commitment,
+    type CommitmentFee as CommitmentFee,
     type CommitmentSearchResponse as CommitmentSearchResponse,
     CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
@@ -1039,6 +1043,7 @@ export declare namespace M3ter {
 
   export {
     Meters as Meters,
+    type DataField as DataField,
     type Meter as Meter,
     MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
@@ -1070,6 +1075,7 @@ export declare namespace M3ter {
     PermissionPolicies as PermissionPolicies,
     type PermissionPolicy as PermissionPolicy,
     type PermissionStatement as PermissionStatement,
+    type PrincipalPermissionRequest as PrincipalPermissionRequest,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
     type PermissionPolicyAddToUserResponse as PermissionPolicyAddToUserResponse,
