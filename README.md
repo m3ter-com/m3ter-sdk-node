@@ -11,11 +11,8 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:m3ter-com/m3ter-sdk-node.git
+npm install m3ter-sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://app.stainless.com/docs/guides/publish), this will become: `npm install m3ter-sdk`
 
 ## Usage
 
