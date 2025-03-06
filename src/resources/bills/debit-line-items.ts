@@ -16,7 +16,7 @@ export class DebitLineItems extends APIResource {
     billId: string,
     params: DebitLineItemCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem> {
+  ): Core.APIPromise<DebitLineItemResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/bills/${billId}/debitlineitems`, { body, ...options });
   }
@@ -29,14 +29,14 @@ export class DebitLineItems extends APIResource {
     id: string,
     params?: DebitLineItemRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem>;
-  retrieve(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitLineItem>;
+  ): Core.APIPromise<DebitLineItemResponse>;
+  retrieve(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitLineItemResponse>;
   retrieve(
     billId: string,
     id: string,
     params: DebitLineItemRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem> {
+  ): Core.APIPromise<DebitLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(billId, id, {}, params);
     }
@@ -52,7 +52,7 @@ export class DebitLineItems extends APIResource {
     id: string,
     params: DebitLineItemUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem> {
+  ): Core.APIPromise<DebitLineItemResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/bills/${billId}/debitlineitems/${id}`, {
       body,
@@ -67,20 +67,23 @@ export class DebitLineItems extends APIResource {
     billId: string,
     params?: DebitLineItemListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitLineItemsCursor, DebitLineItem>;
-  list(billId: string, options?: Core.RequestOptions): Core.PagePromise<DebitLineItemsCursor, DebitLineItem>;
+  ): Core.PagePromise<DebitLineItemResponsesCursor, DebitLineItemResponse>;
+  list(
+    billId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<DebitLineItemResponsesCursor, DebitLineItemResponse>;
   list(
     billId: string,
     params: DebitLineItemListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitLineItemsCursor, DebitLineItem> {
+  ): Core.PagePromise<DebitLineItemResponsesCursor, DebitLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.list(billId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/bills/${billId}/debitlineitems`,
-      DebitLineItemsCursor,
+      DebitLineItemResponsesCursor,
       { query, ...options },
     );
   }
@@ -93,14 +96,14 @@ export class DebitLineItems extends APIResource {
     id: string,
     params?: DebitLineItemDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem>;
-  delete(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitLineItem>;
+  ): Core.APIPromise<DebitLineItemResponse>;
+  delete(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<DebitLineItemResponse>;
   delete(
     billId: string,
     id: string,
     params: DebitLineItemDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitLineItem> {
+  ): Core.APIPromise<DebitLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.delete(billId, id, {}, params);
     }
@@ -109,9 +112,9 @@ export class DebitLineItems extends APIResource {
   }
 }
 
-export class DebitLineItemsCursor extends Cursor<DebitLineItem> {}
+export class DebitLineItemResponsesCursor extends Cursor<DebitLineItemResponse> {}
 
-export interface DebitLineItem {
+export interface DebitLineItemResponse {
   /**
    * The UUID of the entity.
    */
@@ -394,12 +397,12 @@ export interface DebitLineItemDeleteParams {
   orgId?: string;
 }
 
-DebitLineItems.DebitLineItemsCursor = DebitLineItemsCursor;
+DebitLineItems.DebitLineItemResponsesCursor = DebitLineItemResponsesCursor;
 
 export declare namespace DebitLineItems {
   export {
-    type DebitLineItem as DebitLineItem,
-    DebitLineItemsCursor as DebitLineItemsCursor,
+    type DebitLineItemResponse as DebitLineItemResponse,
+    DebitLineItemResponsesCursor as DebitLineItemResponsesCursor,
     type DebitLineItemCreateParams as DebitLineItemCreateParams,
     type DebitLineItemRetrieveParams as DebitLineItemRetrieveParams,
     type DebitLineItemUpdateParams as DebitLineItemUpdateParams,

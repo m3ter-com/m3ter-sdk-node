@@ -13,7 +13,7 @@ export class TransactionTypes extends APIResource {
   create(
     params: TransactionTypeCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType> {
+  ): Core.APIPromise<TransactionTypeResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/transactiontypes`, { body, ...options });
   }
@@ -26,13 +26,13 @@ export class TransactionTypes extends APIResource {
     id: string,
     params?: TransactionTypeRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType>;
+  ): Core.APIPromise<TransactionTypeResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionTypeResponse>;
   retrieve(
     id: string,
     params: TransactionTypeRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType> {
+  ): Core.APIPromise<TransactionTypeResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -49,7 +49,7 @@ export class TransactionTypes extends APIResource {
     id: string,
     params: TransactionTypeUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType> {
+  ): Core.APIPromise<TransactionTypeResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/transactiontypes/${id}`, { body, ...options });
   }
@@ -62,19 +62,21 @@ export class TransactionTypes extends APIResource {
   list(
     params?: TransactionTypeListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionTypesCursor, TransactionType>;
-  list(options?: Core.RequestOptions): Core.PagePromise<TransactionTypesCursor, TransactionType>;
+  ): Core.PagePromise<TransactionTypeResponsesCursor, TransactionTypeResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<TransactionTypeResponsesCursor, TransactionTypeResponse>;
   list(
     params: TransactionTypeListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionTypesCursor, TransactionType> {
+  ): Core.PagePromise<TransactionTypeResponsesCursor, TransactionTypeResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/picklists/transactiontypes`,
-      TransactionTypesCursor,
+      TransactionTypeResponsesCursor,
       { query, ...options },
     );
   }
@@ -86,13 +88,13 @@ export class TransactionTypes extends APIResource {
     id: string,
     params?: TransactionTypeDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionType>;
+  ): Core.APIPromise<TransactionTypeResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<TransactionTypeResponse>;
   delete(
     id: string,
     params: TransactionTypeDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<TransactionType> {
+  ): Core.APIPromise<TransactionTypeResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -101,9 +103,9 @@ export class TransactionTypes extends APIResource {
   }
 }
 
-export class TransactionTypesCursor extends Cursor<TransactionType> {}
+export class TransactionTypeResponsesCursor extends Cursor<TransactionTypeResponse> {}
 
-export interface TransactionType {
+export interface TransactionTypeResponse {
   /**
    * The UUID of the entity.
    */
@@ -278,12 +280,12 @@ export interface TransactionTypeDeleteParams {
   orgId?: string;
 }
 
-TransactionTypes.TransactionTypesCursor = TransactionTypesCursor;
+TransactionTypes.TransactionTypeResponsesCursor = TransactionTypeResponsesCursor;
 
 export declare namespace TransactionTypes {
   export {
-    type TransactionType as TransactionType,
-    TransactionTypesCursor as TransactionTypesCursor,
+    type TransactionTypeResponse as TransactionTypeResponse,
+    TransactionTypeResponsesCursor as TransactionTypeResponsesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
     type TransactionTypeRetrieveParams as TransactionTypeRetrieveParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,

@@ -11,7 +11,7 @@ export class Invitations extends APIResource {
    *
    * This sends an email to someone inviting them to join your m3ter Organization.
    */
-  create(params: InvitationCreateParams, options?: Core.RequestOptions): Core.APIPromise<Invitation> {
+  create(params: InvitationCreateParams, options?: Core.RequestOptions): Core.APIPromise<InvitationResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/invitations`, { body, ...options });
   }
@@ -23,13 +23,13 @@ export class Invitations extends APIResource {
     id: string,
     params?: InvitationRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Invitation>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Invitation>;
+  ): Core.APIPromise<InvitationResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<InvitationResponse>;
   retrieve(
     id: string,
     params: InvitationRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Invitation> {
+  ): Core.APIPromise<InvitationResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -43,26 +43,26 @@ export class Invitations extends APIResource {
   list(
     params?: InvitationListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<InvitationsCursor, Invitation>;
-  list(options?: Core.RequestOptions): Core.PagePromise<InvitationsCursor, Invitation>;
+  ): Core.PagePromise<InvitationResponsesCursor, InvitationResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<InvitationResponsesCursor, InvitationResponse>;
   list(
     params: InvitationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<InvitationsCursor, Invitation> {
+  ): Core.PagePromise<InvitationResponsesCursor, InvitationResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/invitations`, InvitationsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/invitations`, InvitationResponsesCursor, {
       query,
       ...options,
     });
   }
 }
 
-export class InvitationsCursor extends Cursor<Invitation> {}
+export class InvitationResponsesCursor extends Cursor<InvitationResponse> {}
 
-export interface Invitation {
+export interface InvitationResponse {
   /**
    * The UUID of the invitation.
    */
@@ -217,12 +217,12 @@ export interface InvitationListParams extends CursorParams {
   orgId?: string;
 }
 
-Invitations.InvitationsCursor = InvitationsCursor;
+Invitations.InvitationResponsesCursor = InvitationResponsesCursor;
 
 export declare namespace Invitations {
   export {
-    type Invitation as Invitation,
-    InvitationsCursor as InvitationsCursor,
+    type InvitationResponse as InvitationResponse,
+    InvitationResponsesCursor as InvitationResponsesCursor,
     type InvitationCreateParams as InvitationCreateParams,
     type InvitationRetrieveParams as InvitationRetrieveParams,
     type InvitationListParams as InvitationListParams,

@@ -4,8 +4,8 @@ import { APIResource } from '../../resource';
 import * as Core from '../../core';
 import * as DestinationsAPI from './destinations';
 import {
-  DataExportDestination,
-  DataExportDestinationsCursor,
+  DataExportDestinationResponse,
+  DataExportDestinationResponsesCursor,
   DestinationCreateParams,
   DestinationCreateResponse,
   DestinationDeleteParams,
@@ -19,8 +19,8 @@ import {
 } from './destinations';
 import * as JobsAPI from './jobs';
 import {
-  DataExportJob,
-  DataExportJobsCursor,
+  DataExportJobResponse,
+  DataExportJobResponsesCursor,
   JobGetDownloadURLParams,
   JobGetDownloadURLResponse,
   JobListParams,
@@ -113,20 +113,10 @@ export class DataExports extends APIResource {
   createAdhoc(
     params: DataExportCreateAdhocParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AdhocExport> {
+  ): Core.APIPromise<AdHocResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/dataexports/adhoc`, { body, ...options });
   }
-}
-
-/**
- * Response containing data export ad-hoc jobId
- */
-export interface AdhocExport {
-  /**
-   * The id of the job
-   */
-  jobId?: string;
 }
 
 export interface AdHocOperationalDataRequest {
@@ -167,6 +157,16 @@ export interface AdHocOperationalDataRequest {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
+}
+
+/**
+ * Response containing data export ad-hoc jobId
+ */
+export interface AdHocResponse {
+  /**
+   * The id of the job
+   */
+  jobId?: string;
 }
 
 export interface AdHocUsageDataRequest {
@@ -434,28 +434,28 @@ export declare namespace DataExportCreateAdhocParams {
 }
 
 DataExports.Destinations = Destinations;
-DataExports.DataExportDestinationsCursor = DataExportDestinationsCursor;
+DataExports.DataExportDestinationResponsesCursor = DataExportDestinationResponsesCursor;
 DataExports.Jobs = Jobs;
-DataExports.DataExportJobsCursor = DataExportJobsCursor;
+DataExports.DataExportJobResponsesCursor = DataExportJobResponsesCursor;
 DataExports.Schedules = Schedules;
 DataExports.ScheduleListResponsesCursor = ScheduleListResponsesCursor;
 
 export declare namespace DataExports {
   export {
-    type AdhocExport as AdhocExport,
     type AdHocOperationalDataRequest as AdHocOperationalDataRequest,
+    type AdHocResponse as AdHocResponse,
     type AdHocUsageDataRequest as AdHocUsageDataRequest,
     type DataExportCreateAdhocParams as DataExportCreateAdhocParams,
   };
 
   export {
     Destinations as Destinations,
-    type DataExportDestination as DataExportDestination,
+    type DataExportDestinationResponse as DataExportDestinationResponse,
     type DestinationCreateResponse as DestinationCreateResponse,
     type DestinationRetrieveResponse as DestinationRetrieveResponse,
     type DestinationUpdateResponse as DestinationUpdateResponse,
     type DestinationDeleteResponse as DestinationDeleteResponse,
-    DataExportDestinationsCursor as DataExportDestinationsCursor,
+    DataExportDestinationResponsesCursor as DataExportDestinationResponsesCursor,
     type DestinationCreateParams as DestinationCreateParams,
     type DestinationRetrieveParams as DestinationRetrieveParams,
     type DestinationUpdateParams as DestinationUpdateParams,
@@ -465,9 +465,9 @@ export declare namespace DataExports {
 
   export {
     Jobs as Jobs,
-    type DataExportJob as DataExportJob,
+    type DataExportJobResponse as DataExportJobResponse,
     type JobGetDownloadURLResponse as JobGetDownloadURLResponse,
-    DataExportJobsCursor as DataExportJobsCursor,
+    DataExportJobResponsesCursor as DataExportJobResponsesCursor,
     type JobRetrieveParams as JobRetrieveParams,
     type JobListParams as JobListParams,
     type JobGetDownloadURLParams as JobGetDownloadURLParams,

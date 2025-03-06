@@ -4,7 +4,7 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as PermissionPoliciesAPI from './permission-policies';
-import { PermissionPoliciesCursor } from './permission-policies';
+import { PermissionPolicyResponsesCursor } from './permission-policies';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class ResourceGroups extends APIResource {
@@ -15,7 +15,7 @@ export class ResourceGroups extends APIResource {
     type: string,
     params: ResourceGroupCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/resourcegroups/${type}`, { body, ...options });
   }
@@ -28,14 +28,14 @@ export class ResourceGroups extends APIResource {
     id: string,
     params?: ResourceGroupRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup>;
-  retrieve(type: string, id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroup>;
+  ): Core.APIPromise<ResourceGroupResponse>;
+  retrieve(type: string, id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroupResponse>;
   retrieve(
     type: string,
     id: string,
     params: ResourceGroupRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(type, id, {}, params);
     }
@@ -51,7 +51,7 @@ export class ResourceGroups extends APIResource {
     id: string,
     params: ResourceGroupUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/resourcegroups/${type}/${id}`, { body, ...options });
   }
@@ -63,21 +63,25 @@ export class ResourceGroups extends APIResource {
     type: string,
     params?: ResourceGroupListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ResourceGroupsCursor, ResourceGroup>;
-  list(type: string, options?: Core.RequestOptions): Core.PagePromise<ResourceGroupsCursor, ResourceGroup>;
+  ): Core.PagePromise<ResourceGroupResponsesCursor, ResourceGroupResponse>;
+  list(
+    type: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ResourceGroupResponsesCursor, ResourceGroupResponse>;
   list(
     type: string,
     params: ResourceGroupListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ResourceGroupsCursor, ResourceGroup> {
+  ): Core.PagePromise<ResourceGroupResponsesCursor, ResourceGroupResponse> {
     if (isRequestOptions(params)) {
       return this.list(type, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/resourcegroups/${type}`, ResourceGroupsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/resourcegroups/${type}`,
+      ResourceGroupResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -88,14 +92,14 @@ export class ResourceGroups extends APIResource {
     id: string,
     params?: ResourceGroupDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup>;
-  delete(type: string, id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroup>;
+  ): Core.APIPromise<ResourceGroupResponse>;
+  delete(type: string, id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroupResponse>;
   delete(
     type: string,
     id: string,
     params: ResourceGroupDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     if (isRequestOptions(params)) {
       return this.delete(type, id, {}, params);
     }
@@ -111,7 +115,7 @@ export class ResourceGroups extends APIResource {
     resourceGroupId: string,
     params: ResourceGroupAddResourceParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(
       `/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/addresource`,
@@ -158,25 +162,25 @@ export class ResourceGroups extends APIResource {
     resourceGroupId: string,
     params?: ResourceGroupListPermissionsParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy>;
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPoliciesAPI.PermissionPolicyResponse>;
   listPermissions(
     type: string,
     resourceGroupId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy>;
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPoliciesAPI.PermissionPolicyResponse>;
   listPermissions(
     type: string,
     resourceGroupId: string,
     params: ResourceGroupListPermissionsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPoliciesAPI.PermissionPolicy> {
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPoliciesAPI.PermissionPolicyResponse> {
     if (isRequestOptions(params)) {
       return this.listPermissions(type, resourceGroupId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/permissions`,
-      PermissionPoliciesCursor,
+      PermissionPolicyResponsesCursor,
       { query, ...options },
     );
   }
@@ -189,7 +193,7 @@ export class ResourceGroups extends APIResource {
     resourceGroupId: string,
     params: ResourceGroupRemoveResourceParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(
       `/organizations/${orgId}/resourcegroups/${type}/${resourceGroupId}/removeresource`,
@@ -198,11 +202,11 @@ export class ResourceGroups extends APIResource {
   }
 }
 
-export class ResourceGroupsCursor extends Cursor<ResourceGroup> {}
+export class ResourceGroupResponsesCursor extends Cursor<ResourceGroupResponse> {}
 
 export class ResourceGroupListContentsResponsesCursor extends Cursor<ResourceGroupListContentsResponse> {}
 
-export interface ResourceGroup {
+export interface ResourceGroupResponse {
   /**
    * The unique identifier (UUID) of the Resource Group.
    */
@@ -408,14 +412,14 @@ export interface ResourceGroupRemoveResourceParams {
   version?: number;
 }
 
-ResourceGroups.ResourceGroupsCursor = ResourceGroupsCursor;
+ResourceGroups.ResourceGroupResponsesCursor = ResourceGroupResponsesCursor;
 ResourceGroups.ResourceGroupListContentsResponsesCursor = ResourceGroupListContentsResponsesCursor;
 
 export declare namespace ResourceGroups {
   export {
-    type ResourceGroup as ResourceGroup,
+    type ResourceGroupResponse as ResourceGroupResponse,
     type ResourceGroupListContentsResponse as ResourceGroupListContentsResponse,
-    ResourceGroupsCursor as ResourceGroupsCursor,
+    ResourceGroupResponsesCursor as ResourceGroupResponsesCursor,
     ResourceGroupListContentsResponsesCursor as ResourceGroupListContentsResponsesCursor,
     type ResourceGroupCreateParams as ResourceGroupCreateParams,
     type ResourceGroupRetrieveParams as ResourceGroupRetrieveParams,
@@ -429,4 +433,4 @@ export declare namespace ResourceGroups {
   };
 }
 
-export { PermissionPoliciesCursor };
+export { PermissionPolicyResponsesCursor };

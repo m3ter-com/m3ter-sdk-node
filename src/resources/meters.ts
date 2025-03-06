@@ -37,7 +37,7 @@ export class Meters extends APIResource {
    *
    * - [Reviewing Meter Options](https://www.m3ter.com/docs/guides/setting-up-usage-data-meters-and-aggregations/reviewing-meter-options).
    */
-  create(params: MeterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+  create(params: MeterCreateParams, options?: Core.RequestOptions): Core.APIPromise<MeterResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/meters`, { body, ...options });
   }
@@ -45,13 +45,17 @@ export class Meters extends APIResource {
   /**
    * Retrieve the Meter with the given UUID.
    */
-  retrieve(id: string, params?: MeterRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Meter>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  retrieve(
+    id: string,
+    params?: MeterRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<MeterResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<MeterResponse>;
   retrieve(
     id: string,
     params: MeterRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Meter> {
+  ): Core.APIPromise<MeterResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -66,7 +70,11 @@ export class Meters extends APIResource {
    * endpoint to update the Meter use the `customFields` parameter to preserve those
    * Custom Fields. If you omit them from the update request, they will be lost.
    */
-  update(id: string, params: MeterUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Meter> {
+  update(
+    id: string,
+    params: MeterUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<MeterResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/meters/${id}`, { body, ...options });
   }
@@ -75,29 +83,39 @@ export class Meters extends APIResource {
    * Retrieve a list of Meters that can be filtered by Product, Meter ID, or Meter
    * short code.
    */
-  list(params?: MeterListParams, options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
-  list(options?: Core.RequestOptions): Core.PagePromise<MetersCursor, Meter>;
+  list(
+    params?: MeterListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<MeterResponsesCursor, MeterResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<MeterResponsesCursor, MeterResponse>;
   list(
     params: MeterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<MetersCursor, Meter> {
+  ): Core.PagePromise<MeterResponsesCursor, MeterResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/meters`, MetersCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/meters`, MeterResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
    * Delete the Meter with the given UUID.
    */
-  delete(id: string, params?: MeterDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Meter>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Meter>;
+  delete(
+    id: string,
+    params?: MeterDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<MeterResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<MeterResponse>;
   delete(
     id: string,
     params: MeterDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Meter> {
+  ): Core.APIPromise<MeterResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -106,9 +124,9 @@ export class Meters extends APIResource {
   }
 }
 
-export class MetersCursor extends Cursor<Meter> {}
+export class MeterResponsesCursor extends Cursor<MeterResponse> {}
 
-export interface DataField {
+export interface DataFieldResponse {
   /**
    * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
    */
@@ -135,7 +153,7 @@ export interface DataField {
   unit?: string;
 }
 
-export interface Meter {
+export interface MeterResponse {
   /**
    * The UUID of the entity.
    */
@@ -180,7 +198,7 @@ export interface Meter {
    * either numeric quantitative values or non-numeric data values. At least one
    * required per Meter; maximum 15 per Meter.
    */
-  dataFields?: Array<DataField>;
+  dataFields?: Array<DataFieldResponse>;
 
   /**
    * Used to submit usage data values for ingest into the platform that are the
@@ -188,7 +206,7 @@ export interface Meter {
    * `Timestamp` fields. Raw usage data is not submitted using `derivedFields`.
    * Maximum 15 per Meter. _(Optional)_.
    */
-  derivedFields?: Array<Meter.DerivedField>;
+  derivedFields?: Array<MeterResponse.DerivedField>;
 
   /**
    * The DateTime when the meter was created _(in ISO-8601 format)_.
@@ -222,8 +240,8 @@ export interface Meter {
   productId?: string;
 }
 
-export namespace Meter {
-  export interface DerivedField extends MetersAPI.DataField {
+export namespace MeterResponse {
+  export interface DerivedField extends MetersAPI.DataFieldResponse {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
@@ -254,7 +272,7 @@ export interface MeterCreateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<DataField>;
+  dataFields: Array<DataFieldResponse>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -311,7 +329,7 @@ export interface MeterCreateParams {
 }
 
 export namespace MeterCreateParams {
-  export interface DerivedField extends MetersAPI.DataField {
+  export interface DerivedField extends MetersAPI.DataFieldResponse {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
@@ -350,7 +368,7 @@ export interface MeterUpdateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<DataField>;
+  dataFields: Array<DataFieldResponse>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -407,7 +425,7 @@ export interface MeterUpdateParams {
 }
 
 export namespace MeterUpdateParams {
-  export interface DerivedField extends MetersAPI.DataField {
+  export interface DerivedField extends MetersAPI.DataFieldResponse {
     /**
      * The calculation used to transform the value of submitted `dataFields` in usage
      * data. Calculation can reference `dataFields`, `customFields`, or system
@@ -449,13 +467,13 @@ export interface MeterDeleteParams {
   orgId?: string;
 }
 
-Meters.MetersCursor = MetersCursor;
+Meters.MeterResponsesCursor = MeterResponsesCursor;
 
 export declare namespace Meters {
   export {
-    type DataField as DataField,
-    type Meter as Meter,
-    MetersCursor as MetersCursor,
+    type DataFieldResponse as DataFieldResponse,
+    type MeterResponse as MeterResponse,
+    MeterResponsesCursor as MeterResponsesCursor,
     type MeterCreateParams as MeterCreateParams,
     type MeterRetrieveParams as MeterRetrieveParams,
     type MeterUpdateParams as MeterUpdateParams,

@@ -13,7 +13,7 @@ export class Contracts extends APIResource {
    * Creates a new Contract for the specified Account. The Contract includes
    * information such as the associated Account along with start and end dates.
    */
-  create(params: ContractCreateParams, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+  create(params: ContractCreateParams, options?: Core.RequestOptions): Core.APIPromise<ContractResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/contracts`, { body, ...options });
   }
@@ -26,13 +26,13 @@ export class Contracts extends APIResource {
     id: string,
     params?: ContractRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Contract>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Contract>;
+  ): Core.APIPromise<ContractResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<ContractResponse>;
   retrieve(
     id: string,
     params: ContractRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Contract> {
+  ): Core.APIPromise<ContractResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -51,7 +51,11 @@ export class Contracts extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(id: string, params: ContractUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Contract> {
+  update(
+    id: string,
+    params: ContractUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ContractResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/contracts/${id}`, { body, ...options });
   }
@@ -64,17 +68,17 @@ export class Contracts extends APIResource {
   list(
     params?: ContractListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ContractsCursor, Contract>;
-  list(options?: Core.RequestOptions): Core.PagePromise<ContractsCursor, Contract>;
+  ): Core.PagePromise<ContractResponsesCursor, ContractResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ContractResponsesCursor, ContractResponse>;
   list(
     params: ContractListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ContractsCursor, Contract> {
+  ): Core.PagePromise<ContractResponsesCursor, ContractResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/contracts`, ContractsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/contracts`, ContractResponsesCursor, {
       query,
       ...options,
     });
@@ -87,13 +91,17 @@ export class Contracts extends APIResource {
    * **Note:** This call will fail if there are any AccountPlans or Commitments that
    * have been added to the Contract.
    */
-  delete(id: string, params?: ContractDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Contract>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Contract>;
+  delete(
+    id: string,
+    params?: ContractDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ContractResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<ContractResponse>;
   delete(
     id: string,
     params: ContractDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Contract> {
+  ): Core.APIPromise<ContractResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -129,9 +137,9 @@ export class Contracts extends APIResource {
   }
 }
 
-export class ContractsCursor extends Cursor<Contract> {}
+export class ContractResponsesCursor extends Cursor<ContractResponse> {}
 
-export interface Contract {
+export interface ContractResponse {
   /**
    * The UUID of the entity.
    */
@@ -488,13 +496,13 @@ export interface ContractEndDateBillingEntitiesParams {
   applyToChildren?: boolean;
 }
 
-Contracts.ContractsCursor = ContractsCursor;
+Contracts.ContractResponsesCursor = ContractResponsesCursor;
 
 export declare namespace Contracts {
   export {
-    type Contract as Contract,
+    type ContractResponse as ContractResponse,
     type ContractEndDateBillingEntitiesResponse as ContractEndDateBillingEntitiesResponse,
-    ContractsCursor as ContractsCursor,
+    ContractResponsesCursor as ContractResponsesCursor,
     type ContractCreateParams as ContractCreateParams,
     type ContractRetrieveParams as ContractRetrieveParams,
     type ContractUpdateParams as ContractUpdateParams,

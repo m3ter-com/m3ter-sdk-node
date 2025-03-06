@@ -17,7 +17,7 @@ export class CreditLineItems extends APIResource {
     billId: string,
     params: CreditLineItemCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem> {
+  ): Core.APIPromise<CreditLineItemResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/bills/${billId}/creditlineitems`, { body, ...options });
   }
@@ -30,14 +30,18 @@ export class CreditLineItems extends APIResource {
     id: string,
     params?: CreditLineItemRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem>;
-  retrieve(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CreditLineItem>;
+  ): Core.APIPromise<CreditLineItemResponse>;
+  retrieve(
+    billId: string,
+    id: string,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CreditLineItemResponse>;
   retrieve(
     billId: string,
     id: string,
     params: CreditLineItemRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem> {
+  ): Core.APIPromise<CreditLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(billId, id, {}, params);
     }
@@ -53,7 +57,7 @@ export class CreditLineItems extends APIResource {
     id: string,
     params: CreditLineItemUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem> {
+  ): Core.APIPromise<CreditLineItemResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/bills/${billId}/creditlineitems/${id}`, {
       body,
@@ -68,23 +72,23 @@ export class CreditLineItems extends APIResource {
     billId: string,
     params?: CreditLineItemListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditLineItemsCursor, CreditLineItem>;
+  ): Core.PagePromise<CreditLineItemResponsesCursor, CreditLineItemResponse>;
   list(
     billId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditLineItemsCursor, CreditLineItem>;
+  ): Core.PagePromise<CreditLineItemResponsesCursor, CreditLineItemResponse>;
   list(
     billId: string,
     params: CreditLineItemListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditLineItemsCursor, CreditLineItem> {
+  ): Core.PagePromise<CreditLineItemResponsesCursor, CreditLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.list(billId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/bills/${billId}/creditlineitems`,
-      CreditLineItemsCursor,
+      CreditLineItemResponsesCursor,
       { query, ...options },
     );
   }
@@ -97,14 +101,14 @@ export class CreditLineItems extends APIResource {
     id: string,
     params?: CreditLineItemDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem>;
-  delete(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CreditLineItem>;
+  ): Core.APIPromise<CreditLineItemResponse>;
+  delete(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<CreditLineItemResponse>;
   delete(
     billId: string,
     id: string,
     params: CreditLineItemDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditLineItem> {
+  ): Core.APIPromise<CreditLineItemResponse> {
     if (isRequestOptions(params)) {
       return this.delete(billId, id, {}, params);
     }
@@ -113,9 +117,9 @@ export class CreditLineItems extends APIResource {
   }
 }
 
-export class CreditLineItemsCursor extends Cursor<CreditLineItem> {}
+export class CreditLineItemResponsesCursor extends Cursor<CreditLineItemResponse> {}
 
-export interface CreditLineItem {
+export interface CreditLineItemResponse {
   /**
    * The UUID of the entity.
    */
@@ -398,12 +402,12 @@ export interface CreditLineItemDeleteParams {
   orgId?: string;
 }
 
-CreditLineItems.CreditLineItemsCursor = CreditLineItemsCursor;
+CreditLineItems.CreditLineItemResponsesCursor = CreditLineItemResponsesCursor;
 
 export declare namespace CreditLineItems {
   export {
-    type CreditLineItem as CreditLineItem,
-    CreditLineItemsCursor as CreditLineItemsCursor,
+    type CreditLineItemResponse as CreditLineItemResponse,
+    CreditLineItemResponsesCursor as CreditLineItemResponsesCursor,
     type CreditLineItemCreateParams as CreditLineItemCreateParams,
     type CreditLineItemRetrieveParams as CreditLineItemRetrieveParams,
     type CreditLineItemUpdateParams as CreditLineItemUpdateParams,

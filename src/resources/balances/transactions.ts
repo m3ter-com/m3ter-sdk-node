@@ -28,7 +28,7 @@ export class Transactions extends APIResource {
     balanceId: string,
     params: TransactionCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Transaction> {
+  ): Core.APIPromise<TransactionResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/balances/${balanceId}/transactions`, {
       body,
@@ -47,20 +47,23 @@ export class Transactions extends APIResource {
     balanceId: string,
     params?: TransactionListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction>;
-  list(balanceId: string, options?: Core.RequestOptions): Core.PagePromise<TransactionsCursor, Transaction>;
+  ): Core.PagePromise<TransactionResponsesCursor, TransactionResponse>;
+  list(
+    balanceId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<TransactionResponsesCursor, TransactionResponse>;
   list(
     balanceId: string,
     params: TransactionListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<TransactionsCursor, Transaction> {
+  ): Core.PagePromise<TransactionResponsesCursor, TransactionResponse> {
     if (isRequestOptions(params)) {
       return this.list(balanceId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/balances/${balanceId}/transactions`,
-      TransactionsCursor,
+      TransactionResponsesCursor,
       { query, ...options },
     );
   }
@@ -87,9 +90,9 @@ export class Transactions extends APIResource {
   }
 }
 
-export class TransactionsCursor extends Cursor<Transaction> {}
+export class TransactionResponsesCursor extends Cursor<TransactionResponse> {}
 
-export interface Transaction {
+export interface TransactionResponse {
   /**
    * The UUID of the entity.
    */
@@ -270,13 +273,13 @@ export interface TransactionSummaryParams {
   orgId?: string;
 }
 
-Transactions.TransactionsCursor = TransactionsCursor;
+Transactions.TransactionResponsesCursor = TransactionResponsesCursor;
 
 export declare namespace Transactions {
   export {
-    type Transaction as Transaction,
+    type TransactionResponse as TransactionResponse,
     type TransactionSummaryResponse as TransactionSummaryResponse,
-    TransactionsCursor as TransactionsCursor,
+    TransactionResponsesCursor as TransactionResponsesCursor,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
     type TransactionSummaryParams as TransactionSummaryParams,

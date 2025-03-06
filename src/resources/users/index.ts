@@ -1,17 +1,17 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  InvitationsCursor,
+  InvitationResponsesCursor,
   Invitations,
-  type Invitation,
+  type InvitationResponse,
   type InvitationCreateParams,
   type InvitationRetrieveParams,
   type InvitationListParams,
 } from './invitations';
 export {
-  UsersCursor,
+  UserResponsesCursor,
   Users,
-  type User,
+  type UserResponse,
   type UserMeResponse,
   type UserRetrieveParams,
   type UserUpdateParams,

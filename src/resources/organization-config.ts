@@ -5,19 +5,19 @@ import { isRequestOptions } from '../core';
 import * as Core from '../core';
 import * as Shared from './shared';
 
-export class OrganizationConfigResource extends APIResource {
+export class OrganizationConfig extends APIResource {
   /**
    * Retrieve the Organization-wide configuration details.
    */
   retrieve(
     params?: OrganizationConfigRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationConfig>;
-  retrieve(options?: Core.RequestOptions): Core.APIPromise<OrganizationConfig>;
+  ): Core.APIPromise<OrganizationConfigResponse>;
+  retrieve(options?: Core.RequestOptions): Core.APIPromise<OrganizationConfigResponse>;
   retrieve(
     params: OrganizationConfigRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationConfig> {
+  ): Core.APIPromise<OrganizationConfigResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve({}, params);
     }
@@ -31,13 +31,13 @@ export class OrganizationConfigResource extends APIResource {
   update(
     params: OrganizationConfigUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<OrganizationConfig> {
+  ): Core.APIPromise<OrganizationConfigResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/organizationconfig`, { body, ...options });
   }
 }
 
-export interface OrganizationConfig {
+export interface OrganizationConfigResponse {
   /**
    * The UUID of the entity.
    */
@@ -527,9 +527,9 @@ export interface OrganizationConfigUpdateParams {
   version?: number;
 }
 
-export declare namespace OrganizationConfigResource {
+export declare namespace OrganizationConfig {
   export {
-    type OrganizationConfig as OrganizationConfig,
+    type OrganizationConfigResponse as OrganizationConfigResponse,
     type OrganizationConfigRetrieveParams as OrganizationConfigRetrieveParams,
     type OrganizationConfigUpdateParams as OrganizationConfigUpdateParams,
   };

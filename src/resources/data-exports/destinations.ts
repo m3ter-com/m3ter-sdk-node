@@ -64,19 +64,21 @@ export class Destinations extends APIResource {
   list(
     params?: DestinationListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DataExportDestinationsCursor, DataExportDestination>;
-  list(options?: Core.RequestOptions): Core.PagePromise<DataExportDestinationsCursor, DataExportDestination>;
+  ): Core.PagePromise<DataExportDestinationResponsesCursor, DataExportDestinationResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<DataExportDestinationResponsesCursor, DataExportDestinationResponse>;
   list(
     params: DestinationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DataExportDestinationsCursor, DataExportDestination> {
+  ): Core.PagePromise<DataExportDestinationResponsesCursor, DataExportDestinationResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/dataexports/destinations`,
-      DataExportDestinationsCursor,
+      DataExportDestinationResponsesCursor,
       { query, ...options },
     );
   }
@@ -107,9 +109,9 @@ export class Destinations extends APIResource {
   }
 }
 
-export class DataExportDestinationsCursor extends Cursor<DataExportDestination> {}
+export class DataExportDestinationResponsesCursor extends Cursor<DataExportDestinationResponse> {}
 
-export interface DataExportDestination {
+export interface DataExportDestinationResponse {
   /**
    * The UUID of the entity.
    */
@@ -156,7 +158,7 @@ export interface DataExportDestination {
   name?: string;
 }
 
-export interface DestinationCreateResponse extends DataExportDestination {
+export interface DestinationCreateResponse extends DataExportDestinationResponse {
   /**
    * The UUID of the entity.
    */
@@ -209,7 +211,7 @@ export interface DestinationCreateResponse extends DataExportDestination {
   prefix?: string;
 }
 
-export interface DestinationRetrieveResponse extends DataExportDestination {
+export interface DestinationRetrieveResponse extends DataExportDestinationResponse {
   /**
    * The UUID of the entity.
    */
@@ -262,7 +264,7 @@ export interface DestinationRetrieveResponse extends DataExportDestination {
   prefix?: string;
 }
 
-export interface DestinationUpdateResponse extends DataExportDestination {
+export interface DestinationUpdateResponse extends DataExportDestinationResponse {
   /**
    * The UUID of the entity.
    */
@@ -315,7 +317,7 @@ export interface DestinationUpdateResponse extends DataExportDestination {
   prefix?: string;
 }
 
-export interface DestinationDeleteResponse extends DataExportDestination {
+export interface DestinationDeleteResponse extends DataExportDestinationResponse {
   /**
    * The UUID of the entity.
    */
@@ -554,16 +556,16 @@ export interface DestinationDeleteParams {
   orgId?: string;
 }
 
-Destinations.DataExportDestinationsCursor = DataExportDestinationsCursor;
+Destinations.DataExportDestinationResponsesCursor = DataExportDestinationResponsesCursor;
 
 export declare namespace Destinations {
   export {
-    type DataExportDestination as DataExportDestination,
+    type DataExportDestinationResponse as DataExportDestinationResponse,
     type DestinationCreateResponse as DestinationCreateResponse,
     type DestinationRetrieveResponse as DestinationRetrieveResponse,
     type DestinationUpdateResponse as DestinationUpdateResponse,
     type DestinationDeleteResponse as DestinationDeleteResponse,
-    DataExportDestinationsCursor as DataExportDestinationsCursor,
+    DataExportDestinationResponsesCursor as DataExportDestinationResponsesCursor,
     type DestinationCreateParams as DestinationCreateParams,
     type DestinationRetrieveParams as DestinationRetrieveParams,
     type DestinationUpdateParams as DestinationUpdateParams,
