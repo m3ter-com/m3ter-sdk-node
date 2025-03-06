@@ -14,7 +14,10 @@ export class CounterPricings extends APIResource {
    * for this call to be valid. If you omit both, then you will receive a validation
    * error.
    */
-  create(params: CounterPricingCreateParams, options?: Core.RequestOptions): Core.APIPromise<CounterPricing> {
+  create(
+    params: CounterPricingCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterPricingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/counterpricings`, { body, ...options });
   }
@@ -26,13 +29,13 @@ export class CounterPricings extends APIResource {
     id: string,
     params?: CounterPricingRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterPricing>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterPricing>;
+  ): Core.APIPromise<CounterPricingResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterPricingResponse>;
   retrieve(
     id: string,
     params: CounterPricingRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterPricing> {
+  ): Core.APIPromise<CounterPricingResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -51,7 +54,7 @@ export class CounterPricings extends APIResource {
     id: string,
     params: CounterPricingUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterPricing> {
+  ): Core.APIPromise<CounterPricingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/counterpricings/${id}`, { body, ...options });
   }
@@ -63,17 +66,19 @@ export class CounterPricings extends APIResource {
   list(
     params?: CounterPricingListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterPricingsCursor, CounterPricing>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CounterPricingsCursor, CounterPricing>;
+  ): Core.PagePromise<CounterPricingResponsesCursor, CounterPricingResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CounterPricingResponsesCursor, CounterPricingResponse>;
   list(
     params: CounterPricingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterPricingsCursor, CounterPricing> {
+  ): Core.PagePromise<CounterPricingResponsesCursor, CounterPricingResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/counterpricings`, CounterPricingsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/counterpricings`, CounterPricingResponsesCursor, {
       query,
       ...options,
     });
@@ -86,13 +91,13 @@ export class CounterPricings extends APIResource {
     id: string,
     params?: CounterPricingDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterPricing>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterPricing>;
+  ): Core.APIPromise<CounterPricingResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterPricingResponse>;
   delete(
     id: string,
     params: CounterPricingDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterPricing> {
+  ): Core.APIPromise<CounterPricingResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -101,9 +106,9 @@ export class CounterPricings extends APIResource {
   }
 }
 
-export class CounterPricingsCursor extends Cursor<CounterPricing> {}
+export class CounterPricingResponsesCursor extends Cursor<CounterPricingResponse> {}
 
-export interface CounterPricing {
+export interface CounterPricingResponse {
   /**
    * The UUID of the entity.
    */
@@ -562,12 +567,12 @@ export interface CounterPricingDeleteParams {
   orgId?: string;
 }
 
-CounterPricings.CounterPricingsCursor = CounterPricingsCursor;
+CounterPricings.CounterPricingResponsesCursor = CounterPricingResponsesCursor;
 
 export declare namespace CounterPricings {
   export {
-    type CounterPricing as CounterPricing,
-    CounterPricingsCursor as CounterPricingsCursor,
+    type CounterPricingResponse as CounterPricingResponse,
+    CounterPricingResponsesCursor as CounterPricingResponsesCursor,
     type CounterPricingCreateParams as CounterPricingCreateParams,
     type CounterPricingRetrieveParams as CounterPricingRetrieveParams,
     type CounterPricingUpdateParams as CounterPricingUpdateParams,

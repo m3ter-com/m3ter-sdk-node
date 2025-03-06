@@ -11,7 +11,10 @@ export class CreditReasons extends APIResource {
    * Reason, it becomes available as a credit type for adding Credit line items to
    * Bills. See [Credits](https://www.m3ter.com/docs/api#tag/Credits).
    */
-  create(params: CreditReasonCreateParams, options?: Core.RequestOptions): Core.APIPromise<CreditReason> {
+  create(
+    params: CreditReasonCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CreditReasonResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/creditreasons`, { body, ...options });
   }
@@ -23,13 +26,13 @@ export class CreditReasons extends APIResource {
     id: string,
     params?: CreditReasonRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditReason>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CreditReason>;
+  ): Core.APIPromise<CreditReasonResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CreditReasonResponse>;
   retrieve(
     id: string,
     params: CreditReasonRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditReason> {
+  ): Core.APIPromise<CreditReasonResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -44,7 +47,7 @@ export class CreditReasons extends APIResource {
     id: string,
     params: CreditReasonUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditReason> {
+  ): Core.APIPromise<CreditReasonResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/creditreasons/${id}`, { body, ...options });
   }
@@ -57,20 +60,21 @@ export class CreditReasons extends APIResource {
   list(
     params?: CreditReasonListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditReasonsCursor, CreditReason>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CreditReasonsCursor, CreditReason>;
+  ): Core.PagePromise<CreditReasonResponsesCursor, CreditReasonResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CreditReasonResponsesCursor, CreditReasonResponse>;
   list(
     params: CreditReasonListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CreditReasonsCursor, CreditReason> {
+  ): Core.PagePromise<CreditReasonResponsesCursor, CreditReasonResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/picklists/creditreasons`, CreditReasonsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/picklists/creditreasons`,
+      CreditReasonResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -80,13 +84,13 @@ export class CreditReasons extends APIResource {
     id: string,
     params?: CreditReasonDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditReason>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CreditReason>;
+  ): Core.APIPromise<CreditReasonResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CreditReasonResponse>;
   delete(
     id: string,
     params: CreditReasonDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CreditReason> {
+  ): Core.APIPromise<CreditReasonResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -95,9 +99,9 @@ export class CreditReasons extends APIResource {
   }
 }
 
-export class CreditReasonsCursor extends Cursor<CreditReason> {}
+export class CreditReasonResponsesCursor extends Cursor<CreditReasonResponse> {}
 
-export interface CreditReason {
+export interface CreditReasonResponse {
   /**
    * The UUID of the entity.
    */
@@ -271,12 +275,12 @@ export interface CreditReasonDeleteParams {
   orgId?: string;
 }
 
-CreditReasons.CreditReasonsCursor = CreditReasonsCursor;
+CreditReasons.CreditReasonResponsesCursor = CreditReasonResponsesCursor;
 
 export declare namespace CreditReasons {
   export {
-    type CreditReason as CreditReason,
-    CreditReasonsCursor as CreditReasonsCursor,
+    type CreditReasonResponse as CreditReasonResponse,
+    CreditReasonResponsesCursor as CreditReasonResponsesCursor,
     type CreditReasonCreateParams as CreditReasonCreateParams,
     type CreditReasonRetrieveParams as CreditReasonRetrieveParams,
     type CreditReasonUpdateParams as CreditReasonUpdateParams,

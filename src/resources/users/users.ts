@@ -7,12 +7,12 @@ import * as PermissionPoliciesAPI from '../permission-policies';
 import * as ResourceGroupsAPI from '../resource-groups';
 import * as InvitationsAPI from './invitations';
 import {
-  Invitation,
   InvitationCreateParams,
   InvitationListParams,
+  InvitationResponse,
+  InvitationResponsesCursor,
   InvitationRetrieveParams,
   Invitations,
-  InvitationsCursor,
 } from './invitations';
 import { Cursor, type CursorParams } from '../../pagination';
 
@@ -25,13 +25,17 @@ export class Users extends APIResource {
    * Retrieves detailed information for a specific user within an Organization, using
    * their unique identifier (UUID).
    */
-  retrieve(id: string, params?: UserRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<User>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<User>;
+  retrieve(
+    id: string,
+    params?: UserRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<UserResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<UserResponse>;
   retrieve(
     id: string,
     params: UserRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<User> {
+  ): Core.APIPromise<UserResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -46,7 +50,7 @@ export class Users extends APIResource {
    * unique identifier (UUID). Use this endpoint when you need to modify user
    * information such as their permission policy.
    */
-  update(id: string, params: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<User> {
+  update(id: string, params: UserUpdateParams, options?: Core.RequestOptions): Core.APIPromise<UserResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/users/${id}`, { body, ...options });
   }
@@ -58,17 +62,23 @@ export class Users extends APIResource {
    * to get an overview of all users and their basic details. The list can be
    * paginated for easier management.
    */
-  list(params?: UserListParams, options?: Core.RequestOptions): Core.PagePromise<UsersCursor, User>;
-  list(options?: Core.RequestOptions): Core.PagePromise<UsersCursor, User>;
+  list(
+    params?: UserListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<UserResponsesCursor, UserResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<UserResponsesCursor, UserResponse>;
   list(
     params: UserListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<UsersCursor, User> {
+  ): Core.PagePromise<UserResponsesCursor, UserResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/users`, UsersCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/users`, UserResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -81,16 +91,16 @@ export class Users extends APIResource {
     id: string,
     params?: UserGetPermissionsParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy>;
+  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicyResponse>;
   getPermissions(
     id: string,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy>;
+  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicyResponse>;
   getPermissions(
     id: string,
     params: UserGetPermissionsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicy> {
+  ): Core.APIPromise<PermissionPoliciesAPI.PermissionPolicyResponse> {
     if (isRequestOptions(params)) {
       return this.getPermissions(id, {}, params);
     }
@@ -129,13 +139,16 @@ export class Users extends APIResource {
     id: string,
     params?: UserGetUserGroupsParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupsAPI.ResourceGroup>;
-  getUserGroups(id: string, options?: Core.RequestOptions): Core.APIPromise<ResourceGroupsAPI.ResourceGroup>;
+  ): Core.APIPromise<ResourceGroupsAPI.ResourceGroupResponse>;
+  getUserGroups(
+    id: string,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ResourceGroupsAPI.ResourceGroupResponse>;
   getUserGroups(
     id: string,
     params: UserGetUserGroupsParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ResourceGroupsAPI.ResourceGroup> {
+  ): Core.APIPromise<ResourceGroupsAPI.ResourceGroupResponse> {
     if (isRequestOptions(params)) {
       return this.getUserGroups(id, {}, params);
     }
@@ -184,9 +197,9 @@ export class Users extends APIResource {
   }
 }
 
-export class UsersCursor extends Cursor<User> {}
+export class UserResponsesCursor extends Cursor<UserResponse> {}
 
-export interface User {
+export interface UserResponse {
   /**
    * The unique identifier (UUID) of this user.
    */
@@ -259,7 +272,7 @@ export interface User {
    * An array of permission statements for the user. Each permission statement
    * defines a specific permission for the user.
    */
-  permissionPolicy?: Array<PermissionPoliciesAPI.PermissionStatement>;
+  permissionPolicy?: Array<PermissionPoliciesAPI.PermissionStatementResponse>;
 
   /**
    * Indicates whether this is a m3ter Support user.
@@ -500,7 +513,7 @@ export interface UserUpdateParams {
    * [Understanding, Creating, and Managing Permission Policies](https://www.m3ter.com/docs/guides/organization-and-access-management/creating-and-managing-permissions)
    * for more information.
    */
-  permissionPolicy?: Array<PermissionPoliciesAPI.PermissionStatement>;
+  permissionPolicy?: Array<PermissionPoliciesAPI.PermissionStatementResponse>;
 
   /**
    * Body param: The version number of the entity:
@@ -581,15 +594,15 @@ export interface UserResendPasswordParams {
   orgId?: string;
 }
 
-Users.UsersCursor = UsersCursor;
+Users.UserResponsesCursor = UserResponsesCursor;
 Users.Invitations = Invitations;
-Users.InvitationsCursor = InvitationsCursor;
+Users.InvitationResponsesCursor = InvitationResponsesCursor;
 
 export declare namespace Users {
   export {
-    type User as User,
+    type UserResponse as UserResponse,
     type UserMeResponse as UserMeResponse,
-    UsersCursor as UsersCursor,
+    UserResponsesCursor as UserResponsesCursor,
     type UserRetrieveParams as UserRetrieveParams,
     type UserUpdateParams as UserUpdateParams,
     type UserListParams as UserListParams,
@@ -601,8 +614,8 @@ export declare namespace Users {
 
   export {
     Invitations as Invitations,
-    type Invitation as Invitation,
-    InvitationsCursor as InvitationsCursor,
+    type InvitationResponse as InvitationResponse,
+    InvitationResponsesCursor as InvitationResponsesCursor,
     type InvitationCreateParams as InvitationCreateParams,
     type InvitationRetrieveParams as InvitationRetrieveParams,
     type InvitationListParams as InvitationListParams,

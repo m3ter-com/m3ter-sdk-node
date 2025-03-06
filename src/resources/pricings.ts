@@ -14,7 +14,7 @@ export class Pricings extends APIResource {
    * for this call to be valid. If you omit both, then you will receive a validation
    * error.
    */
-  create(params: PricingCreateParams, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+  create(params: PricingCreateParams, options?: Core.RequestOptions): Core.APIPromise<PricingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/pricings`, { body, ...options });
   }
@@ -26,13 +26,13 @@ export class Pricings extends APIResource {
     id: string,
     params?: PricingRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Pricing>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
+  ): Core.APIPromise<PricingResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PricingResponse>;
   retrieve(
     id: string,
     params: PricingRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Pricing> {
+  ): Core.APIPromise<PricingResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -47,7 +47,11 @@ export class Pricings extends APIResource {
    * for this call to be valid. If you omit both, then you will receive a validation
    * error.
    */
-  update(id: string, params: PricingUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Pricing> {
+  update(
+    id: string,
+    params: PricingUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PricingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/pricings/${id}`, { body, ...options });
   }
@@ -56,29 +60,39 @@ export class Pricings extends APIResource {
    * Retrieve a list of Pricings filtered by date, Plan ID, PlanTemplate ID, or
    * Pricing ID.
    */
-  list(params?: PricingListParams, options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PricingsCursor, Pricing>;
+  list(
+    params?: PricingListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<PricingResponsesCursor, PricingResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PricingResponsesCursor, PricingResponse>;
   list(
     params: PricingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PricingsCursor, Pricing> {
+  ): Core.PagePromise<PricingResponsesCursor, PricingResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/pricings`, PricingsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/pricings`, PricingResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
    * Delete the Pricing with the given UUID.
    */
-  delete(id: string, params?: PricingDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Pricing>;
+  delete(
+    id: string,
+    params?: PricingDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PricingResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PricingResponse>;
   delete(
     id: string,
     params: PricingDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Pricing> {
+  ): Core.APIPromise<PricingResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -87,9 +101,9 @@ export class Pricings extends APIResource {
   }
 }
 
-export class PricingsCursor extends Cursor<Pricing> {}
+export class PricingResponsesCursor extends Cursor<PricingResponse> {}
 
-export interface Pricing {
+export interface PricingResponse {
   /**
    * The UUID of the entity.
    */
@@ -644,12 +658,12 @@ export interface PricingDeleteParams {
   orgId?: string;
 }
 
-Pricings.PricingsCursor = PricingsCursor;
+Pricings.PricingResponsesCursor = PricingResponsesCursor;
 
 export declare namespace Pricings {
   export {
-    type Pricing as Pricing,
-    PricingsCursor as PricingsCursor,
+    type PricingResponse as PricingResponse,
+    PricingResponsesCursor as PricingResponsesCursor,
     type PricingCreateParams as PricingCreateParams,
     type PricingRetrieveParams as PricingRetrieveParams,
     type PricingUpdateParams as PricingUpdateParams,

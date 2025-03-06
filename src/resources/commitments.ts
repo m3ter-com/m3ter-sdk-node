@@ -23,7 +23,7 @@ export class Commitments extends APIResource {
    *   `feeDates` request parameter to define a precise schedule of bill dates and
    *   amounts.
    */
-  create(params: CommitmentCreateParams, options?: Core.RequestOptions): Core.APIPromise<Commitment> {
+  create(params: CommitmentCreateParams, options?: Core.RequestOptions): Core.APIPromise<CommitmentResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/commitments`, { body, ...options });
   }
@@ -39,13 +39,13 @@ export class Commitments extends APIResource {
     id: string,
     params?: CommitmentRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment>;
+  ): Core.APIPromise<CommitmentResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CommitmentResponse>;
   retrieve(
     id: string,
     params: CommitmentRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment> {
+  ): Core.APIPromise<CommitmentResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -64,7 +64,7 @@ export class Commitments extends APIResource {
     id: string,
     params: CommitmentUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment> {
+  ): Core.APIPromise<CommitmentResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/commitments/${id}`, { body, ...options });
   }
@@ -79,17 +79,17 @@ export class Commitments extends APIResource {
   list(
     params?: CommitmentListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CommitmentsCursor, Commitment>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CommitmentsCursor, Commitment>;
+  ): Core.PagePromise<CommitmentResponsesCursor, CommitmentResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CommitmentResponsesCursor, CommitmentResponse>;
   list(
     params: CommitmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CommitmentsCursor, Commitment> {
+  ): Core.PagePromise<CommitmentResponsesCursor, CommitmentResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/commitments`, CommitmentsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/commitments`, CommitmentResponsesCursor, {
       query,
       ...options,
     });
@@ -105,13 +105,13 @@ export class Commitments extends APIResource {
     id: string,
     params?: CommitmentDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Commitment>;
+  ): Core.APIPromise<CommitmentResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CommitmentResponse>;
   delete(
     id: string,
     params: CommitmentDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Commitment> {
+  ): Core.APIPromise<CommitmentResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -144,9 +144,19 @@ export class Commitments extends APIResource {
   }
 }
 
-export class CommitmentsCursor extends Cursor<Commitment> {}
+export class CommitmentResponsesCursor extends Cursor<CommitmentResponse> {}
 
-export interface Commitment {
+export interface CommitmentFee {
+  amount: number;
+
+  date: string;
+
+  servicePeriodEndDate: string;
+
+  servicePeriodStartDate: string;
+}
+
+export interface CommitmentResponse {
   /**
    * The UUID of the entity.
    */
@@ -366,21 +376,11 @@ export interface Commitment {
   startDate?: string;
 }
 
-export interface CommitmentFee {
-  amount: number;
-
-  date: string;
-
-  servicePeriodEndDate: string;
-
-  servicePeriodStartDate: string;
-}
-
 export interface CommitmentSearchResponse {
   /**
    * The list of Commitments information.
    */
-  data?: Array<Commitment>;
+  data?: Array<CommitmentResponse>;
 
   /**
    * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
@@ -1005,14 +1005,14 @@ export interface CommitmentSearchParams {
   sortOrder?: 'ASC' | 'DESC';
 }
 
-Commitments.CommitmentsCursor = CommitmentsCursor;
+Commitments.CommitmentResponsesCursor = CommitmentResponsesCursor;
 
 export declare namespace Commitments {
   export {
-    type Commitment as Commitment,
     type CommitmentFee as CommitmentFee,
+    type CommitmentResponse as CommitmentResponse,
     type CommitmentSearchResponse as CommitmentSearchResponse,
-    CommitmentsCursor as CommitmentsCursor,
+    CommitmentResponsesCursor as CommitmentResponsesCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
     type CommitmentRetrieveParams as CommitmentRetrieveParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,

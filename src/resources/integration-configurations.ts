@@ -28,13 +28,13 @@ export class IntegrationConfigurations extends APIResource {
     id: string,
     params?: IntegrationConfigurationRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<IntegrationConfiguration>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<IntegrationConfiguration>;
+  ): Core.APIPromise<IntegrationConfigurationResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<IntegrationConfigurationResponse>;
   retrieve(
     id: string,
     params: IntegrationConfigurationRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<IntegrationConfiguration> {
+  ): Core.APIPromise<IntegrationConfigurationResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -140,13 +140,16 @@ export class IntegrationConfigurations extends APIResource {
     entityType: string,
     params?: IntegrationConfigurationGetByEntityParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<IntegrationConfiguration>;
-  getByEntity(entityType: string, options?: Core.RequestOptions): Core.APIPromise<IntegrationConfiguration>;
+  ): Core.APIPromise<IntegrationConfigurationResponse>;
+  getByEntity(
+    entityType: string,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<IntegrationConfigurationResponse>;
   getByEntity(
     entityType: string,
     params: IntegrationConfigurationGetByEntityParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<IntegrationConfiguration> {
+  ): Core.APIPromise<IntegrationConfigurationResponse> {
     if (isRequestOptions(params)) {
       return this.getByEntity(entityType, {}, params);
     }
@@ -160,7 +163,7 @@ export class IntegrationConfigurations extends APIResource {
 
 export class IntegrationConfigurationListResponsesCursor extends Cursor<IntegrationConfigurationListResponse> {}
 
-export interface IntegrationConfiguration {
+export interface IntegrationConfigurationResponse {
   /**
    * The UUID of the entity.
    */
@@ -1025,7 +1028,7 @@ IntegrationConfigurations.IntegrationConfigurationListResponsesCursor =
 
 export declare namespace IntegrationConfigurations {
   export {
-    type IntegrationConfiguration as IntegrationConfiguration,
+    type IntegrationConfigurationResponse as IntegrationConfigurationResponse,
     type IntegrationConfigurationCreateResponse as IntegrationConfigurationCreateResponse,
     type IntegrationConfigurationUpdateResponse as IntegrationConfigurationUpdateResponse,
     type IntegrationConfigurationListResponse as IntegrationConfigurationListResponse,

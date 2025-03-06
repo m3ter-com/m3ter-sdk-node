@@ -4,8 +4,8 @@ import { APIResource } from '../../../resource';
 import * as Core from '../../../core';
 import * as JobsAPI from './jobs';
 import {
-  FileUploadJob,
-  FileUploadJobsCursor,
+  FileUploadJobResponse,
+  FileUploadJobResponsesCursor,
   JobGetOriginalDownloadURLParams,
   JobGetOriginalDownloadURLResponse,
   JobListParams,
@@ -96,7 +96,7 @@ export interface FileUploadGenerateUploadURLParams {
 }
 
 FileUploads.Jobs = Jobs;
-FileUploads.FileUploadJobsCursor = FileUploadJobsCursor;
+FileUploads.FileUploadJobResponsesCursor = FileUploadJobResponsesCursor;
 
 export declare namespace FileUploads {
   export {
@@ -106,9 +106,9 @@ export declare namespace FileUploads {
 
   export {
     Jobs as Jobs,
-    type FileUploadJob as FileUploadJob,
+    type FileUploadJobResponse as FileUploadJobResponse,
     type JobGetOriginalDownloadURLResponse as JobGetOriginalDownloadURLResponse,
-    FileUploadJobsCursor as FileUploadJobsCursor,
+    FileUploadJobResponsesCursor as FileUploadJobResponsesCursor,
     type JobRetrieveParams as JobRetrieveParams,
     type JobListParams as JobListParams,
     type JobGetOriginalDownloadURLParams as JobGetOriginalDownloadURLParams,

@@ -16,7 +16,7 @@ export class ExternalMappings extends APIResource {
   create(
     params: ExternalMappingCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping> {
+  ): Core.APIPromise<ExternalMappingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/externalmappings`, { body, ...options });
   }
@@ -31,13 +31,13 @@ export class ExternalMappings extends APIResource {
     id: string,
     params?: ExternalMappingRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<ExternalMapping>;
+  ): Core.APIPromise<ExternalMappingResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<ExternalMappingResponse>;
   retrieve(
     id: string,
     params: ExternalMappingRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping> {
+  ): Core.APIPromise<ExternalMappingResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -56,7 +56,7 @@ export class ExternalMappings extends APIResource {
     id: string,
     params: ExternalMappingUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping> {
+  ): Core.APIPromise<ExternalMappingResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/externalmappings/${id}`, { body, ...options });
   }
@@ -71,20 +71,23 @@ export class ExternalMappings extends APIResource {
   list(
     params?: ExternalMappingListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
-  list(options?: Core.RequestOptions): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
   list(
     params: ExternalMappingListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping> {
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/externalmappings`, ExternalMappingsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/externalmappings`,
+      ExternalMappingResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -94,13 +97,13 @@ export class ExternalMappings extends APIResource {
     id: string,
     params?: ExternalMappingDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<ExternalMapping>;
+  ): Core.APIPromise<ExternalMappingResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<ExternalMappingResponse>;
   delete(
     id: string,
     params: ExternalMappingDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<ExternalMapping> {
+  ): Core.APIPromise<ExternalMappingResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -122,27 +125,27 @@ export class ExternalMappings extends APIResource {
     externalId: string,
     params?: ExternalMappingListByExternalEntityParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
   listByExternalEntity(
     system: string,
     externalTable: string,
     externalId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
   listByExternalEntity(
     system: string,
     externalTable: string,
     externalId: string,
     params: ExternalMappingListByExternalEntityParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping> {
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse> {
     if (isRequestOptions(params)) {
       return this.listByExternalEntity(system, externalTable, externalId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/externalmappings/externalid/${system}/${externalTable}/${externalId}`,
-      ExternalMappingsCursor,
+      ExternalMappingResponsesCursor,
       { query, ...options },
     );
   }
@@ -158,33 +161,33 @@ export class ExternalMappings extends APIResource {
     m3terId: string,
     params?: ExternalMappingListByM3terEntityParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
   listByM3terEntity(
     entity: string,
     m3terId: string,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping>;
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse>;
   listByM3terEntity(
     entity: string,
     m3terId: string,
     params: ExternalMappingListByM3terEntityParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ExternalMappingsCursor, ExternalMapping> {
+  ): Core.PagePromise<ExternalMappingResponsesCursor, ExternalMappingResponse> {
     if (isRequestOptions(params)) {
       return this.listByM3terEntity(entity, m3terId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/externalmappings/external/${entity}/${m3terId}`,
-      ExternalMappingsCursor,
+      ExternalMappingResponsesCursor,
       { query, ...options },
     );
   }
 }
 
-export class ExternalMappingsCursor extends Cursor<ExternalMapping> {}
+export class ExternalMappingResponsesCursor extends Cursor<ExternalMappingResponse> {}
 
-export interface ExternalMapping {
+export interface ExternalMappingResponse {
   /**
    * The UUID of the entity.
    */
@@ -420,12 +423,12 @@ export interface ExternalMappingListByM3terEntityParams extends CursorParams {
   orgId?: string;
 }
 
-ExternalMappings.ExternalMappingsCursor = ExternalMappingsCursor;
+ExternalMappings.ExternalMappingResponsesCursor = ExternalMappingResponsesCursor;
 
 export declare namespace ExternalMappings {
   export {
-    type ExternalMapping as ExternalMapping,
-    ExternalMappingsCursor as ExternalMappingsCursor,
+    type ExternalMappingResponse as ExternalMappingResponse,
+    ExternalMappingResponsesCursor as ExternalMappingResponsesCursor,
     type ExternalMappingCreateParams as ExternalMappingCreateParams,
     type ExternalMappingRetrieveParams as ExternalMappingRetrieveParams,
     type ExternalMappingUpdateParams as ExternalMappingUpdateParams,

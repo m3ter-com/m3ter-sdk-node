@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  DataExportDestinationsCursor,
+  DataExportDestinationResponsesCursor,
   Destinations,
-  type DataExportDestination,
+  type DataExportDestinationResponse,
   type DestinationCreateResponse,
   type DestinationRetrieveResponse,
   type DestinationUpdateResponse,
@@ -15,9 +15,9 @@ export {
   type DestinationDeleteParams,
 } from './destinations';
 export {
-  DataExportJobsCursor,
+  DataExportJobResponsesCursor,
   Jobs,
-  type DataExportJob,
+  type DataExportJobResponse,
   type JobGetDownloadURLResponse,
   type JobRetrieveParams,
   type JobListParams,
@@ -25,8 +25,8 @@ export {
 } from './jobs';
 export {
   DataExports,
-  type AdhocExport,
   type AdHocOperationalDataRequest,
+  type AdHocResponse,
   type AdHocUsageDataRequest,
   type DataExportCreateAdhocParams,
 } from './data-exports';

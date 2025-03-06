@@ -37,7 +37,7 @@ export class BillJobs extends APIResource {
    *   many requests). When one of the existing BillJobs has completed, you'll be
    *   able to submit another job
    */
-  create(params: BillJobCreateParams, options?: Core.RequestOptions): Core.APIPromise<BillJob> {
+  create(params: BillJobCreateParams, options?: Core.RequestOptions): Core.APIPromise<BillJobResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/billjobs`, { body, ...options });
   }
@@ -49,13 +49,13 @@ export class BillJobs extends APIResource {
     id: string,
     params?: BillJobRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<BillJob>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<BillJob>;
+  ): Core.APIPromise<BillJobResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<BillJobResponse>;
   retrieve(
     id: string,
     params: BillJobRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<BillJob> {
+  ): Core.APIPromise<BillJobResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -71,17 +71,23 @@ export class BillJobs extends APIResource {
    * based on various parameters, such as BillJob `status` and whether or not BillJob
    * remains `active`.
    */
-  list(params?: BillJobListParams, options?: Core.RequestOptions): Core.PagePromise<BillJobsCursor, BillJob>;
-  list(options?: Core.RequestOptions): Core.PagePromise<BillJobsCursor, BillJob>;
+  list(
+    params?: BillJobListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<BillJobResponsesCursor, BillJobResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<BillJobResponsesCursor, BillJobResponse>;
   list(
     params: BillJobListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<BillJobsCursor, BillJob> {
+  ): Core.PagePromise<BillJobResponsesCursor, BillJobResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/billjobs`, BillJobsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/billjobs`, BillJobResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -91,13 +97,17 @@ export class BillJobs extends APIResource {
    * might be necessary if there are changes in billing requirements or other
    * operational considerations.
    */
-  cancel(id: string, params?: BillJobCancelParams, options?: Core.RequestOptions): Core.APIPromise<BillJob>;
-  cancel(id: string, options?: Core.RequestOptions): Core.APIPromise<BillJob>;
+  cancel(
+    id: string,
+    params?: BillJobCancelParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillJobResponse>;
+  cancel(id: string, options?: Core.RequestOptions): Core.APIPromise<BillJobResponse>;
   cancel(
     id: string,
     params: BillJobCancelParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<BillJob> {
+  ): Core.APIPromise<BillJobResponse> {
     if (isRequestOptions(params)) {
       return this.cancel(id, {}, params);
     }
@@ -122,15 +132,18 @@ export class BillJobs extends APIResource {
    *   null,the parameter is hidden to help simplify the output as well as to reduce
    *   its size and improve performance.
    */
-  recalculate(params: BillJobRecalculateParams, options?: Core.RequestOptions): Core.APIPromise<BillJob> {
+  recalculate(
+    params: BillJobRecalculateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillJobResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/billjobs/recalculate`, { body, ...options });
   }
 }
 
-export class BillJobsCursor extends Cursor<BillJob> {}
+export class BillJobResponsesCursor extends Cursor<BillJobResponse> {}
 
-export interface BillJob {
+export interface BillJobResponse {
   /**
    * The UUID of the entity.
    */
@@ -528,12 +541,12 @@ export interface BillJobRecalculateParams {
   version?: number;
 }
 
-BillJobs.BillJobsCursor = BillJobsCursor;
+BillJobs.BillJobResponsesCursor = BillJobResponsesCursor;
 
 export declare namespace BillJobs {
   export {
-    type BillJob as BillJob,
-    BillJobsCursor as BillJobsCursor,
+    type BillJobResponse as BillJobResponse,
+    BillJobResponsesCursor as BillJobResponsesCursor,
     type BillJobCreateParams as BillJobCreateParams,
     type BillJobRetrieveParams as BillJobRetrieveParams,
     type BillJobListParams as BillJobListParams,

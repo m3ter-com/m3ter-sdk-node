@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  BillsCursor,
+  BillResponsesCursor,
   Bills,
-  type Bill,
+  type BillResponse,
   type BillApproveResponse,
   type BillSearchResponse,
   type BillRetrieveParams,
@@ -16,9 +16,9 @@ export {
   type BillUpdateStatusParams,
 } from './bills';
 export {
-  CreditLineItemsCursor,
+  CreditLineItemResponsesCursor,
   CreditLineItems,
-  type CreditLineItem,
+  type CreditLineItemResponse,
   type CreditLineItemCreateParams,
   type CreditLineItemRetrieveParams,
   type CreditLineItemUpdateParams,
@@ -26,9 +26,9 @@ export {
   type CreditLineItemDeleteParams,
 } from './credit-line-items';
 export {
-  DebitLineItemsCursor,
+  DebitLineItemResponsesCursor,
   DebitLineItems,
-  type DebitLineItem,
+  type DebitLineItemResponse,
   type DebitLineItemCreateParams,
   type DebitLineItemRetrieveParams,
   type DebitLineItemUpdateParams,
@@ -36,9 +36,9 @@ export {
   type DebitLineItemDeleteParams,
 } from './debit-line-items';
 export {
-  LineItemsCursor,
+  LineItemResponsesCursor,
   LineItems,
-  type LineItem,
+  type LineItemResponse,
   type LineItemRetrieveParams,
   type LineItemListParams,
 } from './line-items';

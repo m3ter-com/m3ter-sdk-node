@@ -10,7 +10,7 @@ export class PlanGroups extends APIResource {
    * Create a new PlanGroup. This endpoint creates a new PlanGroup within the
    * specified organization.
    */
-  create(params: PlanGroupCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanGroup> {
+  create(params: PlanGroupCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plangroups`, { body, ...options });
   }
@@ -25,13 +25,13 @@ export class PlanGroups extends APIResource {
     id: string,
     params?: PlanGroupRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup>;
+  ): Core.APIPromise<PlanGroupResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupResponse>;
   retrieve(
     id: string,
     params: PlanGroupRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup> {
+  ): Core.APIPromise<PlanGroupResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -55,7 +55,7 @@ export class PlanGroups extends APIResource {
     id: string,
     params: PlanGroupUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup> {
+  ): Core.APIPromise<PlanGroupResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plangroups/${id}`, { body, ...options });
   }
@@ -70,17 +70,17 @@ export class PlanGroups extends APIResource {
   list(
     params?: PlanGroupListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupsCursor, PlanGroup>;
+  ): Core.PagePromise<PlanGroupResponsesCursor, PlanGroupResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupResponsesCursor, PlanGroupResponse>;
   list(
     params: PlanGroupListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupsCursor, PlanGroup> {
+  ): Core.PagePromise<PlanGroupResponsesCursor, PlanGroupResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/plangroups`, PlanGroupsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/plangroups`, PlanGroupResponsesCursor, {
       query,
       ...options,
     });
@@ -97,13 +97,13 @@ export class PlanGroups extends APIResource {
     id: string,
     params?: PlanGroupDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroup>;
+  ): Core.APIPromise<PlanGroupResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupResponse>;
   delete(
     id: string,
     params: PlanGroupDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroup> {
+  ): Core.APIPromise<PlanGroupResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -112,9 +112,9 @@ export class PlanGroups extends APIResource {
   }
 }
 
-export class PlanGroupsCursor extends Cursor<PlanGroup> {}
+export class PlanGroupResponsesCursor extends Cursor<PlanGroupResponse> {}
 
-export interface PlanGroup {
+export interface PlanGroupResponse {
   /**
    * The UUID of the entity.
    */
@@ -487,12 +487,12 @@ export interface PlanGroupDeleteParams {
   orgId?: string;
 }
 
-PlanGroups.PlanGroupsCursor = PlanGroupsCursor;
+PlanGroups.PlanGroupResponsesCursor = PlanGroupResponsesCursor;
 
 export declare namespace PlanGroups {
   export {
-    type PlanGroup as PlanGroup,
-    PlanGroupsCursor as PlanGroupsCursor,
+    type PlanGroupResponse as PlanGroupResponse,
+    PlanGroupResponsesCursor as PlanGroupResponsesCursor,
     type PlanGroupCreateParams as PlanGroupCreateParams,
     type PlanGroupRetrieveParams as PlanGroupRetrieveParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,

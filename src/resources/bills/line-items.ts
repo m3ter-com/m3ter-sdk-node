@@ -17,14 +17,14 @@ export class LineItems extends APIResource {
     id: string,
     params?: LineItemRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<LineItem>;
-  retrieve(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<LineItem>;
+  ): Core.APIPromise<LineItemResponse>;
+  retrieve(billId: string, id: string, options?: Core.RequestOptions): Core.APIPromise<LineItemResponse>;
   retrieve(
     billId: string,
     id: string,
     params: LineItemRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<LineItem> {
+  ): Core.APIPromise<LineItemResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(billId, id, {}, params);
     }
@@ -44,27 +44,31 @@ export class LineItems extends APIResource {
     billId: string,
     params?: LineItemListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<LineItemsCursor, LineItem>;
-  list(billId: string, options?: Core.RequestOptions): Core.PagePromise<LineItemsCursor, LineItem>;
+  ): Core.PagePromise<LineItemResponsesCursor, LineItemResponse>;
+  list(
+    billId: string,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<LineItemResponsesCursor, LineItemResponse>;
   list(
     billId: string,
     params: LineItemListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<LineItemsCursor, LineItem> {
+  ): Core.PagePromise<LineItemResponsesCursor, LineItemResponse> {
     if (isRequestOptions(params)) {
       return this.list(billId, {}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/bills/${billId}/lineitems`, LineItemsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/bills/${billId}/lineitems`,
+      LineItemResponsesCursor,
+      { query, ...options },
+    );
   }
 }
 
-export class LineItemsCursor extends Cursor<LineItem> {}
+export class LineItemResponsesCursor extends Cursor<LineItemResponse> {}
 
-export interface LineItem {
+export interface LineItemResponse {
   /**
    * The UUID of the entity.
    */
@@ -98,7 +102,7 @@ export interface LineItem {
    * Array containing the pricing band information, which shows the details for each
    * pricing band or tier.
    */
-  bandUsage?: Array<LineItem.BandUsage>;
+  bandUsage?: Array<LineItemResponse.BandUsage>;
 
   /**
    * The unique identifier (UUID) for the Bill that includes this line item.
@@ -303,7 +307,7 @@ export interface LineItem {
   units?: number;
 }
 
-export namespace LineItem {
+export namespace LineItemResponse {
   /**
    * Array containing the pricing band information, which shows the details for each
    * pricing band or tier.
@@ -373,12 +377,12 @@ export interface LineItemListParams extends CursorParams {
   orgId?: string;
 }
 
-LineItems.LineItemsCursor = LineItemsCursor;
+LineItems.LineItemResponsesCursor = LineItemResponsesCursor;
 
 export declare namespace LineItems {
   export {
-    type LineItem as LineItem,
-    LineItemsCursor as LineItemsCursor,
+    type LineItemResponse as LineItemResponse,
+    LineItemResponsesCursor as LineItemResponsesCursor,
     type LineItemRetrieveParams as LineItemRetrieveParams,
     type LineItemListParams as LineItemListParams,
   };
