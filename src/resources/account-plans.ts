@@ -17,7 +17,10 @@ export class AccountPlans extends APIResource {
    * AccountPlanGroup for an Account at the same time. If you want to create both for
    * an Account, you must submit two separate calls.
    */
-  create(params: AccountPlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<AccountPlan> {
+  create(
+    params: AccountPlanCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountPlanResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/accountplans`, { body, ...options });
   }
@@ -30,13 +33,13 @@ export class AccountPlans extends APIResource {
     id: string,
     params?: AccountPlanRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan>;
+  ): Core.APIPromise<AccountPlanResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlanResponse>;
   retrieve(
     id: string,
     params: AccountPlanRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan> {
+  ): Core.APIPromise<AccountPlanResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -65,7 +68,7 @@ export class AccountPlans extends APIResource {
     id: string,
     params: AccountPlanUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan> {
+  ): Core.APIPromise<AccountPlanResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/accountplans/${id}`, { body, ...options });
   }
@@ -85,17 +88,17 @@ export class AccountPlans extends APIResource {
   list(
     params?: AccountPlanListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountPlansCursor, AccountPlan>;
-  list(options?: Core.RequestOptions): Core.PagePromise<AccountPlansCursor, AccountPlan>;
+  ): Core.PagePromise<AccountPlanResponsesCursor, AccountPlanResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AccountPlanResponsesCursor, AccountPlanResponse>;
   list(
     params: AccountPlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountPlansCursor, AccountPlan> {
+  ): Core.PagePromise<AccountPlanResponsesCursor, AccountPlanResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/accountplans`, AccountPlansCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/accountplans`, AccountPlanResponsesCursor, {
       query,
       ...options,
     });
@@ -111,13 +114,13 @@ export class AccountPlans extends APIResource {
     id: string,
     params?: AccountPlanDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlan>;
+  ): Core.APIPromise<AccountPlanResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountPlanResponse>;
   delete(
     id: string,
     params: AccountPlanDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<AccountPlan> {
+  ): Core.APIPromise<AccountPlanResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -126,9 +129,9 @@ export class AccountPlans extends APIResource {
   }
 }
 
-export class AccountPlansCursor extends Cursor<AccountPlan> {}
+export class AccountPlanResponsesCursor extends Cursor<AccountPlanResponse> {}
 
-export interface AccountPlan {
+export interface AccountPlanResponse {
   /**
    * The UUID of the entity.
    */
@@ -553,12 +556,12 @@ export interface AccountPlanDeleteParams {
   orgId?: string;
 }
 
-AccountPlans.AccountPlansCursor = AccountPlansCursor;
+AccountPlans.AccountPlanResponsesCursor = AccountPlanResponsesCursor;
 
 export declare namespace AccountPlans {
   export {
-    type AccountPlan as AccountPlan,
-    AccountPlansCursor as AccountPlansCursor,
+    type AccountPlanResponse as AccountPlanResponse,
+    AccountPlanResponsesCursor as AccountPlanResponsesCursor,
     type AccountPlanCreateParams as AccountPlanCreateParams,
     type AccountPlanRetrieveParams as AccountPlanRetrieveParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,

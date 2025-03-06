@@ -13,13 +13,17 @@ export class Events extends APIResource {
    * Event corresponds to a unique instance of a state change within the system,
    * classified under a specific Event Type.
    */
-  retrieve(id: string, params?: EventRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Event>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Event>;
+  retrieve(
+    id: string,
+    params?: EventRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<EventResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<EventResponse>;
   retrieve(
     id: string,
     params: EventRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Event> {
+  ): Core.APIPromise<EventResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -43,17 +47,23 @@ export class Events extends APIResource {
    *   [List Notification Events](https://www.m3ter.com/docs/api#tag/Events/operation/ListEventTypes)
    *   endpoint in this section. The response lists the valid Query parameters.
    */
-  list(params?: EventListParams, options?: Core.RequestOptions): Core.PagePromise<EventsCursor, Event>;
-  list(options?: Core.RequestOptions): Core.PagePromise<EventsCursor, Event>;
+  list(
+    params?: EventListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<EventResponsesCursor, EventResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<EventResponsesCursor, EventResponse>;
   list(
     params: EventListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<EventsCursor, Event> {
+  ): Core.PagePromise<EventResponsesCursor, EventResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/events`, EventsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/events`, EventResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -122,12 +132,12 @@ export class Events extends APIResource {
   }
 }
 
-export class EventsCursor extends Cursor<Event> {}
+export class EventResponsesCursor extends Cursor<EventResponse> {}
 
 /**
  * Response containing an Event entity.
  */
-export interface Event {
+export interface EventResponse {
   /**
    * The uniqie identifier (UUID) of the Event.
    */
@@ -278,14 +288,14 @@ export interface EventGetTypesParams {
   orgId?: string;
 }
 
-Events.EventsCursor = EventsCursor;
+Events.EventResponsesCursor = EventResponsesCursor;
 
 export declare namespace Events {
   export {
-    type Event as Event,
+    type EventResponse as EventResponse,
     type EventGetFieldsResponse as EventGetFieldsResponse,
     type EventGetTypesResponse as EventGetTypesResponse,
-    EventsCursor as EventsCursor,
+    EventResponsesCursor as EventResponsesCursor,
     type EventRetrieveParams as EventRetrieveParams,
     type EventListParams as EventListParams,
     type EventGetFieldsParams as EventGetFieldsParams,

@@ -9,7 +9,7 @@ export class Plans extends APIResource {
   /**
    * Create a new Plan.
    */
-  create(params: PlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+  create(params: PlanCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plans`, { body, ...options });
   }
@@ -17,13 +17,17 @@ export class Plans extends APIResource {
   /**
    * Retrieve the Plan with the given UUID.
    */
-  retrieve(id: string, params?: PlanRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Plan>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  retrieve(
+    id: string,
+    params?: PlanRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanResponse>;
   retrieve(
     id: string,
     params: PlanRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Plan> {
+  ): Core.APIPromise<PlanResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -38,7 +42,7 @@ export class Plans extends APIResource {
    * endpoint to update the Plan use the `customFields` parameter to preserve those
    * Custom Fields. If you omit them from the update request, they will be lost.
    */
-  update(id: string, params: PlanUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Plan> {
+  update(id: string, params: PlanUpdateParams, options?: Core.RequestOptions): Core.APIPromise<PlanResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plans/${id}`, { body, ...options });
   }
@@ -46,29 +50,35 @@ export class Plans extends APIResource {
   /**
    * Retrieve a list of Plans that can be filtered by Product, Account, or Plan ID.
    */
-  list(params?: PlanListParams, options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PlansCursor, Plan>;
+  list(
+    params?: PlanListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<PlanResponsesCursor, PlanResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanResponsesCursor, PlanResponse>;
   list(
     params: PlanListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlansCursor, Plan> {
+  ): Core.PagePromise<PlanResponsesCursor, PlanResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/plans`, PlansCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/plans`, PlanResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
    * Delete the Plan with the given UUID.
    */
-  delete(id: string, params?: PlanDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Plan>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Plan>;
+  delete(id: string, params?: PlanDeleteParams, options?: Core.RequestOptions): Core.APIPromise<PlanResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanResponse>;
   delete(
     id: string,
     params: PlanDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Plan> {
+  ): Core.APIPromise<PlanResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -77,9 +87,9 @@ export class Plans extends APIResource {
   }
 }
 
-export class PlansCursor extends Cursor<Plan> {}
+export class PlanResponsesCursor extends Cursor<PlanResponse> {}
 
-export interface Plan {
+export interface PlanResponse {
   /**
    * The UUID of the entity.
    */
@@ -551,12 +561,12 @@ export interface PlanDeleteParams {
   orgId?: string;
 }
 
-Plans.PlansCursor = PlansCursor;
+Plans.PlanResponsesCursor = PlanResponsesCursor;
 
 export declare namespace Plans {
   export {
-    type Plan as Plan,
-    PlansCursor as PlansCursor,
+    type PlanResponse as PlanResponse,
+    PlanResponsesCursor as PlanResponsesCursor,
     type PlanCreateParams as PlanCreateParams,
     type PlanRetrieveParams as PlanRetrieveParams,
     type PlanUpdateParams as PlanUpdateParams,

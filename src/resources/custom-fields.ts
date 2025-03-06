@@ -9,12 +9,15 @@ export class CustomFields extends APIResource {
    * Retrieve all Custom Fields added at Organizational level for the entities that
    * support them.
    */
-  retrieve(params?: CustomFieldRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<CustomFields>;
-  retrieve(options?: Core.RequestOptions): Core.APIPromise<CustomFields>;
+  retrieve(
+    params?: CustomFieldRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CustomFieldsResponse>;
+  retrieve(options?: Core.RequestOptions): Core.APIPromise<CustomFieldsResponse>;
   retrieve(
     params: CustomFieldRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CustomFields> {
+  ): Core.APIPromise<CustomFieldsResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve({}, params);
     }
@@ -25,13 +28,16 @@ export class CustomFields extends APIResource {
   /**
    * Update Custom Fields added at Organization level to entities that support them.
    */
-  update(params: CustomFieldUpdateParams, options?: Core.RequestOptions): Core.APIPromise<CustomFields> {
+  update(
+    params: CustomFieldUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CustomFieldsResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/customfields`, { body, ...options });
   }
 }
 
-export interface CustomFields {
+export interface CustomFieldsResponse {
   /**
    * The UUID of the entity.
    */
@@ -189,7 +195,7 @@ export interface CustomFieldUpdateParams {
 
 export declare namespace CustomFields {
   export {
-    type CustomFields as CustomFields,
+    type CustomFieldsResponse as CustomFieldsResponse,
     type CustomFieldRetrieveParams as CustomFieldRetrieveParams,
     type CustomFieldUpdateParams as CustomFieldUpdateParams,
   };

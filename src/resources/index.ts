@@ -2,9 +2,9 @@
 
 export * from './shared';
 export {
-  AccountPlansCursor,
+  AccountPlanResponsesCursor,
   AccountPlans,
-  type AccountPlan,
+  type AccountPlanResponse,
   type AccountPlanCreateParams,
   type AccountPlanRetrieveParams,
   type AccountPlanUpdateParams,
@@ -12,9 +12,9 @@ export {
   type AccountPlanDeleteParams,
 } from './account-plans';
 export {
-  AccountsCursor,
+  AccountResponsesCursor,
   Accounts,
-  type Account,
+  type AccountResponse,
   type Address,
   type AccountEndDateBillingEntitiesResponse,
   type AccountSearchResponse,
@@ -53,15 +53,15 @@ export {
   type BalanceDeleteParams,
 } from './balances/balances';
 export {
-  BillConfigResource,
-  type BillConfig,
+  BillConfig,
+  type BillConfigResponse,
   type BillConfigRetrieveParams,
   type BillConfigUpdateParams,
 } from './bill-config';
 export {
-  BillJobsCursor,
+  BillJobResponsesCursor,
   BillJobs,
-  type BillJob,
+  type BillJobResponse,
   type BillJobCreateParams,
   type BillJobRetrieveParams,
   type BillJobListParams,
@@ -69,9 +69,9 @@ export {
   type BillJobRecalculateParams,
 } from './bill-jobs';
 export {
-  BillsCursor,
+  BillResponsesCursor,
   Bills,
-  type Bill,
+  type BillResponse,
   type BillApproveResponse,
   type BillSearchResponse,
   type BillRetrieveParams,
@@ -84,10 +84,10 @@ export {
   type BillUpdateStatusParams,
 } from './bills/bills';
 export {
-  CommitmentsCursor,
+  CommitmentResponsesCursor,
   Commitments,
-  type Commitment,
   type CommitmentFee,
+  type CommitmentResponse,
   type CommitmentSearchResponse,
   type CommitmentCreateParams,
   type CommitmentRetrieveParams,
@@ -97,9 +97,9 @@ export {
   type CommitmentSearchParams,
 } from './commitments';
 export {
-  CompoundAggregationsCursor,
+  CompoundAggregationResponsesCursor,
   CompoundAggregations,
-  type CompoundAggregation,
+  type CompoundAggregationResponse,
   type CompoundAggregationCreateParams,
   type CompoundAggregationRetrieveParams,
   type CompoundAggregationUpdateParams,
@@ -107,9 +107,9 @@ export {
   type CompoundAggregationDeleteParams,
 } from './compound-aggregations';
 export {
-  ContractsCursor,
+  ContractResponsesCursor,
   Contracts,
-  type Contract,
+  type ContractResponse,
   type ContractEndDateBillingEntitiesResponse,
   type ContractCreateParams,
   type ContractRetrieveParams,
@@ -119,9 +119,9 @@ export {
   type ContractEndDateBillingEntitiesParams,
 } from './contracts';
 export {
-  CounterAdjustmentsCursor,
+  CounterAdjustmentResponsesCursor,
   CounterAdjustments,
-  type CounterAdjustment,
+  type CounterAdjustmentResponse,
   type CounterAdjustmentCreateParams,
   type CounterAdjustmentRetrieveParams,
   type CounterAdjustmentUpdateParams,
@@ -129,9 +129,9 @@ export {
   type CounterAdjustmentDeleteParams,
 } from './counter-adjustments';
 export {
-  CounterPricingsCursor,
+  CounterPricingResponsesCursor,
   CounterPricings,
-  type CounterPricing,
+  type CounterPricingResponse,
   type CounterPricingCreateParams,
   type CounterPricingRetrieveParams,
   type CounterPricingUpdateParams,
@@ -139,9 +139,9 @@ export {
   type CounterPricingDeleteParams,
 } from './counter-pricings';
 export {
-  CountersCursor,
+  CounterResponsesCursor,
   Counters,
-  type Counter,
+  type CounterResponse,
   type CounterCreateParams,
   type CounterRetrieveParams,
   type CounterUpdateParams,
@@ -149,9 +149,9 @@ export {
   type CounterDeleteParams,
 } from './counters';
 export {
-  CreditReasonsCursor,
+  CreditReasonResponsesCursor,
   CreditReasons,
-  type CreditReason,
+  type CreditReasonResponse,
   type CreditReasonCreateParams,
   type CreditReasonRetrieveParams,
   type CreditReasonUpdateParams,
@@ -159,27 +159,32 @@ export {
   type CreditReasonDeleteParams,
 } from './credit-reasons';
 export {
-  CurrenciesCursor,
+  CurrencyResponsesCursor,
   Currencies,
-  type Currency,
+  type CurrencyResponse,
   type CurrencyCreateParams,
   type CurrencyRetrieveParams,
   type CurrencyUpdateParams,
   type CurrencyListParams,
   type CurrencyDeleteParams,
 } from './currencies';
-export { CustomFields, type CustomFieldRetrieveParams, type CustomFieldUpdateParams } from './custom-fields';
+export {
+  CustomFields,
+  type CustomFieldsResponse,
+  type CustomFieldRetrieveParams,
+  type CustomFieldUpdateParams,
+} from './custom-fields';
 export {
   DataExports,
-  type AdhocExport,
   type AdHocOperationalDataRequest,
+  type AdHocResponse,
   type AdHocUsageDataRequest,
   type DataExportCreateAdhocParams,
 } from './data-exports/data-exports';
 export {
-  DebitReasonsCursor,
+  DebitReasonResponsesCursor,
   DebitReasons,
-  type DebitReason,
+  type DebitReasonResponse,
   type DebitReasonCreateParams,
   type DebitReasonRetrieveParams,
   type DebitReasonUpdateParams,
@@ -187,9 +192,9 @@ export {
   type DebitReasonDeleteParams,
 } from './debit-reasons';
 export {
-  EventsCursor,
+  EventResponsesCursor,
   Events,
-  type Event,
+  type EventResponse,
   type EventGetFieldsResponse,
   type EventGetTypesResponse,
   type EventRetrieveParams,
@@ -198,9 +203,9 @@ export {
   type EventGetTypesParams,
 } from './events';
 export {
-  ExternalMappingsCursor,
+  ExternalMappingResponsesCursor,
   ExternalMappings,
-  type ExternalMapping,
+  type ExternalMappingResponse,
   type ExternalMappingCreateParams,
   type ExternalMappingRetrieveParams,
   type ExternalMappingUpdateParams,
@@ -212,7 +217,7 @@ export {
 export {
   IntegrationConfigurationListResponsesCursor,
   IntegrationConfigurations,
-  type IntegrationConfiguration,
+  type IntegrationConfigurationResponse,
   type IntegrationConfigurationCreateResponse,
   type IntegrationConfigurationUpdateResponse,
   type IntegrationConfigurationListResponse,
@@ -227,10 +232,10 @@ export {
   type IntegrationConfigurationGetByEntityParams,
 } from './integration-configurations';
 export {
-  MetersCursor,
+  MeterResponsesCursor,
   Meters,
-  type DataField,
-  type Meter,
+  type DataFieldResponse,
+  type MeterResponse,
   type MeterCreateParams,
   type MeterRetrieveParams,
   type MeterUpdateParams,
@@ -238,9 +243,9 @@ export {
   type MeterDeleteParams,
 } from './meters';
 export {
-  NotificationConfigurationsCursor,
+  NotificationConfigurationResponsesCursor,
   NotificationConfigurations,
-  type NotificationConfiguration,
+  type NotificationConfigurationResponse,
   type NotificationConfigurationCreateParams,
   type NotificationConfigurationRetrieveParams,
   type NotificationConfigurationUpdateParams,
@@ -248,16 +253,16 @@ export {
   type NotificationConfigurationDeleteParams,
 } from './notification-configurations';
 export {
-  OrganizationConfigResource,
-  type OrganizationConfig,
+  OrganizationConfig,
+  type OrganizationConfigResponse,
   type OrganizationConfigRetrieveParams,
   type OrganizationConfigUpdateParams,
 } from './organization-config';
 export {
-  PermissionPoliciesCursor,
+  PermissionPolicyResponsesCursor,
   PermissionPolicies,
-  type PermissionPolicy,
-  type PermissionStatement,
+  type PermissionPolicyResponse,
+  type PermissionStatementResponse,
   type PrincipalPermissionRequest,
   type PermissionPolicyAddToServiceUserResponse,
   type PermissionPolicyAddToSupportUserResponse,
@@ -282,9 +287,9 @@ export {
   type PermissionPolicyRemoveFromUserGroupParams,
 } from './permission-policies';
 export {
-  PlanGroupLinksCursor,
+  PlanGroupLinkResponsesCursor,
   PlanGroupLinks,
-  type PlanGroupLink,
+  type PlanGroupLinkResponse,
   type PlanGroupLinkCreateParams,
   type PlanGroupLinkRetrieveParams,
   type PlanGroupLinkUpdateParams,
@@ -292,9 +297,9 @@ export {
   type PlanGroupLinkDeleteParams,
 } from './plan-group-links';
 export {
-  PlanGroupsCursor,
+  PlanGroupResponsesCursor,
   PlanGroups,
-  type PlanGroup,
+  type PlanGroupResponse,
   type PlanGroupCreateParams,
   type PlanGroupRetrieveParams,
   type PlanGroupUpdateParams,
@@ -302,19 +307,9 @@ export {
   type PlanGroupDeleteParams,
 } from './plan-groups';
 export {
-  PlanTemplatesCursor,
-  PlanTemplates,
-  type PlanTemplate,
-  type PlanTemplateCreateParams,
-  type PlanTemplateRetrieveParams,
-  type PlanTemplateUpdateParams,
-  type PlanTemplateListParams,
-  type PlanTemplateDeleteParams,
-} from './plan-templates';
-export {
-  PlansCursor,
+  PlanResponsesCursor,
   Plans,
-  type Plan,
+  type PlanResponse,
   type PlanCreateParams,
   type PlanRetrieveParams,
   type PlanUpdateParams,
@@ -322,9 +317,19 @@ export {
   type PlanDeleteParams,
 } from './plans';
 export {
-  PricingsCursor,
+  PlanTemplateResponsesCursor,
+  PlanTemplates,
+  type PlanTemplateResponse,
+  type PlanTemplateCreateParams,
+  type PlanTemplateRetrieveParams,
+  type PlanTemplateUpdateParams,
+  type PlanTemplateListParams,
+  type PlanTemplateDeleteParams,
+} from './plan-templates';
+export {
+  PricingResponsesCursor,
   Pricings,
-  type Pricing,
+  type PricingResponse,
   type PricingCreateParams,
   type PricingRetrieveParams,
   type PricingUpdateParams,
@@ -332,9 +337,9 @@ export {
   type PricingDeleteParams,
 } from './pricings';
 export {
-  ProductsCursor,
+  ProductResponsesCursor,
   Products,
-  type Product,
+  type ProductResponse,
   type ProductCreateParams,
   type ProductRetrieveParams,
   type ProductUpdateParams,
@@ -342,10 +347,10 @@ export {
   type ProductDeleteParams,
 } from './products';
 export {
-  ResourceGroupsCursor,
+  ResourceGroupResponsesCursor,
   ResourceGroupListContentsResponsesCursor,
   ResourceGroups,
-  type ResourceGroup,
+  type ResourceGroupResponse,
   type ResourceGroupListContentsResponse,
   type ResourceGroupCreateParams,
   type ResourceGroupRetrieveParams,
@@ -358,9 +363,9 @@ export {
   type ResourceGroupRemoveResourceParams,
 } from './resource-groups';
 export {
-  ScheduledEventConfigurationsCursor,
+  ScheduledEventConfigurationResponsesCursor,
   ScheduledEventConfigurations,
-  type ScheduledEventConfiguration,
+  type ScheduledEventConfigurationResponse,
   type ScheduledEventConfigurationCreateParams,
   type ScheduledEventConfigurationRetrieveParams,
   type ScheduledEventConfigurationUpdateParams,
@@ -368,9 +373,9 @@ export {
   type ScheduledEventConfigurationDeleteParams,
 } from './scheduled-event-configurations';
 export {
-  TransactionTypesCursor,
+  TransactionTypeResponsesCursor,
   TransactionTypes,
-  type TransactionType,
+  type TransactionTypeResponse,
   type TransactionTypeCreateParams,
   type TransactionTypeRetrieveParams,
   type TransactionTypeUpdateParams,
@@ -387,9 +392,9 @@ export {
   type UsageSubmitParams,
 } from './usage/usage';
 export {
-  UsersCursor,
+  UserResponsesCursor,
   Users,
-  type User,
+  type UserResponse,
   type UserMeResponse,
   type UserRetrieveParams,
   type UserUpdateParams,
@@ -402,8 +407,8 @@ export {
 export {
   WebhooksCursor,
   Webhooks,
-  type M3terSignedCredentialsReq,
-  type M3terSignedCredentialsResp,
+  type M3terSignedCredentialsRequest,
+  type M3terSignedCredentialsResponse,
   type Webhook,
   type WebhookCreateResponse,
   type WebhookUpdateResponse,

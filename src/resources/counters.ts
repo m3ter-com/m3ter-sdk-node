@@ -9,7 +9,7 @@ export class Counters extends APIResource {
   /**
    * Create a new Counter.
    */
-  create(params: CounterCreateParams, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+  create(params: CounterCreateParams, options?: Core.RequestOptions): Core.APIPromise<CounterResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/counters`, { body, ...options });
   }
@@ -21,13 +21,13 @@ export class Counters extends APIResource {
     id: string,
     params?: CounterRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Counter>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Counter>;
+  ): Core.APIPromise<CounterResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterResponse>;
   retrieve(
     id: string,
     params: CounterRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Counter> {
+  ): Core.APIPromise<CounterResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -38,7 +38,11 @@ export class Counters extends APIResource {
   /**
    * Update Counter for the given UUID.
    */
-  update(id: string, params: CounterUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Counter> {
+  update(
+    id: string,
+    params: CounterUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/counters/${id}`, { body, ...options });
   }
@@ -47,29 +51,39 @@ export class Counters extends APIResource {
    * Retrieve a list of Counter entities that can be filtered by Product, Counter ID,
    * or Codes.
    */
-  list(params?: CounterListParams, options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CountersCursor, Counter>;
+  list(
+    params?: CounterListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CounterResponsesCursor, CounterResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CounterResponsesCursor, CounterResponse>;
   list(
     params: CounterListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CountersCursor, Counter> {
+  ): Core.PagePromise<CounterResponsesCursor, CounterResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/counters`, CountersCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/counters`, CounterResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
    * Delete a Counter for the given UUID.
    */
-  delete(id: string, params?: CounterDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Counter>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Counter>;
+  delete(
+    id: string,
+    params?: CounterDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CounterResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterResponse>;
   delete(
     id: string,
     params: CounterDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Counter> {
+  ): Core.APIPromise<CounterResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -78,9 +92,9 @@ export class Counters extends APIResource {
   }
 }
 
-export class CountersCursor extends Cursor<Counter> {}
+export class CounterResponsesCursor extends Cursor<CounterResponse> {}
 
-export interface Counter {
+export interface CounterResponse {
   /**
    * The UUID of the entity.
    */
@@ -265,12 +279,12 @@ export interface CounterDeleteParams {
   orgId?: string;
 }
 
-Counters.CountersCursor = CountersCursor;
+Counters.CounterResponsesCursor = CounterResponsesCursor;
 
 export declare namespace Counters {
   export {
-    type Counter as Counter,
-    CountersCursor as CountersCursor,
+    type CounterResponse as CounterResponse,
+    CounterResponsesCursor as CounterResponsesCursor,
     type CounterCreateParams as CounterCreateParams,
     type CounterRetrieveParams as CounterRetrieveParams,
     type CounterUpdateParams as CounterUpdateParams,

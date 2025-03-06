@@ -122,7 +122,7 @@ export class Webhooks extends APIResource {
 
 export class WebhooksCursor extends Cursor<Webhook> {}
 
-export interface M3terSignedCredentialsReq {
+export interface M3terSignedCredentialsRequest {
   /**
    * The API key provided by m3ter. This key is part of the credential set required
    * for signing requests and authenticating with m3ter services.
@@ -162,7 +162,7 @@ export interface M3terSignedCredentialsReq {
   version?: number;
 }
 
-export interface M3terSignedCredentialsResp {
+export interface M3terSignedCredentialsResponse {
   /**
    * The UUID of the entity.
    */
@@ -259,7 +259,7 @@ export interface Webhook {
   /**
    * Response representing a set of credentials used for signing m3ter requests.
    */
-  credentials?: M3terSignedCredentialsResp;
+  credentials?: M3terSignedCredentialsResponse;
 
   description?: string;
 
@@ -290,7 +290,7 @@ export interface WebhookCreateResponse {
   /**
    * This schema defines the credentials required for m3ter request signing.
    */
-  credentials: M3terSignedCredentialsReq;
+  credentials: M3terSignedCredentialsRequest;
 
   description: string;
 
@@ -322,7 +322,7 @@ export interface WebhookUpdateResponse {
   /**
    * This schema defines the credentials required for m3ter request signing.
    */
-  credentials: M3terSignedCredentialsReq;
+  credentials: M3terSignedCredentialsRequest;
 
   description: string;
 
@@ -354,7 +354,7 @@ export interface WebhookSetActiveResponse {
   /**
    * This schema defines the credentials required for m3ter request signing.
    */
-  credentials: M3terSignedCredentialsReq;
+  credentials: M3terSignedCredentialsRequest;
 
   description: string;
 
@@ -393,7 +393,7 @@ export interface WebhookCreateParams {
    * Body param: This schema defines the credentials required for m3ter request
    * signing.
    */
-  credentials: M3terSignedCredentialsReq;
+  credentials: M3terSignedCredentialsRequest;
 
   /**
    * Body param:
@@ -450,7 +450,7 @@ export interface WebhookUpdateParams {
    * Body param: This schema defines the credentials required for m3ter request
    * signing.
    */
-  credentials: M3terSignedCredentialsReq;
+  credentials: M3terSignedCredentialsRequest;
 
   /**
    * Body param:
@@ -527,8 +527,8 @@ Webhooks.WebhooksCursor = WebhooksCursor;
 
 export declare namespace Webhooks {
   export {
-    type M3terSignedCredentialsReq as M3terSignedCredentialsReq,
-    type M3terSignedCredentialsResp as M3terSignedCredentialsResp,
+    type M3terSignedCredentialsRequest as M3terSignedCredentialsRequest,
+    type M3terSignedCredentialsResponse as M3terSignedCredentialsResponse,
     type Webhook as Webhook,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,

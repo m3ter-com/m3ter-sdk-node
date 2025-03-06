@@ -9,29 +9,29 @@ import { type CursorParams, CursorResponse } from './pagination';
 import * as Uploads from './uploads';
 import * as API from './resources/index';
 import {
-  AccountPlan,
   AccountPlanCreateParams,
   AccountPlanDeleteParams,
   AccountPlanListParams,
+  AccountPlanResponse,
+  AccountPlanResponsesCursor,
   AccountPlanRetrieveParams,
   AccountPlanUpdateParams,
   AccountPlans,
-  AccountPlansCursor,
 } from './resources/account-plans';
 import {
-  Account,
   AccountCreateParams,
   AccountDeleteParams,
   AccountEndDateBillingEntitiesParams,
   AccountEndDateBillingEntitiesResponse,
   AccountGetChildrenParams,
   AccountListParams,
+  AccountResponse,
+  AccountResponsesCursor,
   AccountRetrieveParams,
   AccountSearchParams,
   AccountSearchResponse,
   AccountUpdateParams,
   Accounts,
-  AccountsCursor,
   Address,
 } from './resources/accounts';
 import {
@@ -51,141 +51,145 @@ import {
 } from './resources/authentication';
 import {
   BillConfig,
-  BillConfigResource,
+  BillConfigResponse,
   BillConfigRetrieveParams,
   BillConfigUpdateParams,
 } from './resources/bill-config';
 import {
-  BillJob,
   BillJobCancelParams,
   BillJobCreateParams,
   BillJobListParams,
   BillJobRecalculateParams,
+  BillJobResponse,
+  BillJobResponsesCursor,
   BillJobRetrieveParams,
   BillJobs,
-  BillJobsCursor,
 } from './resources/bill-jobs';
 import {
-  Commitment,
   CommitmentCreateParams,
   CommitmentDeleteParams,
   CommitmentFee,
   CommitmentListParams,
+  CommitmentResponse,
+  CommitmentResponsesCursor,
   CommitmentRetrieveParams,
   CommitmentSearchParams,
   CommitmentSearchResponse,
   CommitmentUpdateParams,
   Commitments,
-  CommitmentsCursor,
 } from './resources/commitments';
 import {
-  CompoundAggregation,
   CompoundAggregationCreateParams,
   CompoundAggregationDeleteParams,
   CompoundAggregationListParams,
+  CompoundAggregationResponse,
+  CompoundAggregationResponsesCursor,
   CompoundAggregationRetrieveParams,
   CompoundAggregationUpdateParams,
   CompoundAggregations,
-  CompoundAggregationsCursor,
 } from './resources/compound-aggregations';
 import {
-  Contract,
   ContractCreateParams,
   ContractDeleteParams,
   ContractEndDateBillingEntitiesParams,
   ContractEndDateBillingEntitiesResponse,
   ContractListParams,
+  ContractResponse,
+  ContractResponsesCursor,
   ContractRetrieveParams,
   ContractUpdateParams,
   Contracts,
-  ContractsCursor,
 } from './resources/contracts';
 import {
-  CounterAdjustment,
   CounterAdjustmentCreateParams,
   CounterAdjustmentDeleteParams,
   CounterAdjustmentListParams,
+  CounterAdjustmentResponse,
+  CounterAdjustmentResponsesCursor,
   CounterAdjustmentRetrieveParams,
   CounterAdjustmentUpdateParams,
   CounterAdjustments,
-  CounterAdjustmentsCursor,
 } from './resources/counter-adjustments';
 import {
-  CounterPricing,
   CounterPricingCreateParams,
   CounterPricingDeleteParams,
   CounterPricingListParams,
+  CounterPricingResponse,
+  CounterPricingResponsesCursor,
   CounterPricingRetrieveParams,
   CounterPricingUpdateParams,
   CounterPricings,
-  CounterPricingsCursor,
 } from './resources/counter-pricings';
 import {
-  Counter,
   CounterCreateParams,
   CounterDeleteParams,
   CounterListParams,
+  CounterResponse,
+  CounterResponsesCursor,
   CounterRetrieveParams,
   CounterUpdateParams,
   Counters,
-  CountersCursor,
 } from './resources/counters';
 import {
-  CreditReason,
   CreditReasonCreateParams,
   CreditReasonDeleteParams,
   CreditReasonListParams,
+  CreditReasonResponse,
+  CreditReasonResponsesCursor,
   CreditReasonRetrieveParams,
   CreditReasonUpdateParams,
   CreditReasons,
-  CreditReasonsCursor,
 } from './resources/credit-reasons';
 import {
   Currencies,
-  CurrenciesCursor,
-  Currency,
   CurrencyCreateParams,
   CurrencyDeleteParams,
   CurrencyListParams,
+  CurrencyResponse,
+  CurrencyResponsesCursor,
   CurrencyRetrieveParams,
   CurrencyUpdateParams,
 } from './resources/currencies';
-import { CustomFieldRetrieveParams, CustomFieldUpdateParams, CustomFields } from './resources/custom-fields';
 import {
-  DebitReason,
+  CustomFieldRetrieveParams,
+  CustomFieldUpdateParams,
+  CustomFields,
+  CustomFieldsResponse,
+} from './resources/custom-fields';
+import {
   DebitReasonCreateParams,
   DebitReasonDeleteParams,
   DebitReasonListParams,
+  DebitReasonResponse,
+  DebitReasonResponsesCursor,
   DebitReasonRetrieveParams,
   DebitReasonUpdateParams,
   DebitReasons,
-  DebitReasonsCursor,
 } from './resources/debit-reasons';
 import {
-  Event,
   EventGetFieldsParams,
   EventGetFieldsResponse,
   EventGetTypesParams,
   EventGetTypesResponse,
   EventListParams,
+  EventResponse,
+  EventResponsesCursor,
   EventRetrieveParams,
   Events,
-  EventsCursor,
 } from './resources/events';
 import {
-  ExternalMapping,
   ExternalMappingCreateParams,
   ExternalMappingDeleteParams,
   ExternalMappingListByExternalEntityParams,
   ExternalMappingListByM3terEntityParams,
   ExternalMappingListParams,
+  ExternalMappingResponse,
+  ExternalMappingResponsesCursor,
   ExternalMappingRetrieveParams,
   ExternalMappingUpdateParams,
   ExternalMappings,
-  ExternalMappingsCursor,
 } from './resources/external-mappings';
 import {
-  IntegrationConfiguration,
   IntegrationConfigurationCreateParams,
   IntegrationConfigurationCreateResponse,
   IntegrationConfigurationDeleteParams,
@@ -196,42 +200,41 @@ import {
   IntegrationConfigurationListParams,
   IntegrationConfigurationListResponse,
   IntegrationConfigurationListResponsesCursor,
+  IntegrationConfigurationResponse,
   IntegrationConfigurationRetrieveParams,
   IntegrationConfigurationUpdateParams,
   IntegrationConfigurationUpdateResponse,
   IntegrationConfigurations,
 } from './resources/integration-configurations';
 import {
-  DataField,
-  Meter,
+  DataFieldResponse,
   MeterCreateParams,
   MeterDeleteParams,
   MeterListParams,
+  MeterResponse,
+  MeterResponsesCursor,
   MeterRetrieveParams,
   MeterUpdateParams,
   Meters,
-  MetersCursor,
 } from './resources/meters';
 import {
-  NotificationConfiguration,
   NotificationConfigurationCreateParams,
   NotificationConfigurationDeleteParams,
   NotificationConfigurationListParams,
+  NotificationConfigurationResponse,
+  NotificationConfigurationResponsesCursor,
   NotificationConfigurationRetrieveParams,
   NotificationConfigurationUpdateParams,
   NotificationConfigurations,
-  NotificationConfigurationsCursor,
 } from './resources/notification-configurations';
 import {
   OrganizationConfig,
-  OrganizationConfigResource,
+  OrganizationConfigResponse,
   OrganizationConfigRetrieveParams,
   OrganizationConfigUpdateParams,
 } from './resources/organization-config';
 import {
   PermissionPolicies,
-  PermissionPoliciesCursor,
-  PermissionPolicy,
   PermissionPolicyAddToServiceUserParams,
   PermissionPolicyAddToServiceUserResponse,
   PermissionPolicyAddToSupportUserParams,
@@ -251,73 +254,74 @@ import {
   PermissionPolicyRemoveFromUserGroupResponse,
   PermissionPolicyRemoveFromUserParams,
   PermissionPolicyRemoveFromUserResponse,
+  PermissionPolicyResponse,
+  PermissionPolicyResponsesCursor,
   PermissionPolicyRetrieveParams,
   PermissionPolicyUpdateParams,
-  PermissionStatement,
+  PermissionStatementResponse,
   PrincipalPermissionRequest,
 } from './resources/permission-policies';
 import {
-  PlanGroupLink,
   PlanGroupLinkCreateParams,
   PlanGroupLinkDeleteParams,
   PlanGroupLinkListParams,
+  PlanGroupLinkResponse,
+  PlanGroupLinkResponsesCursor,
   PlanGroupLinkRetrieveParams,
   PlanGroupLinkUpdateParams,
   PlanGroupLinks,
-  PlanGroupLinksCursor,
 } from './resources/plan-group-links';
 import {
-  PlanGroup,
   PlanGroupCreateParams,
   PlanGroupDeleteParams,
   PlanGroupListParams,
+  PlanGroupResponse,
+  PlanGroupResponsesCursor,
   PlanGroupRetrieveParams,
   PlanGroupUpdateParams,
   PlanGroups,
-  PlanGroupsCursor,
 } from './resources/plan-groups';
 import {
-  PlanTemplate,
   PlanTemplateCreateParams,
   PlanTemplateDeleteParams,
   PlanTemplateListParams,
+  PlanTemplateResponse,
+  PlanTemplateResponsesCursor,
   PlanTemplateRetrieveParams,
   PlanTemplateUpdateParams,
   PlanTemplates,
-  PlanTemplatesCursor,
 } from './resources/plan-templates';
 import {
-  Plan,
   PlanCreateParams,
   PlanDeleteParams,
   PlanListParams,
+  PlanResponse,
+  PlanResponsesCursor,
   PlanRetrieveParams,
   PlanUpdateParams,
   Plans,
-  PlansCursor,
 } from './resources/plans';
 import {
-  Pricing,
   PricingCreateParams,
   PricingDeleteParams,
   PricingListParams,
+  PricingResponse,
+  PricingResponsesCursor,
   PricingRetrieveParams,
   PricingUpdateParams,
   Pricings,
-  PricingsCursor,
 } from './resources/pricings';
 import {
-  Product,
   ProductCreateParams,
   ProductDeleteParams,
   ProductListParams,
+  ProductResponse,
+  ProductResponsesCursor,
   ProductRetrieveParams,
   ProductUpdateParams,
   Products,
-  ProductsCursor,
 } from './resources/products';
 import {
-  ResourceGroup,
   ResourceGroupAddResourceParams,
   ResourceGroupCreateParams,
   ResourceGroupDeleteParams,
@@ -327,34 +331,35 @@ import {
   ResourceGroupListParams,
   ResourceGroupListPermissionsParams,
   ResourceGroupRemoveResourceParams,
+  ResourceGroupResponse,
+  ResourceGroupResponsesCursor,
   ResourceGroupRetrieveParams,
   ResourceGroupUpdateParams,
   ResourceGroups,
-  ResourceGroupsCursor,
 } from './resources/resource-groups';
 import {
-  ScheduledEventConfiguration,
   ScheduledEventConfigurationCreateParams,
   ScheduledEventConfigurationDeleteParams,
   ScheduledEventConfigurationListParams,
+  ScheduledEventConfigurationResponse,
+  ScheduledEventConfigurationResponsesCursor,
   ScheduledEventConfigurationRetrieveParams,
   ScheduledEventConfigurationUpdateParams,
   ScheduledEventConfigurations,
-  ScheduledEventConfigurationsCursor,
 } from './resources/scheduled-event-configurations';
 import {
-  TransactionType,
   TransactionTypeCreateParams,
   TransactionTypeDeleteParams,
   TransactionTypeListParams,
+  TransactionTypeResponse,
+  TransactionTypeResponsesCursor,
   TransactionTypeRetrieveParams,
   TransactionTypeUpdateParams,
   TransactionTypes,
-  TransactionTypesCursor,
 } from './resources/transaction-types';
 import {
-  M3terSignedCredentialsReq,
-  M3terSignedCredentialsResp,
+  M3terSignedCredentialsRequest,
+  M3terSignedCredentialsResponse,
   Webhook,
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -379,24 +384,24 @@ import {
   BalancesCursor,
 } from './resources/balances/balances';
 import {
-  Bill,
   BillApproveParams,
   BillApproveResponse,
   BillDeleteParams,
   BillLatestByAccountParams,
   BillListParams,
   BillLockParams,
+  BillResponse,
+  BillResponsesCursor,
   BillRetrieveParams,
   BillSearchParams,
   BillSearchResponse,
   BillUpdateStatusParams,
   Bills,
-  BillsCursor,
 } from './resources/bills/bills';
 import {
   AdHocOperationalDataRequest,
+  AdHocResponse,
   AdHocUsageDataRequest,
-  AdhocExport,
   DataExportCreateAdhocParams,
   DataExports,
 } from './resources/data-exports/data-exports';
@@ -410,17 +415,17 @@ import {
   UsageSubmitParams,
 } from './resources/usage/usage';
 import {
-  User,
   UserGetPermissionsParams,
   UserGetUserGroupsParams,
   UserListParams,
   UserMeParams,
   UserMeResponse,
   UserResendPasswordParams,
+  UserResponse,
+  UserResponsesCursor,
   UserRetrieveParams,
   UserUpdateParams,
   Users,
-  UsersCursor,
 } from './resources/users/users';
 
 export interface ClientOptions {
@@ -595,7 +600,7 @@ export class M3ter extends Core.APIClient {
   aggregations: API.Aggregations = new API.Aggregations(this);
   balances: API.Balances = new API.Balances(this);
   bills: API.Bills = new API.Bills(this);
-  billConfig: API.BillConfigResource = new API.BillConfigResource(this);
+  billConfig: API.BillConfig = new API.BillConfig(this);
   commitments: API.Commitments = new API.Commitments(this);
   billJobs: API.BillJobs = new API.BillJobs(this);
   compoundAggregations: API.CompoundAggregations = new API.CompoundAggregations(this);
@@ -613,7 +618,7 @@ export class M3ter extends Core.APIClient {
   integrationConfigurations: API.IntegrationConfigurations = new API.IntegrationConfigurations(this);
   meters: API.Meters = new API.Meters(this);
   notificationConfigurations: API.NotificationConfigurations = new API.NotificationConfigurations(this);
-  organizationConfig: API.OrganizationConfigResource = new API.OrganizationConfigResource(this);
+  organizationConfig: API.OrganizationConfig = new API.OrganizationConfig(this);
   permissionPolicies: API.PermissionPolicies = new API.PermissionPolicies(this);
   plans: API.Plans = new API.Plans(this);
   planGroups: API.PlanGroups = new API.PlanGroups(this);
@@ -686,72 +691,73 @@ export class M3ter extends Core.APIClient {
 
 M3ter.Authentication = Authentication;
 M3ter.Accounts = Accounts;
-M3ter.AccountsCursor = AccountsCursor;
+M3ter.AccountResponsesCursor = AccountResponsesCursor;
 M3ter.AccountPlans = AccountPlans;
-M3ter.AccountPlansCursor = AccountPlansCursor;
+M3ter.AccountPlanResponsesCursor = AccountPlanResponsesCursor;
 M3ter.Aggregations = Aggregations;
 M3ter.AggregationResponsesCursor = AggregationResponsesCursor;
 M3ter.Balances = Balances;
 M3ter.BalancesCursor = BalancesCursor;
 M3ter.Bills = Bills;
-M3ter.BillsCursor = BillsCursor;
-M3ter.BillConfigResource = BillConfigResource;
+M3ter.BillResponsesCursor = BillResponsesCursor;
+M3ter.BillConfig = BillConfig;
 M3ter.Commitments = Commitments;
-M3ter.CommitmentsCursor = CommitmentsCursor;
+M3ter.CommitmentResponsesCursor = CommitmentResponsesCursor;
 M3ter.BillJobs = BillJobs;
-M3ter.BillJobsCursor = BillJobsCursor;
+M3ter.BillJobResponsesCursor = BillJobResponsesCursor;
 M3ter.CompoundAggregations = CompoundAggregations;
-M3ter.CompoundAggregationsCursor = CompoundAggregationsCursor;
+M3ter.CompoundAggregationResponsesCursor = CompoundAggregationResponsesCursor;
 M3ter.Contracts = Contracts;
-M3ter.ContractsCursor = ContractsCursor;
+M3ter.ContractResponsesCursor = ContractResponsesCursor;
 M3ter.Counters = Counters;
-M3ter.CountersCursor = CountersCursor;
+M3ter.CounterResponsesCursor = CounterResponsesCursor;
 M3ter.CounterAdjustments = CounterAdjustments;
-M3ter.CounterAdjustmentsCursor = CounterAdjustmentsCursor;
+M3ter.CounterAdjustmentResponsesCursor = CounterAdjustmentResponsesCursor;
 M3ter.CounterPricings = CounterPricings;
-M3ter.CounterPricingsCursor = CounterPricingsCursor;
+M3ter.CounterPricingResponsesCursor = CounterPricingResponsesCursor;
 M3ter.CreditReasons = CreditReasons;
-M3ter.CreditReasonsCursor = CreditReasonsCursor;
+M3ter.CreditReasonResponsesCursor = CreditReasonResponsesCursor;
 M3ter.Currencies = Currencies;
-M3ter.CurrenciesCursor = CurrenciesCursor;
+M3ter.CurrencyResponsesCursor = CurrencyResponsesCursor;
+M3ter.CustomFields = CustomFields;
 M3ter.DataExports = DataExports;
 M3ter.DebitReasons = DebitReasons;
-M3ter.DebitReasonsCursor = DebitReasonsCursor;
+M3ter.DebitReasonResponsesCursor = DebitReasonResponsesCursor;
 M3ter.Events = Events;
-M3ter.EventsCursor = EventsCursor;
+M3ter.EventResponsesCursor = EventResponsesCursor;
 M3ter.ExternalMappings = ExternalMappings;
-M3ter.ExternalMappingsCursor = ExternalMappingsCursor;
+M3ter.ExternalMappingResponsesCursor = ExternalMappingResponsesCursor;
 M3ter.IntegrationConfigurations = IntegrationConfigurations;
 M3ter.IntegrationConfigurationListResponsesCursor = IntegrationConfigurationListResponsesCursor;
 M3ter.Meters = Meters;
-M3ter.MetersCursor = MetersCursor;
+M3ter.MeterResponsesCursor = MeterResponsesCursor;
 M3ter.NotificationConfigurations = NotificationConfigurations;
-M3ter.NotificationConfigurationsCursor = NotificationConfigurationsCursor;
-M3ter.OrganizationConfigResource = OrganizationConfigResource;
+M3ter.NotificationConfigurationResponsesCursor = NotificationConfigurationResponsesCursor;
+M3ter.OrganizationConfig = OrganizationConfig;
 M3ter.PermissionPolicies = PermissionPolicies;
-M3ter.PermissionPoliciesCursor = PermissionPoliciesCursor;
+M3ter.PermissionPolicyResponsesCursor = PermissionPolicyResponsesCursor;
 M3ter.Plans = Plans;
-M3ter.PlansCursor = PlansCursor;
+M3ter.PlanResponsesCursor = PlanResponsesCursor;
 M3ter.PlanGroups = PlanGroups;
-M3ter.PlanGroupsCursor = PlanGroupsCursor;
+M3ter.PlanGroupResponsesCursor = PlanGroupResponsesCursor;
 M3ter.PlanGroupLinks = PlanGroupLinks;
-M3ter.PlanGroupLinksCursor = PlanGroupLinksCursor;
+M3ter.PlanGroupLinkResponsesCursor = PlanGroupLinkResponsesCursor;
 M3ter.PlanTemplates = PlanTemplates;
-M3ter.PlanTemplatesCursor = PlanTemplatesCursor;
+M3ter.PlanTemplateResponsesCursor = PlanTemplateResponsesCursor;
 M3ter.Pricings = Pricings;
-M3ter.PricingsCursor = PricingsCursor;
+M3ter.PricingResponsesCursor = PricingResponsesCursor;
 M3ter.Products = Products;
-M3ter.ProductsCursor = ProductsCursor;
+M3ter.ProductResponsesCursor = ProductResponsesCursor;
 M3ter.ResourceGroups = ResourceGroups;
-M3ter.ResourceGroupsCursor = ResourceGroupsCursor;
+M3ter.ResourceGroupResponsesCursor = ResourceGroupResponsesCursor;
 M3ter.ResourceGroupListContentsResponsesCursor = ResourceGroupListContentsResponsesCursor;
 M3ter.ScheduledEventConfigurations = ScheduledEventConfigurations;
-M3ter.ScheduledEventConfigurationsCursor = ScheduledEventConfigurationsCursor;
+M3ter.ScheduledEventConfigurationResponsesCursor = ScheduledEventConfigurationResponsesCursor;
 M3ter.TransactionTypes = TransactionTypes;
-M3ter.TransactionTypesCursor = TransactionTypesCursor;
+M3ter.TransactionTypeResponsesCursor = TransactionTypeResponsesCursor;
 M3ter.Usage = Usage;
 M3ter.Users = Users;
-M3ter.UsersCursor = UsersCursor;
+M3ter.UserResponsesCursor = UserResponsesCursor;
 M3ter.Webhooks = Webhooks;
 M3ter.WebhooksCursor = WebhooksCursor;
 export declare namespace M3ter {
@@ -768,11 +774,11 @@ export declare namespace M3ter {
 
   export {
     Accounts as Accounts,
-    type Account as Account,
+    type AccountResponse as AccountResponse,
     type Address as Address,
     type AccountEndDateBillingEntitiesResponse as AccountEndDateBillingEntitiesResponse,
     type AccountSearchResponse as AccountSearchResponse,
-    AccountsCursor as AccountsCursor,
+    AccountResponsesCursor as AccountResponsesCursor,
     type AccountCreateParams as AccountCreateParams,
     type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,
@@ -785,8 +791,8 @@ export declare namespace M3ter {
 
   export {
     AccountPlans as AccountPlans,
-    type AccountPlan as AccountPlan,
-    AccountPlansCursor as AccountPlansCursor,
+    type AccountPlanResponse as AccountPlanResponse,
+    AccountPlanResponsesCursor as AccountPlanResponsesCursor,
     type AccountPlanCreateParams as AccountPlanCreateParams,
     type AccountPlanRetrieveParams as AccountPlanRetrieveParams,
     type AccountPlanUpdateParams as AccountPlanUpdateParams,
@@ -818,10 +824,10 @@ export declare namespace M3ter {
 
   export {
     Bills as Bills,
-    type Bill as Bill,
+    type BillResponse as BillResponse,
     type BillApproveResponse as BillApproveResponse,
     type BillSearchResponse as BillSearchResponse,
-    BillsCursor as BillsCursor,
+    BillResponsesCursor as BillResponsesCursor,
     type BillRetrieveParams as BillRetrieveParams,
     type BillListParams as BillListParams,
     type BillDeleteParams as BillDeleteParams,
@@ -833,18 +839,18 @@ export declare namespace M3ter {
   };
 
   export {
-    BillConfigResource as BillConfigResource,
-    type BillConfig as BillConfig,
+    BillConfig as BillConfig,
+    type BillConfigResponse as BillConfigResponse,
     type BillConfigRetrieveParams as BillConfigRetrieveParams,
     type BillConfigUpdateParams as BillConfigUpdateParams,
   };
 
   export {
     Commitments as Commitments,
-    type Commitment as Commitment,
     type CommitmentFee as CommitmentFee,
+    type CommitmentResponse as CommitmentResponse,
     type CommitmentSearchResponse as CommitmentSearchResponse,
-    CommitmentsCursor as CommitmentsCursor,
+    CommitmentResponsesCursor as CommitmentResponsesCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
     type CommitmentRetrieveParams as CommitmentRetrieveParams,
     type CommitmentUpdateParams as CommitmentUpdateParams,
@@ -855,8 +861,8 @@ export declare namespace M3ter {
 
   export {
     BillJobs as BillJobs,
-    type BillJob as BillJob,
-    BillJobsCursor as BillJobsCursor,
+    type BillJobResponse as BillJobResponse,
+    BillJobResponsesCursor as BillJobResponsesCursor,
     type BillJobCreateParams as BillJobCreateParams,
     type BillJobRetrieveParams as BillJobRetrieveParams,
     type BillJobListParams as BillJobListParams,
@@ -866,8 +872,8 @@ export declare namespace M3ter {
 
   export {
     CompoundAggregations as CompoundAggregations,
-    type CompoundAggregation as CompoundAggregation,
-    CompoundAggregationsCursor as CompoundAggregationsCursor,
+    type CompoundAggregationResponse as CompoundAggregationResponse,
+    CompoundAggregationResponsesCursor as CompoundAggregationResponsesCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
     type CompoundAggregationRetrieveParams as CompoundAggregationRetrieveParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,
@@ -877,9 +883,9 @@ export declare namespace M3ter {
 
   export {
     Contracts as Contracts,
-    type Contract as Contract,
+    type ContractResponse as ContractResponse,
     type ContractEndDateBillingEntitiesResponse as ContractEndDateBillingEntitiesResponse,
-    ContractsCursor as ContractsCursor,
+    ContractResponsesCursor as ContractResponsesCursor,
     type ContractCreateParams as ContractCreateParams,
     type ContractRetrieveParams as ContractRetrieveParams,
     type ContractUpdateParams as ContractUpdateParams,
@@ -890,8 +896,8 @@ export declare namespace M3ter {
 
   export {
     Counters as Counters,
-    type Counter as Counter,
-    CountersCursor as CountersCursor,
+    type CounterResponse as CounterResponse,
+    CounterResponsesCursor as CounterResponsesCursor,
     type CounterCreateParams as CounterCreateParams,
     type CounterRetrieveParams as CounterRetrieveParams,
     type CounterUpdateParams as CounterUpdateParams,
@@ -901,8 +907,8 @@ export declare namespace M3ter {
 
   export {
     CounterAdjustments as CounterAdjustments,
-    type CounterAdjustment as CounterAdjustment,
-    CounterAdjustmentsCursor as CounterAdjustmentsCursor,
+    type CounterAdjustmentResponse as CounterAdjustmentResponse,
+    CounterAdjustmentResponsesCursor as CounterAdjustmentResponsesCursor,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
     type CounterAdjustmentRetrieveParams as CounterAdjustmentRetrieveParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,
@@ -912,8 +918,8 @@ export declare namespace M3ter {
 
   export {
     CounterPricings as CounterPricings,
-    type CounterPricing as CounterPricing,
-    CounterPricingsCursor as CounterPricingsCursor,
+    type CounterPricingResponse as CounterPricingResponse,
+    CounterPricingResponsesCursor as CounterPricingResponsesCursor,
     type CounterPricingCreateParams as CounterPricingCreateParams,
     type CounterPricingRetrieveParams as CounterPricingRetrieveParams,
     type CounterPricingUpdateParams as CounterPricingUpdateParams,
@@ -923,8 +929,8 @@ export declare namespace M3ter {
 
   export {
     CreditReasons as CreditReasons,
-    type CreditReason as CreditReason,
-    CreditReasonsCursor as CreditReasonsCursor,
+    type CreditReasonResponse as CreditReasonResponse,
+    CreditReasonResponsesCursor as CreditReasonResponsesCursor,
     type CreditReasonCreateParams as CreditReasonCreateParams,
     type CreditReasonRetrieveParams as CreditReasonRetrieveParams,
     type CreditReasonUpdateParams as CreditReasonUpdateParams,
@@ -934,8 +940,8 @@ export declare namespace M3ter {
 
   export {
     Currencies as Currencies,
-    type Currency as Currency,
-    CurrenciesCursor as CurrenciesCursor,
+    type CurrencyResponse as CurrencyResponse,
+    CurrencyResponsesCursor as CurrencyResponsesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
     type CurrencyRetrieveParams as CurrencyRetrieveParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,
@@ -944,23 +950,24 @@ export declare namespace M3ter {
   };
 
   export {
-    type CustomFields as CustomFields,
+    CustomFields as CustomFields,
+    type CustomFieldsResponse as CustomFieldsResponse,
     type CustomFieldRetrieveParams as CustomFieldRetrieveParams,
     type CustomFieldUpdateParams as CustomFieldUpdateParams,
   };
 
   export {
     DataExports as DataExports,
-    type AdhocExport as AdhocExport,
     type AdHocOperationalDataRequest as AdHocOperationalDataRequest,
+    type AdHocResponse as AdHocResponse,
     type AdHocUsageDataRequest as AdHocUsageDataRequest,
     type DataExportCreateAdhocParams as DataExportCreateAdhocParams,
   };
 
   export {
     DebitReasons as DebitReasons,
-    type DebitReason as DebitReason,
-    DebitReasonsCursor as DebitReasonsCursor,
+    type DebitReasonResponse as DebitReasonResponse,
+    DebitReasonResponsesCursor as DebitReasonResponsesCursor,
     type DebitReasonCreateParams as DebitReasonCreateParams,
     type DebitReasonRetrieveParams as DebitReasonRetrieveParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
@@ -970,10 +977,10 @@ export declare namespace M3ter {
 
   export {
     Events as Events,
-    type Event as Event,
+    type EventResponse as EventResponse,
     type EventGetFieldsResponse as EventGetFieldsResponse,
     type EventGetTypesResponse as EventGetTypesResponse,
-    EventsCursor as EventsCursor,
+    EventResponsesCursor as EventResponsesCursor,
     type EventRetrieveParams as EventRetrieveParams,
     type EventListParams as EventListParams,
     type EventGetFieldsParams as EventGetFieldsParams,
@@ -982,8 +989,8 @@ export declare namespace M3ter {
 
   export {
     ExternalMappings as ExternalMappings,
-    type ExternalMapping as ExternalMapping,
-    ExternalMappingsCursor as ExternalMappingsCursor,
+    type ExternalMappingResponse as ExternalMappingResponse,
+    ExternalMappingResponsesCursor as ExternalMappingResponsesCursor,
     type ExternalMappingCreateParams as ExternalMappingCreateParams,
     type ExternalMappingRetrieveParams as ExternalMappingRetrieveParams,
     type ExternalMappingUpdateParams as ExternalMappingUpdateParams,
@@ -995,7 +1002,7 @@ export declare namespace M3ter {
 
   export {
     IntegrationConfigurations as IntegrationConfigurations,
-    type IntegrationConfiguration as IntegrationConfiguration,
+    type IntegrationConfigurationResponse as IntegrationConfigurationResponse,
     type IntegrationConfigurationCreateResponse as IntegrationConfigurationCreateResponse,
     type IntegrationConfigurationUpdateResponse as IntegrationConfigurationUpdateResponse,
     type IntegrationConfigurationListResponse as IntegrationConfigurationListResponse,
@@ -1013,9 +1020,9 @@ export declare namespace M3ter {
 
   export {
     Meters as Meters,
-    type DataField as DataField,
-    type Meter as Meter,
-    MetersCursor as MetersCursor,
+    type DataFieldResponse as DataFieldResponse,
+    type MeterResponse as MeterResponse,
+    MeterResponsesCursor as MeterResponsesCursor,
     type MeterCreateParams as MeterCreateParams,
     type MeterRetrieveParams as MeterRetrieveParams,
     type MeterUpdateParams as MeterUpdateParams,
@@ -1025,8 +1032,8 @@ export declare namespace M3ter {
 
   export {
     NotificationConfigurations as NotificationConfigurations,
-    type NotificationConfiguration as NotificationConfiguration,
-    NotificationConfigurationsCursor as NotificationConfigurationsCursor,
+    type NotificationConfigurationResponse as NotificationConfigurationResponse,
+    NotificationConfigurationResponsesCursor as NotificationConfigurationResponsesCursor,
     type NotificationConfigurationCreateParams as NotificationConfigurationCreateParams,
     type NotificationConfigurationRetrieveParams as NotificationConfigurationRetrieveParams,
     type NotificationConfigurationUpdateParams as NotificationConfigurationUpdateParams,
@@ -1035,16 +1042,16 @@ export declare namespace M3ter {
   };
 
   export {
-    OrganizationConfigResource as OrganizationConfigResource,
-    type OrganizationConfig as OrganizationConfig,
+    OrganizationConfig as OrganizationConfig,
+    type OrganizationConfigResponse as OrganizationConfigResponse,
     type OrganizationConfigRetrieveParams as OrganizationConfigRetrieveParams,
     type OrganizationConfigUpdateParams as OrganizationConfigUpdateParams,
   };
 
   export {
     PermissionPolicies as PermissionPolicies,
-    type PermissionPolicy as PermissionPolicy,
-    type PermissionStatement as PermissionStatement,
+    type PermissionPolicyResponse as PermissionPolicyResponse,
+    type PermissionStatementResponse as PermissionStatementResponse,
     type PrincipalPermissionRequest as PrincipalPermissionRequest,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
@@ -1054,7 +1061,7 @@ export declare namespace M3ter {
     type PermissionPolicyRemoveFromSupportUserResponse as PermissionPolicyRemoveFromSupportUserResponse,
     type PermissionPolicyRemoveFromUserResponse as PermissionPolicyRemoveFromUserResponse,
     type PermissionPolicyRemoveFromUserGroupResponse as PermissionPolicyRemoveFromUserGroupResponse,
-    PermissionPoliciesCursor as PermissionPoliciesCursor,
+    PermissionPolicyResponsesCursor as PermissionPolicyResponsesCursor,
     type PermissionPolicyCreateParams as PermissionPolicyCreateParams,
     type PermissionPolicyRetrieveParams as PermissionPolicyRetrieveParams,
     type PermissionPolicyUpdateParams as PermissionPolicyUpdateParams,
@@ -1072,8 +1079,8 @@ export declare namespace M3ter {
 
   export {
     Plans as Plans,
-    type Plan as Plan,
-    PlansCursor as PlansCursor,
+    type PlanResponse as PlanResponse,
+    PlanResponsesCursor as PlanResponsesCursor,
     type PlanCreateParams as PlanCreateParams,
     type PlanRetrieveParams as PlanRetrieveParams,
     type PlanUpdateParams as PlanUpdateParams,
@@ -1083,8 +1090,8 @@ export declare namespace M3ter {
 
   export {
     PlanGroups as PlanGroups,
-    type PlanGroup as PlanGroup,
-    PlanGroupsCursor as PlanGroupsCursor,
+    type PlanGroupResponse as PlanGroupResponse,
+    PlanGroupResponsesCursor as PlanGroupResponsesCursor,
     type PlanGroupCreateParams as PlanGroupCreateParams,
     type PlanGroupRetrieveParams as PlanGroupRetrieveParams,
     type PlanGroupUpdateParams as PlanGroupUpdateParams,
@@ -1094,8 +1101,8 @@ export declare namespace M3ter {
 
   export {
     PlanGroupLinks as PlanGroupLinks,
-    type PlanGroupLink as PlanGroupLink,
-    PlanGroupLinksCursor as PlanGroupLinksCursor,
+    type PlanGroupLinkResponse as PlanGroupLinkResponse,
+    PlanGroupLinkResponsesCursor as PlanGroupLinkResponsesCursor,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
     type PlanGroupLinkRetrieveParams as PlanGroupLinkRetrieveParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,
@@ -1105,8 +1112,8 @@ export declare namespace M3ter {
 
   export {
     PlanTemplates as PlanTemplates,
-    type PlanTemplate as PlanTemplate,
-    PlanTemplatesCursor as PlanTemplatesCursor,
+    type PlanTemplateResponse as PlanTemplateResponse,
+    PlanTemplateResponsesCursor as PlanTemplateResponsesCursor,
     type PlanTemplateCreateParams as PlanTemplateCreateParams,
     type PlanTemplateRetrieveParams as PlanTemplateRetrieveParams,
     type PlanTemplateUpdateParams as PlanTemplateUpdateParams,
@@ -1116,8 +1123,8 @@ export declare namespace M3ter {
 
   export {
     Pricings as Pricings,
-    type Pricing as Pricing,
-    PricingsCursor as PricingsCursor,
+    type PricingResponse as PricingResponse,
+    PricingResponsesCursor as PricingResponsesCursor,
     type PricingCreateParams as PricingCreateParams,
     type PricingRetrieveParams as PricingRetrieveParams,
     type PricingUpdateParams as PricingUpdateParams,
@@ -1127,8 +1134,8 @@ export declare namespace M3ter {
 
   export {
     Products as Products,
-    type Product as Product,
-    ProductsCursor as ProductsCursor,
+    type ProductResponse as ProductResponse,
+    ProductResponsesCursor as ProductResponsesCursor,
     type ProductCreateParams as ProductCreateParams,
     type ProductRetrieveParams as ProductRetrieveParams,
     type ProductUpdateParams as ProductUpdateParams,
@@ -1138,9 +1145,9 @@ export declare namespace M3ter {
 
   export {
     ResourceGroups as ResourceGroups,
-    type ResourceGroup as ResourceGroup,
+    type ResourceGroupResponse as ResourceGroupResponse,
     type ResourceGroupListContentsResponse as ResourceGroupListContentsResponse,
-    ResourceGroupsCursor as ResourceGroupsCursor,
+    ResourceGroupResponsesCursor as ResourceGroupResponsesCursor,
     ResourceGroupListContentsResponsesCursor as ResourceGroupListContentsResponsesCursor,
     type ResourceGroupCreateParams as ResourceGroupCreateParams,
     type ResourceGroupRetrieveParams as ResourceGroupRetrieveParams,
@@ -1155,8 +1162,8 @@ export declare namespace M3ter {
 
   export {
     ScheduledEventConfigurations as ScheduledEventConfigurations,
-    type ScheduledEventConfiguration as ScheduledEventConfiguration,
-    ScheduledEventConfigurationsCursor as ScheduledEventConfigurationsCursor,
+    type ScheduledEventConfigurationResponse as ScheduledEventConfigurationResponse,
+    ScheduledEventConfigurationResponsesCursor as ScheduledEventConfigurationResponsesCursor,
     type ScheduledEventConfigurationCreateParams as ScheduledEventConfigurationCreateParams,
     type ScheduledEventConfigurationRetrieveParams as ScheduledEventConfigurationRetrieveParams,
     type ScheduledEventConfigurationUpdateParams as ScheduledEventConfigurationUpdateParams,
@@ -1166,8 +1173,8 @@ export declare namespace M3ter {
 
   export {
     TransactionTypes as TransactionTypes,
-    type TransactionType as TransactionType,
-    TransactionTypesCursor as TransactionTypesCursor,
+    type TransactionTypeResponse as TransactionTypeResponse,
+    TransactionTypeResponsesCursor as TransactionTypeResponsesCursor,
     type TransactionTypeCreateParams as TransactionTypeCreateParams,
     type TransactionTypeRetrieveParams as TransactionTypeRetrieveParams,
     type TransactionTypeUpdateParams as TransactionTypeUpdateParams,
@@ -1187,9 +1194,9 @@ export declare namespace M3ter {
 
   export {
     Users as Users,
-    type User as User,
+    type UserResponse as UserResponse,
     type UserMeResponse as UserMeResponse,
-    UsersCursor as UsersCursor,
+    UserResponsesCursor as UserResponsesCursor,
     type UserRetrieveParams as UserRetrieveParams,
     type UserUpdateParams as UserUpdateParams,
     type UserListParams as UserListParams,
@@ -1201,8 +1208,8 @@ export declare namespace M3ter {
 
   export {
     Webhooks as Webhooks,
-    type M3terSignedCredentialsReq as M3terSignedCredentialsReq,
-    type M3terSignedCredentialsResp as M3terSignedCredentialsResp,
+    type M3terSignedCredentialsRequest as M3terSignedCredentialsRequest,
+    type M3terSignedCredentialsResponse as M3terSignedCredentialsResponse,
     type Webhook as Webhook,
     type WebhookCreateResponse as WebhookCreateResponse,
     type WebhookUpdateResponse as WebhookUpdateResponse,

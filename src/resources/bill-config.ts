@@ -4,16 +4,19 @@ import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
 
-export class BillConfigResource extends APIResource {
+export class BillConfig extends APIResource {
   /**
    * Retrieve the Organization-wide BillConfig.
    */
-  retrieve(params?: BillConfigRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<BillConfig>;
-  retrieve(options?: Core.RequestOptions): Core.APIPromise<BillConfig>;
+  retrieve(
+    params?: BillConfigRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillConfigResponse>;
+  retrieve(options?: Core.RequestOptions): Core.APIPromise<BillConfigResponse>;
   retrieve(
     params: BillConfigRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<BillConfig> {
+  ): Core.APIPromise<BillConfigResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve({}, params);
     }
@@ -28,13 +31,13 @@ export class BillConfigResource extends APIResource {
    * with a service period end date on or before the set date will be locked and
    * cannot be updated or recalculated.
    */
-  update(params: BillConfigUpdateParams, options?: Core.RequestOptions): Core.APIPromise<BillConfig> {
+  update(params: BillConfigUpdateParams, options?: Core.RequestOptions): Core.APIPromise<BillConfigResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/billconfig`, { body, ...options });
   }
 }
 
-export interface BillConfig {
+export interface BillConfigResponse {
   /**
    * The Organization UUID. The Organization represents your company as a direct
    * customer of the m3ter service.
@@ -111,9 +114,9 @@ export interface BillConfigUpdateParams {
   version?: number;
 }
 
-export declare namespace BillConfigResource {
+export declare namespace BillConfig {
   export {
-    type BillConfig as BillConfig,
+    type BillConfigResponse as BillConfigResponse,
     type BillConfigRetrieveParams as BillConfigRetrieveParams,
     type BillConfigUpdateParams as BillConfigUpdateParams,
   };

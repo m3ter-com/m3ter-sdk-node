@@ -11,7 +11,7 @@ export class Currencies extends APIResource {
    *
    * Used to create a Currency that your Organization will start to use.
    */
-  create(params: CurrencyCreateParams, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+  create(params: CurrencyCreateParams, options?: Core.RequestOptions): Core.APIPromise<CurrencyResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/currency`, { body, ...options });
   }
@@ -24,13 +24,13 @@ export class Currencies extends APIResource {
     id: string,
     params?: CurrencyRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Currency>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Currency>;
+  ): Core.APIPromise<CurrencyResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CurrencyResponse>;
   retrieve(
     id: string,
     params: CurrencyRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Currency> {
+  ): Core.APIPromise<CurrencyResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -44,7 +44,11 @@ export class Currencies extends APIResource {
    * Used to update the attributes of the specified Currency for the specified
    * Organization.
    */
-  update(id: string, params: CurrencyUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Currency> {
+  update(
+    id: string,
+    params: CurrencyUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CurrencyResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/currency/${id}`, { body, ...options });
   }
@@ -59,17 +63,17 @@ export class Currencies extends APIResource {
   list(
     params?: CurrencyListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CurrenciesCursor, Currency>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CurrenciesCursor, Currency>;
+  ): Core.PagePromise<CurrencyResponsesCursor, CurrencyResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<CurrencyResponsesCursor, CurrencyResponse>;
   list(
     params: CurrencyListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CurrenciesCursor, Currency> {
+  ): Core.PagePromise<CurrencyResponsesCursor, CurrencyResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/picklists/currency`, CurrenciesCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/picklists/currency`, CurrencyResponsesCursor, {
       query,
       ...options,
     });
@@ -81,13 +85,17 @@ export class Currencies extends APIResource {
    * Used to remove an existing Currency from your Organization that is no longer
    * required.
    */
-  delete(id: string, params?: CurrencyDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Currency>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Currency>;
+  delete(
+    id: string,
+    params?: CurrencyDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CurrencyResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CurrencyResponse>;
   delete(
     id: string,
     params: CurrencyDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Currency> {
+  ): Core.APIPromise<CurrencyResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -96,9 +104,9 @@ export class Currencies extends APIResource {
   }
 }
 
-export class CurrenciesCursor extends Cursor<Currency> {}
+export class CurrencyResponsesCursor extends Cursor<CurrencyResponse> {}
 
-export interface Currency {
+export interface CurrencyResponse {
   /**
    * The UUID of the entity.
    */
@@ -303,12 +311,12 @@ export interface CurrencyDeleteParams {
   orgId?: string;
 }
 
-Currencies.CurrenciesCursor = CurrenciesCursor;
+Currencies.CurrencyResponsesCursor = CurrencyResponsesCursor;
 
 export declare namespace Currencies {
   export {
-    type Currency as Currency,
-    CurrenciesCursor as CurrenciesCursor,
+    type CurrencyResponse as CurrencyResponse,
+    CurrencyResponsesCursor as CurrencyResponsesCursor,
     type CurrencyCreateParams as CurrencyCreateParams,
     type CurrencyRetrieveParams as CurrencyRetrieveParams,
     type CurrencyUpdateParams as CurrencyUpdateParams,

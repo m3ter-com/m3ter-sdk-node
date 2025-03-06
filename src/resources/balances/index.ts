@@ -11,9 +11,9 @@ export {
   type BalanceDeleteParams,
 } from './balances';
 export {
-  TransactionsCursor,
+  TransactionResponsesCursor,
   Transactions,
-  type Transaction,
+  type TransactionResponse,
   type TransactionSummaryResponse,
   type TransactionCreateParams,
   type TransactionListParams,

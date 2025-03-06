@@ -38,7 +38,7 @@ export class PermissionPolicies extends APIResource {
   create(
     params: PermissionPolicyCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy> {
+  ): Core.APIPromise<PermissionPolicyResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/permissionpolicies`, { body, ...options });
   }
@@ -50,13 +50,13 @@ export class PermissionPolicies extends APIResource {
     id: string,
     params?: PermissionPolicyRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PermissionPolicy>;
+  ): Core.APIPromise<PermissionPolicyResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PermissionPolicyResponse>;
   retrieve(
     id: string,
     params: PermissionPolicyRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy> {
+  ): Core.APIPromise<PermissionPolicyResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -97,7 +97,7 @@ export class PermissionPolicies extends APIResource {
     id: string,
     params: PermissionPolicyUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy> {
+  ): Core.APIPromise<PermissionPolicyResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/permissionpolicies/${id}`, { body, ...options });
   }
@@ -108,20 +108,23 @@ export class PermissionPolicies extends APIResource {
   list(
     params?: PermissionPolicyListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPolicy>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PermissionPoliciesCursor, PermissionPolicy>;
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPolicyResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPolicyResponse>;
   list(
     params: PermissionPolicyListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PermissionPoliciesCursor, PermissionPolicy> {
+  ): Core.PagePromise<PermissionPolicyResponsesCursor, PermissionPolicyResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/permissionpolicies`, PermissionPoliciesCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/permissionpolicies`,
+      PermissionPolicyResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -131,13 +134,13 @@ export class PermissionPolicies extends APIResource {
     id: string,
     params?: PermissionPolicyDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PermissionPolicy>;
+  ): Core.APIPromise<PermissionPolicyResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PermissionPolicyResponse>;
   delete(
     id: string,
     params: PermissionPolicyDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PermissionPolicy> {
+  ): Core.APIPromise<PermissionPolicyResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -278,9 +281,9 @@ export class PermissionPolicies extends APIResource {
   }
 }
 
-export class PermissionPoliciesCursor extends Cursor<PermissionPolicy> {}
+export class PermissionPolicyResponsesCursor extends Cursor<PermissionPolicyResponse> {}
 
-export interface PermissionPolicy {
+export interface PermissionPolicyResponse {
   /**
    * The unique identifier (UUID) for this Permission Policy.
    */
@@ -321,7 +324,7 @@ export interface PermissionPolicy {
   /**
    * Array containing the Permission Policies information.
    */
-  permissionPolicy?: Array<PermissionStatement>;
+  permissionPolicy?: Array<PermissionStatementResponse>;
 
   /**
    * The version number. Default value when newly created is one.
@@ -329,7 +332,7 @@ export interface PermissionPolicy {
   version?: number;
 }
 
-export interface PermissionStatement {
+export interface PermissionStatementResponse {
   /**
    * The actions available to users who are assigned the Permission Policy - what
    * they can do or cannot do with respect to the specified resource.
@@ -737,7 +740,7 @@ export interface PermissionPolicyCreateParams {
   /**
    * Body param:
    */
-  permissionPolicy: Array<PermissionStatement>;
+  permissionPolicy: Array<PermissionStatementResponse>;
 
   /**
    * Body param: The version number of the entity:
@@ -772,7 +775,7 @@ export interface PermissionPolicyUpdateParams {
   /**
    * Body param:
    */
-  permissionPolicy: Array<PermissionStatement>;
+  permissionPolicy: Array<PermissionStatementResponse>;
 
   /**
    * Body param: The version number of the entity:
@@ -970,12 +973,12 @@ export interface PermissionPolicyRemoveFromUserGroupParams {
   version?: number;
 }
 
-PermissionPolicies.PermissionPoliciesCursor = PermissionPoliciesCursor;
+PermissionPolicies.PermissionPolicyResponsesCursor = PermissionPolicyResponsesCursor;
 
 export declare namespace PermissionPolicies {
   export {
-    type PermissionPolicy as PermissionPolicy,
-    type PermissionStatement as PermissionStatement,
+    type PermissionPolicyResponse as PermissionPolicyResponse,
+    type PermissionStatementResponse as PermissionStatementResponse,
     type PrincipalPermissionRequest as PrincipalPermissionRequest,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
@@ -985,7 +988,7 @@ export declare namespace PermissionPolicies {
     type PermissionPolicyRemoveFromSupportUserResponse as PermissionPolicyRemoveFromSupportUserResponse,
     type PermissionPolicyRemoveFromUserResponse as PermissionPolicyRemoveFromUserResponse,
     type PermissionPolicyRemoveFromUserGroupResponse as PermissionPolicyRemoveFromUserGroupResponse,
-    PermissionPoliciesCursor as PermissionPoliciesCursor,
+    PermissionPolicyResponsesCursor as PermissionPolicyResponsesCursor,
     type PermissionPolicyCreateParams as PermissionPolicyCreateParams,
     type PermissionPolicyRetrieveParams as PermissionPolicyRetrieveParams,
     type PermissionPolicyUpdateParams as PermissionPolicyUpdateParams,

@@ -6,33 +6,33 @@ import * as Core from '../../core';
 import * as Shared from '../shared';
 import * as CreditLineItemsAPI from './credit-line-items';
 import {
-  CreditLineItem,
   CreditLineItemCreateParams,
   CreditLineItemDeleteParams,
   CreditLineItemListParams,
+  CreditLineItemResponse,
+  CreditLineItemResponsesCursor,
   CreditLineItemRetrieveParams,
   CreditLineItemUpdateParams,
   CreditLineItems,
-  CreditLineItemsCursor,
 } from './credit-line-items';
 import * as DebitLineItemsAPI from './debit-line-items';
 import {
-  DebitLineItem,
   DebitLineItemCreateParams,
   DebitLineItemDeleteParams,
   DebitLineItemListParams,
+  DebitLineItemResponse,
+  DebitLineItemResponsesCursor,
   DebitLineItemRetrieveParams,
   DebitLineItemUpdateParams,
   DebitLineItems,
-  DebitLineItemsCursor,
 } from './debit-line-items';
 import * as LineItemsAPI from './line-items';
 import {
-  LineItem as LineItemsAPILineItem,
   LineItemListParams,
+  LineItemResponse,
+  LineItemResponsesCursor,
   LineItemRetrieveParams,
   LineItems,
-  LineItemsCursor,
 } from './line-items';
 import { Cursor, type CursorParams } from '../../pagination';
 
@@ -47,13 +47,17 @@ export class Bills extends APIResource {
    * This endpoint retrieves the Bill with the given unique identifier (UUID) and
    * specific Organization.
    */
-  retrieve(id: string, params?: BillRetrieveParams, options?: Core.RequestOptions): Core.APIPromise<Bill>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Bill>;
+  retrieve(
+    id: string,
+    params?: BillRetrieveParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
   retrieve(
     id: string,
     params: BillRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill> {
+  ): Core.APIPromise<BillResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -69,17 +73,23 @@ export class Bills extends APIResource {
    * lock status, or other attributes. The list can also be paginated for easier
    * management.
    */
-  list(params?: BillListParams, options?: Core.RequestOptions): Core.PagePromise<BillsCursor, Bill>;
-  list(options?: Core.RequestOptions): Core.PagePromise<BillsCursor, Bill>;
+  list(
+    params?: BillListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<BillResponsesCursor, BillResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<BillResponsesCursor, BillResponse>;
   list(
     params: BillListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<BillsCursor, Bill> {
+  ): Core.PagePromise<BillResponsesCursor, BillResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/bills`, BillsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/bills`, BillResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -91,13 +101,13 @@ export class Bills extends APIResource {
    * Where end-customer invoices for Bills have been sent to customers, Bills should
    * not be deleted to ensure you have an audit trail of how the invoice was created.
    */
-  delete(id: string, params?: BillDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Bill>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Bill>;
+  delete(id: string, params?: BillDeleteParams, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
   delete(
     id: string,
     params: BillDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill> {
+  ): Core.APIPromise<BillResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -149,13 +159,13 @@ export class Bills extends APIResource {
     accountId: string,
     params?: BillLatestByAccountParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill>;
-  latestByAccount(accountId: string, options?: Core.RequestOptions): Core.APIPromise<Bill>;
+  ): Core.APIPromise<BillResponse>;
+  latestByAccount(accountId: string, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
   latestByAccount(
     accountId: string,
     params: BillLatestByAccountParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill> {
+  ): Core.APIPromise<BillResponse> {
     if (isRequestOptions(params)) {
       return this.latestByAccount(accountId, {}, params);
     }
@@ -172,13 +182,13 @@ export class Bills extends APIResource {
    * [Approve Bills](https://www.m3ter.com/docs/api#tag/Bill/operation/ApproveBills)
    * call to approve a Bill before you can lock it.
    */
-  lock(id: string, params?: BillLockParams, options?: Core.RequestOptions): Core.APIPromise<Bill>;
-  lock(id: string, options?: Core.RequestOptions): Core.APIPromise<Bill>;
+  lock(id: string, params?: BillLockParams, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
+  lock(id: string, options?: Core.RequestOptions): Core.APIPromise<BillResponse>;
   lock(
     id: string,
     params: BillLockParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill> {
+  ): Core.APIPromise<BillResponse> {
     if (isRequestOptions(params)) {
       return this.lock(id, {}, params);
     }
@@ -217,15 +227,15 @@ export class Bills extends APIResource {
     id: string,
     params: BillUpdateStatusParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Bill> {
+  ): Core.APIPromise<BillResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/bills/${id}/status`, { body, ...options });
   }
 }
 
-export class BillsCursor extends Cursor<Bill> {}
+export class BillResponsesCursor extends Cursor<BillResponse> {}
 
-export interface Bill {
+export interface BillResponse {
   /**
    * The UUID of the entity.
    */
@@ -337,7 +347,7 @@ export interface Bill {
   /**
    * An array of the Bill line items.
    */
-  lineItems?: Array<Bill.LineItem>;
+  lineItems?: Array<BillResponse.LineItem>;
 
   locked?: boolean;
 
@@ -364,7 +374,7 @@ export interface Bill {
   timezone?: string;
 }
 
-export namespace Bill {
+export namespace BillResponse {
   export interface LineItem {
     /**
      * The average unit price across all tiers / pricing bands.
@@ -615,7 +625,7 @@ export interface BillSearchResponse {
   /**
    * An array containing the list of requested Bills.
    */
-  data?: Array<Bill>;
+  data?: Array<BillResponse>;
 
   /**
    * The `nextToken` for multi-page retrievals. It is used to fetch the next page of
@@ -838,20 +848,20 @@ export interface BillUpdateStatusParams {
   status: 'PENDING' | 'APPROVED';
 }
 
-Bills.BillsCursor = BillsCursor;
+Bills.BillResponsesCursor = BillResponsesCursor;
 Bills.CreditLineItems = CreditLineItems;
-Bills.CreditLineItemsCursor = CreditLineItemsCursor;
+Bills.CreditLineItemResponsesCursor = CreditLineItemResponsesCursor;
 Bills.DebitLineItems = DebitLineItems;
-Bills.DebitLineItemsCursor = DebitLineItemsCursor;
+Bills.DebitLineItemResponsesCursor = DebitLineItemResponsesCursor;
 Bills.LineItems = LineItems;
-Bills.LineItemsCursor = LineItemsCursor;
+Bills.LineItemResponsesCursor = LineItemResponsesCursor;
 
 export declare namespace Bills {
   export {
-    type Bill as Bill,
+    type BillResponse as BillResponse,
     type BillApproveResponse as BillApproveResponse,
     type BillSearchResponse as BillSearchResponse,
-    BillsCursor as BillsCursor,
+    BillResponsesCursor as BillResponsesCursor,
     type BillRetrieveParams as BillRetrieveParams,
     type BillListParams as BillListParams,
     type BillDeleteParams as BillDeleteParams,
@@ -864,8 +874,8 @@ export declare namespace Bills {
 
   export {
     CreditLineItems as CreditLineItems,
-    type CreditLineItem as CreditLineItem,
-    CreditLineItemsCursor as CreditLineItemsCursor,
+    type CreditLineItemResponse as CreditLineItemResponse,
+    CreditLineItemResponsesCursor as CreditLineItemResponsesCursor,
     type CreditLineItemCreateParams as CreditLineItemCreateParams,
     type CreditLineItemRetrieveParams as CreditLineItemRetrieveParams,
     type CreditLineItemUpdateParams as CreditLineItemUpdateParams,
@@ -875,8 +885,8 @@ export declare namespace Bills {
 
   export {
     DebitLineItems as DebitLineItems,
-    type DebitLineItem as DebitLineItem,
-    DebitLineItemsCursor as DebitLineItemsCursor,
+    type DebitLineItemResponse as DebitLineItemResponse,
+    DebitLineItemResponsesCursor as DebitLineItemResponsesCursor,
     type DebitLineItemCreateParams as DebitLineItemCreateParams,
     type DebitLineItemRetrieveParams as DebitLineItemRetrieveParams,
     type DebitLineItemUpdateParams as DebitLineItemUpdateParams,
@@ -886,8 +896,8 @@ export declare namespace Bills {
 
   export {
     LineItems as LineItems,
-    type LineItemsAPILineItem as LineItem,
-    LineItemsCursor as LineItemsCursor,
+    type LineItemResponse as LineItemResponse,
+    LineItemResponsesCursor as LineItemResponsesCursor,
     type LineItemRetrieveParams as LineItemRetrieveParams,
     type LineItemListParams as LineItemListParams,
   };

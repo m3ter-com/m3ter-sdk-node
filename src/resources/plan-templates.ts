@@ -13,7 +13,10 @@ export class PlanTemplates extends APIResource {
    * identified by its unique UUID. The request body should contain the necessary
    * information for the new PlanTemplate.
    */
-  create(params: PlanTemplateCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanTemplate> {
+  create(
+    params: PlanTemplateCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanTemplateResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plantemplates`, { body, ...options });
   }
@@ -28,13 +31,13 @@ export class PlanTemplates extends APIResource {
     id: string,
     params?: PlanTemplateRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanTemplate>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanTemplate>;
+  ): Core.APIPromise<PlanTemplateResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanTemplateResponse>;
   retrieve(
     id: string,
     params: PlanTemplateRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanTemplate> {
+  ): Core.APIPromise<PlanTemplateResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -58,7 +61,7 @@ export class PlanTemplates extends APIResource {
     id: string,
     params: PlanTemplateUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanTemplate> {
+  ): Core.APIPromise<PlanTemplateResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plantemplates/${id}`, { body, ...options });
   }
@@ -73,17 +76,17 @@ export class PlanTemplates extends APIResource {
   list(
     params?: PlanTemplateListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanTemplatesCursor, PlanTemplate>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PlanTemplatesCursor, PlanTemplate>;
+  ): Core.PagePromise<PlanTemplateResponsesCursor, PlanTemplateResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanTemplateResponsesCursor, PlanTemplateResponse>;
   list(
     params: PlanTemplateListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanTemplatesCursor, PlanTemplate> {
+  ): Core.PagePromise<PlanTemplateResponsesCursor, PlanTemplateResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/plantemplates`, PlanTemplatesCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/plantemplates`, PlanTemplateResponsesCursor, {
       query,
       ...options,
     });
@@ -99,13 +102,13 @@ export class PlanTemplates extends APIResource {
     id: string,
     params?: PlanTemplateDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanTemplate>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanTemplate>;
+  ): Core.APIPromise<PlanTemplateResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanTemplateResponse>;
   delete(
     id: string,
     params: PlanTemplateDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanTemplate> {
+  ): Core.APIPromise<PlanTemplateResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -114,9 +117,9 @@ export class PlanTemplates extends APIResource {
   }
 }
 
-export class PlanTemplatesCursor extends Cursor<PlanTemplate> {}
+export class PlanTemplateResponsesCursor extends Cursor<PlanTemplateResponse> {}
 
-export interface PlanTemplate {
+export interface PlanTemplateResponse {
   /**
    * The UUID of the entity.
    */
@@ -645,12 +648,12 @@ export interface PlanTemplateDeleteParams {
   orgId?: string;
 }
 
-PlanTemplates.PlanTemplatesCursor = PlanTemplatesCursor;
+PlanTemplates.PlanTemplateResponsesCursor = PlanTemplateResponsesCursor;
 
 export declare namespace PlanTemplates {
   export {
-    type PlanTemplate as PlanTemplate,
-    PlanTemplatesCursor as PlanTemplatesCursor,
+    type PlanTemplateResponse as PlanTemplateResponse,
+    PlanTemplateResponsesCursor as PlanTemplateResponsesCursor,
     type PlanTemplateCreateParams as PlanTemplateCreateParams,
     type PlanTemplateRetrieveParams as PlanTemplateRetrieveParams,
     type PlanTemplateUpdateParams as PlanTemplateUpdateParams,

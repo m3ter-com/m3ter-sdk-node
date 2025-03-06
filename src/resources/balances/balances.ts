@@ -5,13 +5,13 @@ import { isRequestOptions } from '../../core';
 import * as Core from '../../core';
 import * as TransactionsAPI from './transactions';
 import {
-  Transaction,
   TransactionCreateParams,
   TransactionListParams,
+  TransactionResponse,
+  TransactionResponsesCursor,
   TransactionSummaryParams,
   TransactionSummaryResponse,
   Transactions,
-  TransactionsCursor,
 } from './transactions';
 import { Cursor, type CursorParams } from '../../pagination';
 
@@ -584,7 +584,7 @@ export interface BalanceDeleteParams {
 
 Balances.BalancesCursor = BalancesCursor;
 Balances.Transactions = Transactions;
-Balances.TransactionsCursor = TransactionsCursor;
+Balances.TransactionResponsesCursor = TransactionResponsesCursor;
 
 export declare namespace Balances {
   export {
@@ -599,9 +599,9 @@ export declare namespace Balances {
 
   export {
     Transactions as Transactions,
-    type Transaction as Transaction,
+    type TransactionResponse as TransactionResponse,
     type TransactionSummaryResponse as TransactionSummaryResponse,
-    TransactionsCursor as TransactionsCursor,
+    TransactionResponsesCursor as TransactionResponsesCursor,
     type TransactionCreateParams as TransactionCreateParams,
     type TransactionListParams as TransactionListParams,
     type TransactionSummaryParams as TransactionSummaryParams,
