@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-03-06)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Features
+
+* **api:** fixing warnings ([#41](https://github.com/m3ter-com/m3ter-sdk-node/issues/41)) ([66854f9](https://github.com/m3ter-com/m3ter-sdk-node/commit/66854f9864bf3357915e9a468d501ff521e21cde))
+* **api:** manual updates ([#42](https://github.com/m3ter-com/m3ter-sdk-node/issues/42)) ([c2c3fa0](https://github.com/m3ter-com/m3ter-sdk-node/commit/c2c3fa0089f6ff10c082f680a6f6a0b368a020f7))
+
+
+### Chores
+
+* org ID at the client level is required ([#40](https://github.com/m3ter-com/m3ter-sdk-node/issues/40)) ([bb4ed02](https://github.com/m3ter-com/m3ter-sdk-node/commit/bb4ed027150e04b56bfc15cb4d8cd358c3761404))
+* org ID client arg is optional ([#38](https://github.com/m3ter-com/m3ter-sdk-node/issues/38)) ([8f0c612](https://github.com/m3ter-com/m3ter-sdk-node/commit/8f0c61278d6326e7399da85568efb915bb9a28e3))
+
 ## 0.1.0-alpha.6 (2025-03-03)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)

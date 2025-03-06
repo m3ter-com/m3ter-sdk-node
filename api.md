@@ -54,15 +54,15 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/aggregations.ts">Aggregation</a></code>
+- <code><a href="./src/resources/aggregations.ts">AggregationResponse</a></code>
 
 Methods:
 
-- <code title="post /organizations/{orgId}/aggregations">client.aggregations.<a href="./src/resources/aggregations.ts">create</a>({ ...params }) -> Aggregation</code>
-- <code title="get /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">retrieve</a>(id, { ...params }) -> Aggregation</code>
-- <code title="put /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">update</a>(id, { ...params }) -> Aggregation</code>
-- <code title="get /organizations/{orgId}/aggregations">client.aggregations.<a href="./src/resources/aggregations.ts">list</a>({ ...params }) -> AggregationsCursor</code>
-- <code title="delete /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">delete</a>(id, { ...params }) -> Aggregation</code>
+- <code title="post /organizations/{orgId}/aggregations">client.aggregations.<a href="./src/resources/aggregations.ts">create</a>({ ...params }) -> AggregationResponse</code>
+- <code title="get /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">retrieve</a>(id, { ...params }) -> AggregationResponse</code>
+- <code title="put /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">update</a>(id, { ...params }) -> AggregationResponse</code>
+- <code title="get /organizations/{orgId}/aggregations">client.aggregations.<a href="./src/resources/aggregations.ts">list</a>({ ...params }) -> AggregationResponsesCursor</code>
+- <code title="delete /organizations/{orgId}/aggregations/{id}">client.aggregations.<a href="./src/resources/aggregations.ts">delete</a>(id, { ...params }) -> AggregationResponse</code>
 
 # Balances
 
@@ -165,6 +165,7 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/commitments.ts">Commitment</a></code>
+- <code><a href="./src/resources/commitments.ts">CommitmentFee</a></code>
 - <code><a href="./src/resources/commitments.ts">CommitmentSearchResponse</a></code>
 
 Methods:
@@ -198,9 +199,9 @@ Types:
 
 Methods:
 
-- <code title="post /organizations/{orgId}/compoundaggregations">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">create</a>({ ...params }) -> Aggregation</code>
+- <code title="post /organizations/{orgId}/compoundaggregations">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">create</a>({ ...params }) -> AggregationResponse</code>
 - <code title="get /organizations/{orgId}/compoundaggregations/{id}">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">retrieve</a>(id, { ...params }) -> CompoundAggregation</code>
-- <code title="put /organizations/{orgId}/compoundaggregations/{id}">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">update</a>(id, { ...params }) -> Aggregation</code>
+- <code title="put /organizations/{orgId}/compoundaggregations/{id}">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">update</a>(id, { ...params }) -> AggregationResponse</code>
 - <code title="get /organizations/{orgId}/compoundaggregations">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">list</a>({ ...params }) -> CompoundAggregationsCursor</code>
 - <code title="delete /organizations/{orgId}/compoundaggregations/{id}">client.compoundAggregations.<a href="./src/resources/compound-aggregations.ts">delete</a>(id, { ...params }) -> CompoundAggregation</code>
 
@@ -348,8 +349,10 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportSchedule</a></code>
-- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportSchedule</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportScheduleRequest</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">OperationalDataExportScheduleResponse</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportScheduleRequest</a></code>
+- <code><a href="./src/resources/data-exports/schedules.ts">UsageDataExportScheduleResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleCreateResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleRetrieveResponse</a></code>
 - <code><a href="./src/resources/data-exports/schedules.ts">ScheduleUpdateResponse</a></code>
@@ -434,6 +437,7 @@ Methods:
 
 Types:
 
+- <code><a href="./src/resources/meters.ts">DataField</a></code>
 - <code><a href="./src/resources/meters.ts">Meter</a></code>
 
 Methods:
@@ -475,6 +479,7 @@ Types:
 
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicy</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionStatement</a></code>
+- <code><a href="./src/resources/permission-policies.ts">PrincipalPermissionRequest</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToServiceUserResponse</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToSupportUserResponse</a></code>
 - <code><a href="./src/resources/permission-policies.ts">PermissionPolicyAddToUserResponse</a></code>

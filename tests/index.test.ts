@@ -269,7 +269,8 @@ describe('instantiate client', () => {
     process.env['M3TER_API_KEY'] = 'My API Key';
     process.env['M3TER_API_SECRET'] = 'My API Secret';
     process.env['M3TER_API_TOKEN'] = 'My Token';
-    const client = new M3ter({ orgId: 'My Org ID' });
+    process.env['M3TER_ORG_ID'] = 'My Org ID';
+    const client = new M3ter();
     expect(client.apiKey).toBe('My API Key');
     expect(client.apiSecret).toBe('My API Secret');
     expect(client.token).toBe('My Token');
@@ -281,6 +282,7 @@ describe('instantiate client', () => {
     process.env['M3TER_API_KEY'] = 'another My API Key';
     process.env['M3TER_API_SECRET'] = 'another My API Secret';
     process.env['M3TER_API_TOKEN'] = 'another My Token';
+    process.env['M3TER_ORG_ID'] = 'another My Org ID';
     const client = new M3ter({
       apiKey: 'My API Key',
       apiSecret: 'My API Secret',

@@ -35,14 +35,14 @@ import {
   Address,
 } from './resources/accounts';
 import {
-  Aggregation,
   AggregationCreateParams,
   AggregationDeleteParams,
   AggregationListParams,
+  AggregationResponse,
+  AggregationResponsesCursor,
   AggregationRetrieveParams,
   AggregationUpdateParams,
   Aggregations,
-  AggregationsCursor,
 } from './resources/aggregations';
 import {
   Authentication,
@@ -69,6 +69,7 @@ import {
   Commitment,
   CommitmentCreateParams,
   CommitmentDeleteParams,
+  CommitmentFee,
   CommitmentListParams,
   CommitmentRetrieveParams,
   CommitmentSearchParams,
@@ -201,6 +202,7 @@ import {
   IntegrationConfigurations,
 } from './resources/integration-configurations';
 import {
+  DataField,
   Meter,
   MeterCreateParams,
   MeterDeleteParams,
@@ -252,6 +254,7 @@ import {
   PermissionPolicyRetrieveParams,
   PermissionPolicyUpdateParams,
   PermissionStatement,
+  PrincipalPermissionRequest,
 } from './resources/permission-policies';
 import {
   PlanGroupLink,
@@ -436,7 +439,10 @@ export interface ClientOptions {
    */
   token?: string | null | undefined;
 
-  orgId: string;
+  /**
+   * Defaults to process.env['M3TER_ORG_ID'].
+   */
+  orgId?: string | undefined;
 
   /**
    * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
@@ -520,7 +526,7 @@ export class M3ter extends Core.APIClient {
    * @param {string | undefined} [opts.apiKey=process.env['M3TER_API_KEY'] ?? undefined]
    * @param {string | undefined} [opts.apiSecret=process.env['M3TER_API_SECRET'] ?? undefined]
    * @param {string | null | undefined} [opts.token=process.env['M3TER_API_TOKEN'] ?? null]
-   * @param {string} opts.orgId
+   * @param {string | undefined} [opts.orgId=process.env['M3TER_ORG_ID'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['M3TER_BASE_URL'] ?? https://api.m3ter.com] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -535,9 +541,9 @@ export class M3ter extends Core.APIClient {
     apiKey = Core.readEnv('M3TER_API_KEY'),
     apiSecret = Core.readEnv('M3TER_API_SECRET'),
     token = Core.readEnv('M3TER_API_TOKEN') ?? null,
-    orgId,
+    orgId = Core.readEnv('M3TER_ORG_ID'),
     ...opts
-  }: ClientOptions) {
+  }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.M3terError(
         "The M3TER_API_KEY environment variable is missing or empty; either provide it, or instantiate the M3ter client with an apiKey option, like new M3ter({ apiKey: 'My API Key' }).",
@@ -550,7 +556,7 @@ export class M3ter extends Core.APIClient {
     }
     if (orgId === undefined) {
       throw new Errors.M3terError(
-        "Missing required client option orgId; you need to instantiate the M3ter client with an orgId option, like new M3ter({ orgId: 'My Org ID' }).",
+        "The M3TER_ORG_ID environment variable is missing or empty; either provide it, or instantiate the M3ter client with an orgId option, like new M3ter({ orgId: 'My Org ID' }).",
       );
     }
 
@@ -714,7 +720,7 @@ M3ter.AccountsCursor = AccountsCursor;
 M3ter.AccountPlans = AccountPlans;
 M3ter.AccountPlansCursor = AccountPlansCursor;
 M3ter.Aggregations = Aggregations;
-M3ter.AggregationsCursor = AggregationsCursor;
+M3ter.AggregationResponsesCursor = AggregationResponsesCursor;
 M3ter.Balances = Balances;
 M3ter.BalancesCursor = BalancesCursor;
 M3ter.Bills = Bills;
@@ -820,8 +826,8 @@ export declare namespace M3ter {
 
   export {
     Aggregations as Aggregations,
-    type Aggregation as Aggregation,
-    AggregationsCursor as AggregationsCursor,
+    type AggregationResponse as AggregationResponse,
+    AggregationResponsesCursor as AggregationResponsesCursor,
     type AggregationCreateParams as AggregationCreateParams,
     type AggregationRetrieveParams as AggregationRetrieveParams,
     type AggregationUpdateParams as AggregationUpdateParams,
@@ -866,6 +872,7 @@ export declare namespace M3ter {
   export {
     Commitments as Commitments,
     type Commitment as Commitment,
+    type CommitmentFee as CommitmentFee,
     type CommitmentSearchResponse as CommitmentSearchResponse,
     CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
@@ -1036,6 +1043,7 @@ export declare namespace M3ter {
 
   export {
     Meters as Meters,
+    type DataField as DataField,
     type Meter as Meter,
     MetersCursor as MetersCursor,
     type MeterCreateParams as MeterCreateParams,
@@ -1067,6 +1075,7 @@ export declare namespace M3ter {
     PermissionPolicies as PermissionPolicies,
     type PermissionPolicy as PermissionPolicy,
     type PermissionStatement as PermissionStatement,
+    type PrincipalPermissionRequest as PrincipalPermissionRequest,
     type PermissionPolicyAddToServiceUserResponse as PermissionPolicyAddToServiceUserResponse,
     type PermissionPolicyAddToSupportUserResponse as PermissionPolicyAddToSupportUserResponse,
     type PermissionPolicyAddToUserResponse as PermissionPolicyAddToUserResponse,

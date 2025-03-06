@@ -300,7 +300,7 @@ export interface Commitment {
    * - `servicePeriodStartDate` and `servicePeriodEndDate` - defines the service
    *   period the bill covers _(in ISO-8601 format)_.
    */
-  feeDates?: Array<Commitment.FeeDate>;
+  feeDates?: Array<CommitmentFee>;
 
   feesAccountingProductId?: string;
 
@@ -366,16 +366,14 @@ export interface Commitment {
   startDate?: string;
 }
 
-export namespace Commitment {
-  export interface FeeDate {
-    amount: number;
+export interface CommitmentFee {
+  amount: number;
 
-    date: string;
+  date: string;
 
-    servicePeriodEndDate: string;
+  servicePeriodEndDate: string;
 
-    servicePeriodStartDate: string;
-  }
+  servicePeriodStartDate: string;
 }
 
 export interface CommitmentSearchResponse {
@@ -546,7 +544,7 @@ export interface CommitmentCreateParams {
    *   date_ without receiving an error, but _please be sure_ your Commitment billing
    *   use case requires this.
    */
-  feeDates?: Array<CommitmentCreateParams.FeeDate>;
+  feeDates?: Array<CommitmentFee>;
 
   /**
    * Body param: Optional Product ID this Commitment fees should be attributed to for
@@ -634,18 +632,6 @@ export interface CommitmentCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace CommitmentCreateParams {
-  export interface FeeDate {
-    amount: number;
-
-    date: string;
-
-    servicePeriodEndDate: string;
-
-    servicePeriodStartDate: string;
-  }
 }
 
 export interface CommitmentRetrieveParams {
@@ -811,7 +797,7 @@ export interface CommitmentUpdateParams {
    *   date_ without receiving an error, but _please be sure_ your Commitment billing
    *   use case requires this.
    */
-  feeDates?: Array<CommitmentUpdateParams.FeeDate>;
+  feeDates?: Array<CommitmentFee>;
 
   /**
    * Body param: Optional Product ID this Commitment fees should be attributed to for
@@ -899,18 +885,6 @@ export interface CommitmentUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace CommitmentUpdateParams {
-  export interface FeeDate {
-    amount: number;
-
-    date: string;
-
-    servicePeriodEndDate: string;
-
-    servicePeriodStartDate: string;
-  }
 }
 
 export interface CommitmentListParams extends CursorParams {
@@ -1036,6 +1010,7 @@ Commitments.CommitmentsCursor = CommitmentsCursor;
 export declare namespace Commitments {
   export {
     type Commitment as Commitment,
+    type CommitmentFee as CommitmentFee,
     type CommitmentSearchResponse as CommitmentSearchResponse,
     CommitmentsCursor as CommitmentsCursor,
     type CommitmentCreateParams as CommitmentCreateParams,
