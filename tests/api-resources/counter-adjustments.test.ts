@@ -7,13 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
-  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource counterAdjustments', () => {
   test('create: only required params', async () => {
     const responsePromise = client.counterAdjustments.create({
+      orgId: 'orgId',
       accountId: 'x',
       counterId: 'x',
       date: '2022-01-04',
@@ -41,7 +41,7 @@ describe('resource counterAdjustments', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.counterAdjustments.retrieve('id');
+    const responsePromise = client.counterAdjustments.retrieve('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -55,22 +55,9 @@ describe('resource counterAdjustments', () => {
     const response = await client.counterAdjustments.retrieve('id', { orgId: 'orgId' });
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.counterAdjustments.retrieve('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.counterAdjustments.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('update: only required params', async () => {
     const responsePromise = client.counterAdjustments.update('id', {
+      orgId: 'orgId',
       accountId: 'x',
       counterId: 'x',
       date: '2022-01-04',
@@ -98,7 +85,7 @@ describe('resource counterAdjustments', () => {
   });
 
   test('list: only required params', async () => {
-    const responsePromise = client.counterAdjustments.list();
+    const responsePromise = client.counterAdjustments.list({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -123,36 +110,8 @@ describe('resource counterAdjustments', () => {
     });
   });
 
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.counterAdjustments.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.counterAdjustments.list(
-        {
-          orgId: 'orgId',
-          accountId: 'accountId',
-          counterId: 'counterId',
-          date: 'date',
-          dateEnd: 'dateEnd',
-          dateStart: 'dateStart',
-          endDateEnd: 'endDateEnd',
-          endDateStart: 'endDateStart',
-          nextToken: 'nextToken',
-          pageSize: 1,
-        },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('delete: only required params', async () => {
-    const responsePromise = client.counterAdjustments.delete('id');
+    const responsePromise = client.counterAdjustments.delete('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -164,19 +123,5 @@ describe('resource counterAdjustments', () => {
 
   test('delete: required and optional params', async () => {
     const response = await client.counterAdjustments.delete('id', { orgId: 'orgId' });
-  });
-
-  test('delete: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.counterAdjustments.delete('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('delete: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.counterAdjustments.delete('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });

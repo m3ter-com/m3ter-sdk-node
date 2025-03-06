@@ -7,13 +7,13 @@ const client = new M3ter({
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   token: 'My Token',
-  orgId: 'My Org ID',
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
 describe('resource invitations', () => {
   test('create: only required params', async () => {
     const responsePromise = client.users.invitations.create({
+      orgId: 'orgId',
       email: 'dev@stainless.com',
       firstName: 'x',
       lastName: 'x',
@@ -43,7 +43,7 @@ describe('resource invitations', () => {
   });
 
   test('retrieve: only required params', async () => {
-    const responsePromise = client.users.invitations.retrieve('id');
+    const responsePromise = client.users.invitations.retrieve('id', { orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -57,22 +57,8 @@ describe('resource invitations', () => {
     const response = await client.users.invitations.retrieve('id', { orgId: 'orgId' });
   });
 
-  test('retrieve: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.invitations.retrieve('id', { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
-  test('retrieve: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.invitations.retrieve('id', { orgId: 'orgId' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(M3ter.NotFoundError);
-  });
-
   test('list: only required params', async () => {
-    const responsePromise = client.users.invitations.list();
+    const responsePromise = client.users.invitations.list({ orgId: 'orgId' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -88,22 +74,5 @@ describe('resource invitations', () => {
       nextToken: 'nextToken',
       pageSize: 1,
     });
-  });
-
-  test('list: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.users.invitations.list({ path: '/_stainless_unknown_path' })).rejects.toThrow(
-      M3ter.NotFoundError,
-    );
-  });
-
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.users.invitations.list(
-        { orgId: 'orgId', nextToken: 'nextToken', pageSize: 1 },
-        { path: '/_stainless_unknown_path' },
-      ),
-    ).rejects.toThrow(M3ter.NotFoundError);
   });
 });
