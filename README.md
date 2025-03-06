@@ -32,7 +32,7 @@ const client = new M3ter({
 });
 
 async function main() {
-  const page = await client.products.list({ orgId: 'ORG_ID' });
+  const page = await client.products.list();
   const product = page.data[0];
 
   console.log(product.id);
@@ -56,8 +56,7 @@ const client = new M3ter({
 });
 
 async function main() {
-  const params: M3ter.ProductListParams = { orgId: 'ORG_ID' };
-  const [product]: [M3ter.Product] = await client.products.list(params);
+  const [product]: [M3ter.Product] = await client.products.list();
 }
 
 main();
@@ -74,7 +73,7 @@ a subclass of `APIError` will be thrown:
 <!-- prettier-ignore -->
 ```ts
 async function main() {
-  const page = await client.products.list({ orgId: 'ORG_ID' }).catch(async (err) => {
+  const page = await client.products.list().catch(async (err) => {
     if (err instanceof M3ter.APIError) {
       console.log(err.status); // 400
       console.log(err.name); // BadRequestError
@@ -116,10 +115,11 @@ const client = new M3ter({
   maxRetries: 0, // default is 2
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
+  orgId: 'My Org ID',
 });
 
 // Or, configure per-request:
-await client.products.list({ orgId: 'ORG_ID' }, {
+await client.products.list({
   maxRetries: 5,
 });
 ```
@@ -135,10 +135,11 @@ const client = new M3ter({
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
+  orgId: 'My Org ID',
 });
 
 // Override per-request:
-await client.products.list({ orgId: 'ORG_ID' }, {
+await client.products.list({
   timeout: 5 * 1000,
 });
 ```
@@ -156,7 +157,7 @@ You can use the `for await … of` syntax to iterate through items across all pa
 async function fetchAllProducts(params) {
   const allProducts = [];
   // Automatically fetches more pages as needed.
-  for await (const product of client.products.list({ orgId: 'ORG_ID' })) {
+  for await (const product of client.products.list()) {
     allProducts.push(product);
   }
   return allProducts;
@@ -166,7 +167,7 @@ async function fetchAllProducts(params) {
 Alternatively, you can request a single page at a time:
 
 ```ts
-let page = await client.products.list({ orgId: 'ORG_ID' });
+let page = await client.products.list();
 for (const product of page.data) {
   console.log(product);
 }
@@ -190,11 +191,11 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new M3ter();
 
-const response = await client.products.list({ orgId: 'ORG_ID' }).asResponse();
+const response = await client.products.list().asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: page, response: raw } = await client.products.list({ orgId: 'ORG_ID' }).withResponse();
+const { data: page, response: raw } = await client.products.list().withResponse();
 console.log(raw.headers.get('X-My-Header'));
 for await (const product of page) {
   console.log(product.id);
@@ -301,15 +302,13 @@ const client = new M3ter({
   httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
+  orgId: 'My Org ID',
 });
 
 // Override per-request:
-await client.products.list(
-  { orgId: 'ORG_ID' },
-  {
-    httpAgent: new http.Agent({ keepAlive: false }),
-  },
-);
+await client.products.list({
+  httpAgent: new http.Agent({ keepAlive: false }),
+});
 ```
 
 ## Semantic versioning
