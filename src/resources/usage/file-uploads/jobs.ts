@@ -15,13 +15,13 @@ export class Jobs extends APIResource {
     id: string,
     params?: JobRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileUploadJob>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<FileUploadJob>;
+  ): Core.APIPromise<FileUploadJobResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<FileUploadJobResponse>;
   retrieve(
     id: string,
     params: JobRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<FileUploadJob> {
+  ): Core.APIPromise<FileUploadJobResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -42,19 +42,19 @@ export class Jobs extends APIResource {
   list(
     params?: JobListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileUploadJobsCursor, FileUploadJob>;
-  list(options?: Core.RequestOptions): Core.PagePromise<FileUploadJobsCursor, FileUploadJob>;
+  ): Core.PagePromise<FileUploadJobResponsesCursor, FileUploadJobResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<FileUploadJobResponsesCursor, FileUploadJobResponse>;
   list(
     params: JobListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<FileUploadJobsCursor, FileUploadJob> {
+  ): Core.PagePromise<FileUploadJobResponsesCursor, FileUploadJobResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/fileuploads/measurements/jobs`,
-      FileUploadJobsCursor,
+      FileUploadJobResponsesCursor,
       { query, ...options },
     );
   }
@@ -91,12 +91,12 @@ export class Jobs extends APIResource {
   }
 }
 
-export class FileUploadJobsCursor extends Cursor<FileUploadJob> {}
+export class FileUploadJobResponsesCursor extends Cursor<FileUploadJobResponse> {}
 
 /**
  * Response containing the upload job details.
  */
-export interface FileUploadJob {
+export interface FileUploadJobResponse {
   /**
    * UUID of the file upload job.
    */
@@ -202,13 +202,13 @@ export interface JobGetOriginalDownloadURLParams {
   orgId?: string;
 }
 
-Jobs.FileUploadJobsCursor = FileUploadJobsCursor;
+Jobs.FileUploadJobResponsesCursor = FileUploadJobResponsesCursor;
 
 export declare namespace Jobs {
   export {
-    type FileUploadJob as FileUploadJob,
+    type FileUploadJobResponse as FileUploadJobResponse,
     type JobGetOriginalDownloadURLResponse as JobGetOriginalDownloadURLResponse,
-    FileUploadJobsCursor as FileUploadJobsCursor,
+    FileUploadJobResponsesCursor as FileUploadJobResponsesCursor,
     type JobRetrieveParams as JobRetrieveParams,
     type JobListParams as JobListParams,
     type JobGetOriginalDownloadURLParams as JobGetOriginalDownloadURLParams,

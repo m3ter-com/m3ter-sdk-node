@@ -32,13 +32,13 @@ export class CompoundAggregations extends APIResource {
     id: string,
     params?: CompoundAggregationRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CompoundAggregation>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation>;
+  ): Core.APIPromise<CompoundAggregationResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregationResponse>;
   retrieve(
     id: string,
     params: CompoundAggregationRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CompoundAggregation> {
+  ): Core.APIPromise<CompoundAggregationResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -79,19 +79,21 @@ export class CompoundAggregations extends APIResource {
   list(
     params?: CompoundAggregationListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation>;
+  ): Core.PagePromise<CompoundAggregationResponsesCursor, CompoundAggregationResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CompoundAggregationResponsesCursor, CompoundAggregationResponse>;
   list(
     params: CompoundAggregationListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CompoundAggregationsCursor, CompoundAggregation> {
+  ): Core.PagePromise<CompoundAggregationResponsesCursor, CompoundAggregationResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
     return this._client.getAPIList(
       `/organizations/${orgId}/compoundaggregations`,
-      CompoundAggregationsCursor,
+      CompoundAggregationResponsesCursor,
       { query, ...options },
     );
   }
@@ -108,13 +110,13 @@ export class CompoundAggregations extends APIResource {
     id: string,
     params?: CompoundAggregationDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CompoundAggregation>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregation>;
+  ): Core.APIPromise<CompoundAggregationResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CompoundAggregationResponse>;
   delete(
     id: string,
     params: CompoundAggregationDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CompoundAggregation> {
+  ): Core.APIPromise<CompoundAggregationResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -123,9 +125,9 @@ export class CompoundAggregations extends APIResource {
   }
 }
 
-export class CompoundAggregationsCursor extends Cursor<CompoundAggregation> {}
+export class CompoundAggregationResponsesCursor extends Cursor<CompoundAggregationResponse> {}
 
-export interface CompoundAggregation {
+export interface CompoundAggregationResponse {
   /**
    * The UUID of the entity.
    */
@@ -528,12 +530,12 @@ export interface CompoundAggregationDeleteParams {
   orgId?: string;
 }
 
-CompoundAggregations.CompoundAggregationsCursor = CompoundAggregationsCursor;
+CompoundAggregations.CompoundAggregationResponsesCursor = CompoundAggregationResponsesCursor;
 
 export declare namespace CompoundAggregations {
   export {
-    type CompoundAggregation as CompoundAggregation,
-    CompoundAggregationsCursor as CompoundAggregationsCursor,
+    type CompoundAggregationResponse as CompoundAggregationResponse,
+    CompoundAggregationResponsesCursor as CompoundAggregationResponsesCursor,
     type CompoundAggregationCreateParams as CompoundAggregationCreateParams,
     type CompoundAggregationRetrieveParams as CompoundAggregationRetrieveParams,
     type CompoundAggregationUpdateParams as CompoundAggregationUpdateParams,

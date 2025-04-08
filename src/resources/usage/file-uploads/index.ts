@@ -1,9 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 export {
-  FileUploadJobsCursor,
+  FileUploadJobResponsesCursor,
   Jobs,
-  type FileUploadJob,
+  type FileUploadJobResponse,
   type JobGetOriginalDownloadURLResponse,
   type JobRetrieveParams,
   type JobListParams,

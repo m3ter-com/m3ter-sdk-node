@@ -12,7 +12,7 @@ export class Products extends APIResource {
    * This endpoint creates a new Product within the specified Organization. The
    * details of the Product are provided in the request body.
    */
-  create(params: ProductCreateParams, options?: Core.RequestOptions): Core.APIPromise<Product> {
+  create(params: ProductCreateParams, options?: Core.RequestOptions): Core.APIPromise<ProductResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/products`, { body, ...options });
   }
@@ -27,13 +27,13 @@ export class Products extends APIResource {
     id: string,
     params?: ProductRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Product>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Product>;
+  ): Core.APIPromise<ProductResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<ProductResponse>;
   retrieve(
     id: string,
     params: ProductRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Product> {
+  ): Core.APIPromise<ProductResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -53,7 +53,11 @@ export class Products extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(id: string, params: ProductUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Product> {
+  update(
+    id: string,
+    params: ProductUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ProductResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/products/${id}`, { body, ...options });
   }
@@ -65,17 +69,23 @@ export class Products extends APIResource {
    * Organization. The list can be paginated, and supports filtering by specific
    * Product IDs.
    */
-  list(params?: ProductListParams, options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
-  list(options?: Core.RequestOptions): Core.PagePromise<ProductsCursor, Product>;
+  list(
+    params?: ProductListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<ProductResponsesCursor, ProductResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<ProductResponsesCursor, ProductResponse>;
   list(
     params: ProductListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<ProductsCursor, Product> {
+  ): Core.PagePromise<ProductResponsesCursor, ProductResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/products`, ProductsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/products`, ProductResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -84,13 +94,17 @@ export class Products extends APIResource {
    * This endpoint deletes a specific Product within a specified Organization, using
    * the Product UUID.
    */
-  delete(id: string, params?: ProductDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Product>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Product>;
+  delete(
+    id: string,
+    params?: ProductDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<ProductResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<ProductResponse>;
   delete(
     id: string,
     params: ProductDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Product> {
+  ): Core.APIPromise<ProductResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -99,9 +113,9 @@ export class Products extends APIResource {
   }
 }
 
-export class ProductsCursor extends Cursor<Product> {}
+export class ProductResponsesCursor extends Cursor<ProductResponse> {}
 
-export interface Product {
+export interface ProductResponse {
   /**
    * The UUID of the entity.
    */
@@ -282,12 +296,12 @@ export interface ProductDeleteParams {
   orgId?: string;
 }
 
-Products.ProductsCursor = ProductsCursor;
+Products.ProductResponsesCursor = ProductResponsesCursor;
 
 export declare namespace Products {
   export {
-    type Product as Product,
-    ProductsCursor as ProductsCursor,
+    type ProductResponse as ProductResponse,
+    ProductResponsesCursor as ProductResponsesCursor,
     type ProductCreateParams as ProductCreateParams,
     type ProductRetrieveParams as ProductRetrieveParams,
     type ProductUpdateParams as ProductUpdateParams,

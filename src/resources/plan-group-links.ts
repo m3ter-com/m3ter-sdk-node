@@ -9,7 +9,10 @@ export class PlanGroupLinks extends APIResource {
   /**
    * Create a new PlanGroupLink.
    */
-  create(params: PlanGroupLinkCreateParams, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink> {
+  create(
+    params: PlanGroupLinkCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<PlanGroupLinkResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/plangrouplinks`, { body, ...options });
   }
@@ -21,13 +24,13 @@ export class PlanGroupLinks extends APIResource {
     id: string,
     params?: PlanGroupLinkRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink>;
+  ): Core.APIPromise<PlanGroupLinkResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLinkResponse>;
   retrieve(
     id: string,
     params: PlanGroupLinkRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink> {
+  ): Core.APIPromise<PlanGroupLinkResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -42,7 +45,7 @@ export class PlanGroupLinks extends APIResource {
     id: string,
     params: PlanGroupLinkUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink> {
+  ): Core.APIPromise<PlanGroupLinkResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/plangrouplinks/${id}`, { body, ...options });
   }
@@ -53,17 +56,17 @@ export class PlanGroupLinks extends APIResource {
   list(
     params?: PlanGroupLinkListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
-  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink>;
+  ): Core.PagePromise<PlanGroupLinkResponsesCursor, PlanGroupLinkResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<PlanGroupLinkResponsesCursor, PlanGroupLinkResponse>;
   list(
     params: PlanGroupLinkListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<PlanGroupLinksCursor, PlanGroupLink> {
+  ): Core.PagePromise<PlanGroupLinkResponsesCursor, PlanGroupLinkResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/plangrouplinks`, PlanGroupLinksCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/plangrouplinks`, PlanGroupLinkResponsesCursor, {
       query,
       ...options,
     });
@@ -76,13 +79,13 @@ export class PlanGroupLinks extends APIResource {
     id: string,
     params?: PlanGroupLinkDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLink>;
+  ): Core.APIPromise<PlanGroupLinkResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<PlanGroupLinkResponse>;
   delete(
     id: string,
     params: PlanGroupLinkDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<PlanGroupLink> {
+  ): Core.APIPromise<PlanGroupLinkResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -91,9 +94,9 @@ export class PlanGroupLinks extends APIResource {
   }
 }
 
-export class PlanGroupLinksCursor extends Cursor<PlanGroupLink> {}
+export class PlanGroupLinkResponsesCursor extends Cursor<PlanGroupLinkResponse> {}
 
-export interface PlanGroupLink {
+export interface PlanGroupLinkResponse {
   /**
    * The UUID of the entity.
    */
@@ -234,12 +237,12 @@ export interface PlanGroupLinkDeleteParams {
   orgId?: string;
 }
 
-PlanGroupLinks.PlanGroupLinksCursor = PlanGroupLinksCursor;
+PlanGroupLinks.PlanGroupLinkResponsesCursor = PlanGroupLinkResponsesCursor;
 
 export declare namespace PlanGroupLinks {
   export {
-    type PlanGroupLink as PlanGroupLink,
-    PlanGroupLinksCursor as PlanGroupLinksCursor,
+    type PlanGroupLinkResponse as PlanGroupLinkResponse,
+    PlanGroupLinkResponsesCursor as PlanGroupLinkResponsesCursor,
     type PlanGroupLinkCreateParams as PlanGroupLinkCreateParams,
     type PlanGroupLinkRetrieveParams as PlanGroupLinkRetrieveParams,
     type PlanGroupLinkUpdateParams as PlanGroupLinkUpdateParams,

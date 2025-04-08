@@ -10,7 +10,7 @@ export class Accounts extends APIResource {
   /**
    * Create a new Account within the Organization.
    */
-  create(params: AccountCreateParams, options?: Core.RequestOptions): Core.APIPromise<Account> {
+  create(params: AccountCreateParams, options?: Core.RequestOptions): Core.APIPromise<AccountResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/accounts`, { body, ...options });
   }
@@ -22,13 +22,13 @@ export class Accounts extends APIResource {
     id: string,
     params?: AccountRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Account>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  ): Core.APIPromise<AccountResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountResponse>;
   retrieve(
     id: string,
     params: AccountRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Account> {
+  ): Core.APIPromise<AccountResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -44,7 +44,11 @@ export class Accounts extends APIResource {
    * those Custom Fields. If you omit them from the update request, they will be
    * lost.
    */
-  update(id: string, params: AccountUpdateParams, options?: Core.RequestOptions): Core.APIPromise<Account> {
+  update(
+    id: string,
+    params: AccountUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/accounts/${id}`, { body, ...options });
   }
@@ -52,30 +56,40 @@ export class Accounts extends APIResource {
   /**
    * Retrieve a list of Accounts that can be filtered by Account ID or Account Code.
    */
-  list(params?: AccountListParams, options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
-  list(options?: Core.RequestOptions): Core.PagePromise<AccountsCursor, Account>;
+  list(
+    params?: AccountListParams,
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<AccountResponsesCursor, AccountResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<AccountResponsesCursor, AccountResponse>;
   list(
     params: AccountListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<AccountsCursor, Account> {
+  ): Core.PagePromise<AccountResponsesCursor, AccountResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/accounts`, AccountsCursor, { query, ...options });
+    return this._client.getAPIList(`/organizations/${orgId}/accounts`, AccountResponsesCursor, {
+      query,
+      ...options,
+    });
   }
 
   /**
    * Delete the Account with the given UUID. This may fail if there are any
    * AccountPlans that reference the Account being deleted.
    */
-  delete(id: string, params?: AccountDeleteParams, options?: Core.RequestOptions): Core.APIPromise<Account>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  delete(
+    id: string,
+    params?: AccountDeleteParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<AccountResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountResponse>;
   delete(
     id: string,
     params: AccountDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Account> {
+  ): Core.APIPromise<AccountResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -110,13 +124,13 @@ export class Accounts extends APIResource {
     id: string,
     params?: AccountGetChildrenParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Account>;
-  getChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<Account>;
+  ): Core.APIPromise<AccountResponse>;
+  getChildren(id: string, options?: Core.RequestOptions): Core.APIPromise<AccountResponse>;
   getChildren(
     id: string,
     params: AccountGetChildrenParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<Account> {
+  ): Core.APIPromise<AccountResponse> {
     if (isRequestOptions(params)) {
       return this.getChildren(id, {}, params);
     }
@@ -146,9 +160,9 @@ export class Accounts extends APIResource {
   }
 }
 
-export class AccountsCursor extends Cursor<Account> {}
+export class AccountResponsesCursor extends Cursor<AccountResponse> {}
 
-export interface Account {
+export interface AccountResponse {
   /**
    * The UUID of the entity.
    */
@@ -383,7 +397,7 @@ export namespace AccountEndDateBillingEntitiesResponse {
 }
 
 export interface AccountSearchResponse {
-  data?: Array<Account>;
+  data?: Array<AccountResponse>;
 
   nextToken?: string;
 }
@@ -863,15 +877,15 @@ export interface AccountSearchParams {
   sortOrder?: 'ASC' | 'DESC';
 }
 
-Accounts.AccountsCursor = AccountsCursor;
+Accounts.AccountResponsesCursor = AccountResponsesCursor;
 
 export declare namespace Accounts {
   export {
-    type Account as Account,
+    type AccountResponse as AccountResponse,
     type Address as Address,
     type AccountEndDateBillingEntitiesResponse as AccountEndDateBillingEntitiesResponse,
     type AccountSearchResponse as AccountSearchResponse,
-    AccountsCursor as AccountsCursor,
+    AccountResponsesCursor as AccountResponsesCursor,
     type AccountCreateParams as AccountCreateParams,
     type AccountRetrieveParams as AccountRetrieveParams,
     type AccountUpdateParams as AccountUpdateParams,

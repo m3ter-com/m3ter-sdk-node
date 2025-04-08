@@ -19,13 +19,13 @@ export class Jobs extends APIResource {
     id: string,
     params?: JobRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DataExportJob>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DataExportJob>;
+  ): Core.APIPromise<DataExportJobResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DataExportJobResponse>;
   retrieve(
     id: string,
     params: JobRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DataExportJob> {
+  ): Core.APIPromise<DataExportJobResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -39,17 +39,17 @@ export class Jobs extends APIResource {
   list(
     params?: JobListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DataExportJobsCursor, DataExportJob>;
-  list(options?: Core.RequestOptions): Core.PagePromise<DataExportJobsCursor, DataExportJob>;
+  ): Core.PagePromise<DataExportJobResponsesCursor, DataExportJobResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<DataExportJobResponsesCursor, DataExportJobResponse>;
   list(
     params: JobListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DataExportJobsCursor, DataExportJob> {
+  ): Core.PagePromise<DataExportJobResponsesCursor, DataExportJobResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/dataexports/jobs`, DataExportJobsCursor, {
+    return this._client.getAPIList(`/organizations/${orgId}/dataexports/jobs`, DataExportJobResponsesCursor, {
       query,
       ...options,
     });
@@ -93,9 +93,9 @@ export class Jobs extends APIResource {
   }
 }
 
-export class DataExportJobsCursor extends Cursor<DataExportJob> {}
+export class DataExportJobResponsesCursor extends Cursor<DataExportJobResponse> {}
 
-export interface DataExportJob {
+export interface DataExportJobResponse {
   /**
    * The id of the Export Job.
    */
@@ -194,13 +194,13 @@ export interface JobGetDownloadURLParams {
   orgId?: string;
 }
 
-Jobs.DataExportJobsCursor = DataExportJobsCursor;
+Jobs.DataExportJobResponsesCursor = DataExportJobResponsesCursor;
 
 export declare namespace Jobs {
   export {
-    type DataExportJob as DataExportJob,
+    type DataExportJobResponse as DataExportJobResponse,
     type JobGetDownloadURLResponse as JobGetDownloadURLResponse,
-    DataExportJobsCursor as DataExportJobsCursor,
+    DataExportJobResponsesCursor as DataExportJobResponsesCursor,
     type JobRetrieveParams as JobRetrieveParams,
     type JobListParams as JobListParams,
     type JobGetDownloadURLParams as JobGetDownloadURLParams,

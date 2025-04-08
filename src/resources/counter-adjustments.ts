@@ -22,7 +22,7 @@ export class CounterAdjustments extends APIResource {
   create(
     params: CounterAdjustmentCreateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment> {
+  ): Core.APIPromise<CounterAdjustmentResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/counteradjustments`, { body, ...options });
   }
@@ -34,13 +34,13 @@ export class CounterAdjustments extends APIResource {
     id: string,
     params?: CounterAdjustmentRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment>;
+  ): Core.APIPromise<CounterAdjustmentResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustmentResponse>;
   retrieve(
     id: string,
     params: CounterAdjustmentRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment> {
+  ): Core.APIPromise<CounterAdjustmentResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -55,7 +55,7 @@ export class CounterAdjustments extends APIResource {
     id: string,
     params: CounterAdjustmentUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment> {
+  ): Core.APIPromise<CounterAdjustmentResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/counteradjustments/${id}`, { body, ...options });
   }
@@ -75,20 +75,23 @@ export class CounterAdjustments extends APIResource {
   list(
     params?: CounterAdjustmentListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
-  list(options?: Core.RequestOptions): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment>;
+  ): Core.PagePromise<CounterAdjustmentResponsesCursor, CounterAdjustmentResponse>;
+  list(
+    options?: Core.RequestOptions,
+  ): Core.PagePromise<CounterAdjustmentResponsesCursor, CounterAdjustmentResponse>;
   list(
     params: CounterAdjustmentListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<CounterAdjustmentsCursor, CounterAdjustment> {
+  ): Core.PagePromise<CounterAdjustmentResponsesCursor, CounterAdjustmentResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/counteradjustments`, CounterAdjustmentsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/counteradjustments`,
+      CounterAdjustmentResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -98,13 +101,13 @@ export class CounterAdjustments extends APIResource {
     id: string,
     params?: CounterAdjustmentDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustment>;
+  ): Core.APIPromise<CounterAdjustmentResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<CounterAdjustmentResponse>;
   delete(
     id: string,
     params: CounterAdjustmentDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<CounterAdjustment> {
+  ): Core.APIPromise<CounterAdjustmentResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -113,9 +116,9 @@ export class CounterAdjustments extends APIResource {
   }
 }
 
-export class CounterAdjustmentsCursor extends Cursor<CounterAdjustment> {}
+export class CounterAdjustmentResponsesCursor extends Cursor<CounterAdjustmentResponse> {}
 
-export interface CounterAdjustment {
+export interface CounterAdjustmentResponse {
   /**
    * The UUID of the entity.
    */
@@ -350,12 +353,12 @@ export interface CounterAdjustmentDeleteParams {
   orgId?: string;
 }
 
-CounterAdjustments.CounterAdjustmentsCursor = CounterAdjustmentsCursor;
+CounterAdjustments.CounterAdjustmentResponsesCursor = CounterAdjustmentResponsesCursor;
 
 export declare namespace CounterAdjustments {
   export {
-    type CounterAdjustment as CounterAdjustment,
-    CounterAdjustmentsCursor as CounterAdjustmentsCursor,
+    type CounterAdjustmentResponse as CounterAdjustmentResponse,
+    CounterAdjustmentResponsesCursor as CounterAdjustmentResponsesCursor,
     type CounterAdjustmentCreateParams as CounterAdjustmentCreateParams,
     type CounterAdjustmentRetrieveParams as CounterAdjustmentRetrieveParams,
     type CounterAdjustmentUpdateParams as CounterAdjustmentUpdateParams,

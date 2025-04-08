@@ -11,11 +11,8 @@ It is generated with [Stainless](https://www.stainless.com/).
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:m3ter-com/m3ter-sdk-node.git
+npm install m3ter-sdk
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://app.stainless.com/docs/guides/publish), this will become: `npm install m3ter-sdk`
 
 ## Usage
 
@@ -33,9 +30,9 @@ const client = new M3ter({
 
 async function main() {
   const page = await client.products.list();
-  const product = page.data[0];
+  const productResponse = page.data[0];
 
-  console.log(product.id);
+  console.log(productResponse.id);
 }
 
 main();
@@ -56,7 +53,7 @@ const client = new M3ter({
 });
 
 async function main() {
-  const [product]: [M3ter.Product] = await client.products.list();
+  const [productResponse]: [M3ter.ProductResponse] = await client.products.list();
 }
 
 main();
@@ -157,8 +154,8 @@ You can use the `for await … of` syntax to iterate through items across all pa
 async function fetchAllProducts(params) {
   const allProducts = [];
   // Automatically fetches more pages as needed.
-  for await (const product of client.products.list()) {
-    allProducts.push(product);
+  for await (const productResponse of client.products.list()) {
+    allProducts.push(productResponse);
   }
   return allProducts;
 }
@@ -168,8 +165,8 @@ Alternatively, you can request a single page at a time:
 
 ```ts
 let page = await client.products.list();
-for (const product of page.data) {
-  console.log(product);
+for (const productResponse of page.data) {
+  console.log(productResponse);
 }
 
 // Convenience methods are provided for manually paginating:
@@ -197,8 +194,8 @@ console.log(response.statusText); // access the underlying Response object
 
 const { data: page, response: raw } = await client.products.list().withResponse();
 console.log(raw.headers.get('X-My-Header'));
-for await (const product of page) {
-  console.log(product.id);
+for await (const productResponse of page) {
+  console.log(productResponse.id);
 }
 ```
 

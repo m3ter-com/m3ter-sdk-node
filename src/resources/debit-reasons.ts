@@ -11,7 +11,10 @@ export class DebitReasons extends APIResource {
    * Reason, it becomes available as a debit type for adding Debit line items to
    * Bills. See [Debits](https://www.m3ter.com/docs/api#tag/Debits).
    */
-  create(params: DebitReasonCreateParams, options?: Core.RequestOptions): Core.APIPromise<DebitReason> {
+  create(
+    params: DebitReasonCreateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<DebitReasonResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/picklists/debitreasons`, { body, ...options });
   }
@@ -23,13 +26,13 @@ export class DebitReasons extends APIResource {
     id: string,
     params?: DebitReasonRetrieveParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason>;
-  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason>;
+  ): Core.APIPromise<DebitReasonResponse>;
+  retrieve(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReasonResponse>;
   retrieve(
     id: string,
     params: DebitReasonRetrieveParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason> {
+  ): Core.APIPromise<DebitReasonResponse> {
     if (isRequestOptions(params)) {
       return this.retrieve(id, {}, params);
     }
@@ -44,7 +47,7 @@ export class DebitReasons extends APIResource {
     id: string,
     params: DebitReasonUpdateParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason> {
+  ): Core.APIPromise<DebitReasonResponse> {
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/picklists/debitreasons/${id}`, { body, ...options });
   }
@@ -57,20 +60,21 @@ export class DebitReasons extends APIResource {
   list(
     params?: DebitReasonListParams,
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitReasonsCursor, DebitReason>;
-  list(options?: Core.RequestOptions): Core.PagePromise<DebitReasonsCursor, DebitReason>;
+  ): Core.PagePromise<DebitReasonResponsesCursor, DebitReasonResponse>;
+  list(options?: Core.RequestOptions): Core.PagePromise<DebitReasonResponsesCursor, DebitReasonResponse>;
   list(
     params: DebitReasonListParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.PagePromise<DebitReasonsCursor, DebitReason> {
+  ): Core.PagePromise<DebitReasonResponsesCursor, DebitReasonResponse> {
     if (isRequestOptions(params)) {
       return this.list({}, params);
     }
     const { orgId = this._client.orgId, ...query } = params;
-    return this._client.getAPIList(`/organizations/${orgId}/picklists/debitreasons`, DebitReasonsCursor, {
-      query,
-      ...options,
-    });
+    return this._client.getAPIList(
+      `/organizations/${orgId}/picklists/debitreasons`,
+      DebitReasonResponsesCursor,
+      { query, ...options },
+    );
   }
 
   /**
@@ -80,13 +84,13 @@ export class DebitReasons extends APIResource {
     id: string,
     params?: DebitReasonDeleteParams,
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason>;
-  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReason>;
+  ): Core.APIPromise<DebitReasonResponse>;
+  delete(id: string, options?: Core.RequestOptions): Core.APIPromise<DebitReasonResponse>;
   delete(
     id: string,
     params: DebitReasonDeleteParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
-  ): Core.APIPromise<DebitReason> {
+  ): Core.APIPromise<DebitReasonResponse> {
     if (isRequestOptions(params)) {
       return this.delete(id, {}, params);
     }
@@ -95,9 +99,9 @@ export class DebitReasons extends APIResource {
   }
 }
 
-export class DebitReasonsCursor extends Cursor<DebitReason> {}
+export class DebitReasonResponsesCursor extends Cursor<DebitReasonResponse> {}
 
-export interface DebitReason {
+export interface DebitReasonResponse {
   /**
    * The UUID of the entity.
    */
@@ -271,12 +275,12 @@ export interface DebitReasonDeleteParams {
   orgId?: string;
 }
 
-DebitReasons.DebitReasonsCursor = DebitReasonsCursor;
+DebitReasons.DebitReasonResponsesCursor = DebitReasonResponsesCursor;
 
 export declare namespace DebitReasons {
   export {
-    type DebitReason as DebitReason,
-    DebitReasonsCursor as DebitReasonsCursor,
+    type DebitReasonResponse as DebitReasonResponse,
+    DebitReasonResponsesCursor as DebitReasonResponsesCursor,
     type DebitReasonCreateParams as DebitReasonCreateParams,
     type DebitReasonRetrieveParams as DebitReasonRetrieveParams,
     type DebitReasonUpdateParams as DebitReasonUpdateParams,
