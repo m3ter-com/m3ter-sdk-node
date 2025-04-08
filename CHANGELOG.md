@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.1.0-alpha.8 (2025-04-08)
+
+Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
+
+### Features
+
+* add SKIP_BREW env var to ./scripts/bootstrap ([#49](https://github.com/m3ter-com/m3ter-sdk-node/issues/49)) ([55fd57b](https://github.com/m3ter-com/m3ter-sdk-node/commit/55fd57b7c4705d7d5d922886477a9ee1151e0403))
+* **api:** make response model names explicit ([#48](https://github.com/m3ter-com/m3ter-sdk-node/issues/48)) ([7e1fe70](https://github.com/m3ter-com/m3ter-sdk-node/commit/7e1fe7035f448a6d60c55ded0339779681742719))
+* **api:** update contact email and package name ([#61](https://github.com/m3ter-com/m3ter-sdk-node/issues/61)) ([30e00fb](https://github.com/m3ter-com/m3ter-sdk-node/commit/30e00fb2c07ea3110dd68e2ed4198af21fcd421a))
+* **client:** accept RFC6838 JSON content types ([#50](https://github.com/m3ter-com/m3ter-sdk-node/issues/50)) ([0f94da2](https://github.com/m3ter-com/m3ter-sdk-node/commit/0f94da2f28689a224e46ddfd7ced82737fb00cca))
+
+
+### Bug Fixes
+
+* **api:** improve type resolution when importing as a package ([#59](https://github.com/m3ter-com/m3ter-sdk-node/issues/59)) ([c967aec](https://github.com/m3ter-com/m3ter-sdk-node/commit/c967aec928fe07d1e6dacd5a9a4abedbed0d71d8))
+* avoid type error in certain environments ([#55](https://github.com/m3ter-com/m3ter-sdk-node/issues/55)) ([597f2f5](https://github.com/m3ter-com/m3ter-sdk-node/commit/597f2f502099ab93d52285d2e972e5fc2138691b))
+* **client:** send `X-Stainless-Timeout` in seconds ([#57](https://github.com/m3ter-com/m3ter-sdk-node/issues/57)) ([f4e4bd7](https://github.com/m3ter-com/m3ter-sdk-node/commit/f4e4bd7e3c1e6db8173fc15ee3dd9165f066d5ca))
+* **exports:** ensure resource imports don't require /index ([#52](https://github.com/m3ter-com/m3ter-sdk-node/issues/52)) ([fb480bc](https://github.com/m3ter-com/m3ter-sdk-node/commit/fb480bc85024f6c2019ae9adf13d457182bf01df))
+* **internal:** work around https://github.com/vercel/next.js/issues/76881 ([#56](https://github.com/m3ter-com/m3ter-sdk-node/issues/56)) ([d7ec43b](https://github.com/m3ter-com/m3ter-sdk-node/commit/d7ec43bd72db551dcb598dc7b5a5c452a99de9c1))
+* **mcp:** remove unused tools.ts ([#60](https://github.com/m3ter-com/m3ter-sdk-node/issues/60)) ([81ced42](https://github.com/m3ter-com/m3ter-sdk-node/commit/81ced42284782942b0430385413a0b981ba11384))
+
+
+### Chores
+
+* **exports:** cleaner resource index imports ([#53](https://github.com/m3ter-com/m3ter-sdk-node/issues/53)) ([ad226f2](https://github.com/m3ter-com/m3ter-sdk-node/commit/ad226f251358a7526ff005a57aa948dcb75a8dd2))
+* **exports:** stop using path fallbacks ([#54](https://github.com/m3ter-com/m3ter-sdk-node/issues/54)) ([5df4910](https://github.com/m3ter-com/m3ter-sdk-node/commit/5df4910384b335277541c6ddefa8aef425745043))
+* **internal:** add aliases for Record and Array ([#58](https://github.com/m3ter-com/m3ter-sdk-node/issues/58)) ([2cf0430](https://github.com/m3ter-com/m3ter-sdk-node/commit/2cf0430549a3ef4eceddcc62e932bcafeea48522))
+* **internal:** remove extra empty newlines ([#51](https://github.com/m3ter-com/m3ter-sdk-node/issues/51)) ([f0161c0](https://github.com/m3ter-com/m3ter-sdk-node/commit/f0161c0c35b660ff018b53b7b02f9801c4ee6a7c))
+* update SDK settings ([#46](https://github.com/m3ter-com/m3ter-sdk-node/issues/46)) ([c2d64a0](https://github.com/m3ter-com/m3ter-sdk-node/commit/c2d64a04b1e49c8b7fe5ac09214790d7f11ba2a6))
+
 ## 0.1.0-alpha.7 (2025-03-06)
 
 Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
