@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.9 (2025-04-09)
+
+Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
+
+### Features
+
+* feat: update README for org ID env variable ([#63](https://github.com/m3ter-com/m3ter-sdk-node/issues/63)) ([cac7bae](https://github.com/m3ter-com/m3ter-sdk-node/commit/cac7bae640036753cc58a87638cd90e10a561982))
+
 ## 0.1.0-alpha.8 (2025-04-08)
 
 Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
