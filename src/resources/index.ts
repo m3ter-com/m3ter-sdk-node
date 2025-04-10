@@ -386,6 +386,8 @@ export {
 export {
   Usage,
   type DownloadURLResponse,
+  type MeasurementRequest,
+  type SubmitMeasurementsRequest,
   type SubmitMeasurementsResponse,
   type UsageQueryResponse,
   type UsageGetFailedIngestDownloadURLParams,
