@@ -207,7 +207,8 @@ import {
   IntegrationConfigurations,
 } from './resources/integration-configurations';
 import {
-  DataFieldResponse,
+  DataField,
+  DerivedField,
   MeterCreateParams,
   MeterDeleteParams,
   MeterListParams,
@@ -407,6 +408,8 @@ import {
 } from './resources/data-exports/data-exports';
 import {
   DownloadURLResponse,
+  MeasurementRequest,
+  SubmitMeasurementsRequest,
   SubmitMeasurementsResponse,
   Usage,
   UsageGetFailedIngestDownloadURLParams,
@@ -1062,7 +1065,8 @@ export declare namespace M3ter {
 
   export {
     Meters as Meters,
-    type DataFieldResponse as DataFieldResponse,
+    type DataField as DataField,
+    type DerivedField as DerivedField,
     type MeterResponse as MeterResponse,
     MeterResponsesCursor as MeterResponsesCursor,
     type MeterCreateParams as MeterCreateParams,
@@ -1227,6 +1231,8 @@ export declare namespace M3ter {
   export {
     Usage as Usage,
     type DownloadURLResponse as DownloadURLResponse,
+    type MeasurementRequest as MeasurementRequest,
+    type SubmitMeasurementsRequest as SubmitMeasurementsRequest,
     type SubmitMeasurementsResponse as SubmitMeasurementsResponse,
     type UsageQueryResponse as UsageQueryResponse,
     type UsageGetFailedIngestDownloadURLParams as UsageGetFailedIngestDownloadURLParams,

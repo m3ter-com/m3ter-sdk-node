@@ -234,7 +234,8 @@ export {
 export {
   MeterResponsesCursor,
   Meters,
-  type DataFieldResponse,
+  type DataField,
+  type DerivedField,
   type MeterResponse,
   type MeterCreateParams,
   type MeterRetrieveParams,
@@ -385,6 +386,8 @@ export {
 export {
   Usage,
   type DownloadURLResponse,
+  type MeasurementRequest,
+  type SubmitMeasurementsRequest,
   type SubmitMeasurementsResponse,
   type UsageQueryResponse,
   type UsageGetFailedIngestDownloadURLParams,
