@@ -437,7 +437,8 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/meters.ts">DataFieldResponse</a></code>
+- <code><a href="./src/resources/meters.ts">DataField</a></code>
+- <code><a href="./src/resources/meters.ts">DerivedField</a></code>
 - <code><a href="./src/resources/meters.ts">MeterResponse</a></code>
 
 Methods:

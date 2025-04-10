@@ -207,7 +207,8 @@ import {
   IntegrationConfigurations,
 } from './resources/integration-configurations';
 import {
-  DataFieldResponse,
+  DataField,
+  DerivedField,
   MeterCreateParams,
   MeterDeleteParams,
   MeterListParams,
@@ -1050,7 +1051,8 @@ export declare namespace M3ter {
 
   export {
     Meters as Meters,
-    type DataFieldResponse as DataFieldResponse,
+    type DataField as DataField,
+    type DerivedField as DerivedField,
     type MeterResponse as MeterResponse,
     MeterResponsesCursor as MeterResponsesCursor,
     type MeterCreateParams as MeterCreateParams,

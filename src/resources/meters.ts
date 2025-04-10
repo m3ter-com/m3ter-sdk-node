@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import * as MetersAPI from './meters';
 import { Cursor, type CursorParams } from '../pagination';
 
 export class Meters extends APIResource {
@@ -126,7 +125,7 @@ export class Meters extends APIResource {
 
 export class MeterResponsesCursor extends Cursor<MeterResponse> {}
 
-export interface DataFieldResponse {
+export interface DataField {
   /**
    * The type of field (WHO, WHAT, WHERE, MEASURE, METADATA, INCOME, COST, OTHER).
    */
@@ -151,6 +150,15 @@ export interface DataFieldResponse {
    * Measure_ (UCUM). Required only for numeric field categories.
    */
   unit?: string;
+}
+
+export interface DerivedField extends DataField {
+  /**
+   * The calculation used to transform the value of submitted `dataFields` in usage
+   * data. Calculation can reference `dataFields`, `customFields`, or system
+   * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
+   */
+  calculation: string;
 }
 
 export interface MeterResponse {
@@ -198,7 +206,7 @@ export interface MeterResponse {
    * either numeric quantitative values or non-numeric data values. At least one
    * required per Meter; maximum 15 per Meter.
    */
-  dataFields?: Array<DataFieldResponse>;
+  dataFields?: Array<DataField>;
 
   /**
    * Used to submit usage data values for ingest into the platform that are the
@@ -206,7 +214,7 @@ export interface MeterResponse {
    * `Timestamp` fields. Raw usage data is not submitted using `derivedFields`.
    * Maximum 15 per Meter. _(Optional)_.
    */
-  derivedFields?: Array<MeterResponse.DerivedField>;
+  derivedFields?: Array<DerivedField>;
 
   /**
    * The DateTime when the meter was created _(in ISO-8601 format)_.
@@ -240,17 +248,6 @@ export interface MeterResponse {
   productId?: string;
 }
 
-export namespace MeterResponse {
-  export interface DerivedField extends MetersAPI.DataFieldResponse {
-    /**
-     * The calculation used to transform the value of submitted `dataFields` in usage
-     * data. Calculation can reference `dataFields`, `customFields`, or system
-     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
-     */
-    calculation: string;
-  }
-}
-
 export interface MeterCreateParams {
   /**
    * Path param: UUID of the organization. The Organization represents your company
@@ -272,7 +269,7 @@ export interface MeterCreateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<DataFieldResponse>;
+  dataFields: Array<DataField>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -283,7 +280,7 @@ export interface MeterCreateParams {
    * **Note:** Required parameter. If you want to create a Meter without Derived
    * Fields, use an empty array `[]`. If you use a `null`, you'll receive an error.
    */
-  derivedFields: Array<MeterCreateParams.DerivedField>;
+  derivedFields: Array<DerivedField>;
 
   /**
    * Body param: Descriptive name for the Meter.
@@ -326,17 +323,6 @@ export interface MeterCreateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace MeterCreateParams {
-  export interface DerivedField extends MetersAPI.DataFieldResponse {
-    /**
-     * The calculation used to transform the value of submitted `dataFields` in usage
-     * data. Calculation can reference `dataFields`, `customFields`, or system
-     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
-     */
-    calculation: string;
-  }
 }
 
 export interface MeterRetrieveParams {
@@ -368,7 +354,7 @@ export interface MeterUpdateParams {
    * platform - either numeric quantitative values or non-numeric data values. At
    * least one required per Meter; maximum 15 per Meter.
    */
-  dataFields: Array<DataFieldResponse>;
+  dataFields: Array<DataField>;
 
   /**
    * Body param: Used to submit usage data values for ingest into the platform that
@@ -379,7 +365,7 @@ export interface MeterUpdateParams {
    * **Note:** Required parameter. If you want to create a Meter without Derived
    * Fields, use an empty array `[]`. If you use a `null`, you'll receive an error.
    */
-  derivedFields: Array<MeterUpdateParams.DerivedField>;
+  derivedFields: Array<DerivedField>;
 
   /**
    * Body param: Descriptive name for the Meter.
@@ -422,17 +408,6 @@ export interface MeterUpdateParams {
    *   preserved. Version is incremented by 1 and listed in the response.
    */
   version?: number;
-}
-
-export namespace MeterUpdateParams {
-  export interface DerivedField extends MetersAPI.DataFieldResponse {
-    /**
-     * The calculation used to transform the value of submitted `dataFields` in usage
-     * data. Calculation can reference `dataFields`, `customFields`, or system
-     * `Timestamp` fields. _(Example: datafieldms datafieldgb)_
-     */
-    calculation: string;
-  }
 }
 
 export interface MeterListParams extends CursorParams {
@@ -471,7 +446,8 @@ Meters.MeterResponsesCursor = MeterResponsesCursor;
 
 export declare namespace Meters {
   export {
-    type DataFieldResponse as DataFieldResponse,
+    type DataField as DataField,
+    type DerivedField as DerivedField,
     type MeterResponse as MeterResponse,
     MeterResponsesCursor as MeterResponsesCursor,
     type MeterCreateParams as MeterCreateParams,
