@@ -112,7 +112,9 @@ export class Usage extends APIResource {
     options?: Core.RequestOptions,
   ): Core.APIPromise<SubmitMeasurementsResponse> {
     const { orgId = this._client.orgId, ...body } = params;
-    return this._client.post(`/organizations/${orgId}/measurements`, { body, ...options });
+    const baseUrl = this._client.baseURL;
+    const ingestUrl = baseUrl.replace("api.", "ingest.")
+    return this._client.post(`${ingestUrl}/organizations/${orgId}/measurements`, { body, ...options });
   }
 }
 
