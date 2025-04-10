@@ -697,7 +697,6 @@ export class M3ter extends Core.APIClient {
     if (options.method === 'post' && INGEST_SUBMISSIONS_PATH_REGEX.test(options.path)) {
       options.path = `${this.baseURL.replace('api.', 'ingest.')}${options.path}`;
     }
-    console.log(options);
   }
 
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {
