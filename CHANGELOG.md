@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.0-alpha (2025-04-10)
+
+Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.9...v0.1.0-alpha)
+
+### Features
+
+* **api:** add measurement request model ([11a80d9](https://github.com/m3ter-com/m3ter-sdk-node/commit/11a80d93fd086d929d39978506acdf10d6f8951d))
+* **api:** rename DataFieldResponse to DataField and add DerivedField as a model ([b73514f](https://github.com/m3ter-com/m3ter-sdk-node/commit/b73514fb6f40abc09922b0c7203d598703bfa0a4))
+* BR-2837: Fix baseURL issue for ingest submissions ([#68](https://github.com/m3ter-com/m3ter-sdk-node/issues/68)) ([66488e4](https://github.com/m3ter-com/m3ter-sdk-node/commit/66488e4ca1e2398a751f7675e104fbfb43201313))
+
+
+### Chores
+
+* **internal:** reduce CI branch coverage ([51bd674](https://github.com/m3ter-com/m3ter-sdk-node/commit/51bd674d259eb23ebc01526254a1f1922f03dae5))
+* **internal:** upload builds and expand CI branch coverage ([#65](https://github.com/m3ter-com/m3ter-sdk-node/issues/65)) ([832d905](https://github.com/m3ter-com/m3ter-sdk-node/commit/832d90577713dc555ba387f0ac2967bdb389a583))
+
 ## 0.1.0-alpha.9 (2025-04-09)
 
 Full Changelog: [v0.1.0-alpha.8...v0.1.0-alpha.9](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.8...v0.1.0-alpha.9)
