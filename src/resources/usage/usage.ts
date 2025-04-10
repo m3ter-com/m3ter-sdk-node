@@ -126,6 +126,83 @@ export interface DownloadURLResponse {
   url?: string;
 }
 
+export interface MeasurementRequest {
+  /**
+   * Code of the Account the measurement is for.
+   */
+  account: string;
+
+  /**
+   * Short code identifying the Meter the measurement is for.
+   */
+  meter: string;
+
+  /**
+   * Timestamp for the measurement _(in ISO 8601 format)_.
+   */
+  ts: string;
+
+  /**
+   * 'cost' values
+   */
+  cost?: Record<string, number>;
+
+  /**
+   * End timestamp for the measurement _(in ISO 8601 format)_. _(Optional)_.
+   *
+   * Can be used in the case a usage event needs to have an explicit start and end
+   * rather than being instantaneous.
+   */
+  ets?: string;
+
+  /**
+   * 'income' values
+   */
+  income?: Record<string, number>;
+
+  /**
+   * 'measure' values
+   */
+  measure?: Record<string, number>;
+
+  /**
+   * 'metadata' values
+   */
+  metadata?: Record<string, string>;
+
+  /**
+   * 'other' values
+   */
+  other?: Record<string, string>;
+
+  /**
+   * Unique ID for this measurement.
+   */
+  uid?: string;
+
+  /**
+   * 'what' values
+   */
+  what?: Record<string, string>;
+
+  /**
+   * 'where' values
+   */
+  where?: Record<string, string>;
+
+  /**
+   * 'who' values
+   */
+  who?: Record<string, string>;
+}
+
+export interface SubmitMeasurementsRequest {
+  /**
+   * Request containing the usage data measurements for submission.
+   */
+  measurements: Array<MeasurementRequest>;
+}
+
 export interface SubmitMeasurementsResponse {
   /**
    * `accepted` is returned when successful.
@@ -292,79 +369,7 @@ export interface UsageSubmitParams {
   /**
    * Body param: Request containing the usage data measurements for submission.
    */
-  measurements: Array<UsageSubmitParams.Measurement>;
-}
-
-export namespace UsageSubmitParams {
-  export interface Measurement {
-    /**
-     * Code of the Account the measurement is for.
-     */
-    account: string;
-
-    /**
-     * Short code identifying the Meter the measurement is for.
-     */
-    meter: string;
-
-    /**
-     * Timestamp for the measurement _(in ISO 8601 format)_.
-     */
-    ts: string;
-
-    /**
-     * 'cost' values
-     */
-    cost?: Record<string, number>;
-
-    /**
-     * End timestamp for the measurement _(in ISO 8601 format)_. _(Optional)_.
-     *
-     * Can be used in the case a usage event needs to have an explicit start and end
-     * rather than being instantaneous.
-     */
-    ets?: string;
-
-    /**
-     * 'income' values
-     */
-    income?: Record<string, number>;
-
-    /**
-     * 'measure' values
-     */
-    measure?: Record<string, number>;
-
-    /**
-     * 'metadata' values
-     */
-    metadata?: Record<string, string>;
-
-    /**
-     * 'other' values
-     */
-    other?: Record<string, string>;
-
-    /**
-     * Unique ID for this measurement.
-     */
-    uid?: string;
-
-    /**
-     * 'what' values
-     */
-    what?: Record<string, string>;
-
-    /**
-     * 'where' values
-     */
-    where?: Record<string, string>;
-
-    /**
-     * 'who' values
-     */
-    who?: Record<string, string>;
-  }
+  measurements: Array<MeasurementRequest>;
 }
 
 Usage.FileUploads = FileUploads;
@@ -372,6 +377,8 @@ Usage.FileUploads = FileUploads;
 export declare namespace Usage {
   export {
     type DownloadURLResponse as DownloadURLResponse,
+    type MeasurementRequest as MeasurementRequest,
+    type SubmitMeasurementsRequest as SubmitMeasurementsRequest,
     type SubmitMeasurementsResponse as SubmitMeasurementsResponse,
     type UsageQueryResponse as UsageQueryResponse,
     type UsageGetFailedIngestDownloadURLParams as UsageGetFailedIngestDownloadURLParams,

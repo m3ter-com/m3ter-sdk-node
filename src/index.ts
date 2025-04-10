@@ -408,6 +408,8 @@ import {
 } from './resources/data-exports/data-exports';
 import {
   DownloadURLResponse,
+  MeasurementRequest,
+  SubmitMeasurementsRequest,
   SubmitMeasurementsResponse,
   Usage,
   UsageGetFailedIngestDownloadURLParams,
@@ -1217,6 +1219,8 @@ export declare namespace M3ter {
   export {
     Usage as Usage,
     type DownloadURLResponse as DownloadURLResponse,
+    type MeasurementRequest as MeasurementRequest,
+    type SubmitMeasurementsRequest as SubmitMeasurementsRequest,
     type SubmitMeasurementsResponse as SubmitMeasurementsResponse,
     type UsageQueryResponse as UsageQueryResponse,
     type UsageGetFailedIngestDownloadURLParams as UsageGetFailedIngestDownloadURLParams,

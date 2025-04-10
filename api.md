@@ -642,6 +642,8 @@ Methods:
 Types:
 
 - <code><a href="./src/resources/usage/usage.ts">DownloadURLResponse</a></code>
+- <code><a href="./src/resources/usage/usage.ts">MeasurementRequest</a></code>
+- <code><a href="./src/resources/usage/usage.ts">SubmitMeasurementsRequest</a></code>
 - <code><a href="./src/resources/usage/usage.ts">SubmitMeasurementsResponse</a></code>
 - <code><a href="./src/resources/usage/usage.ts">UsageQueryResponse</a></code>
 
