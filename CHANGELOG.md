@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1-alpha (2025-04-14)
+
+Full Changelog: [v0.1.0-alpha...v0.1.1-alpha](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha...v0.1.1-alpha)
+
+### Chores
+
+* **client:** minor internal fixes ([21166b1](https://github.com/m3ter-com/m3ter-sdk-node/commit/21166b19fcf1b1fe1a9498d2d4ae28d92b0cbfff))
+
 ## 0.1.0-alpha (2025-04-10)
 
 Full Changelog: [v0.1.0-alpha.9...v0.1.0-alpha](https://github.com/m3ter-com/m3ter-sdk-node/compare/v0.1.0-alpha.9...v0.1.0-alpha)
