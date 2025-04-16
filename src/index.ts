@@ -515,6 +515,9 @@ export interface ClientOptions {
   dangerouslyAllowBrowser?: boolean | undefined;
 }
 
+const INGEST_SUBMISSIONS_PATH_REGEX =
+  /^\/organizations\/([0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12})\/measurements$/;
+
 /**
  * API Client for interfacing with the M3ter API.
  */
@@ -523,6 +526,8 @@ export class M3ter extends Core.APIClient {
   apiSecret: string;
   token: string | null;
   orgId: string;
+
+  tokenExpiry: Date | undefined;
 
   private _options: ClientOptions;
 
@@ -648,6 +653,12 @@ export class M3ter extends Core.APIClient {
   }
 
   protected override validateHeaders(headers: Core.Headers, customHeaders: Core.Headers) {
+    // When making the token request we have an `authorization` header in `customHeaders`.
+    // Using this to skip validating the token on token requests themselves.
+    if (customHeaders['authorization']) {
+      return;
+    }
+
     if (this.token && headers['authorization']) {
       return;
     }
@@ -658,6 +669,37 @@ export class M3ter extends Core.APIClient {
     throw new Error(
       'Could not resolve authentication method. Expected the token to be set. Or for the "Authorization" headers to be explicitly omitted',
     );
+  }
+
+  // This is the earliest async hook we have to obtain a token, before the `authHeaders` is called
+  // on the request.
+  // It also allows us to fix an issue with ingest submissions where the client tries to use the standard
+  // API base path (api.{env}.m3ter.com) even though it should be using ingest.{env}.m3ter.com.
+  protected override async prepareOptions(options: Core.FinalRequestOptions): Promise<void> {
+    // When manually setting the token we won't have a `tokenExpiry` so consider that valid.
+    const tokenValid = !!this.token && (!this.tokenExpiry || this.tokenExpiry > new Date());
+
+    // Prevent infinite loop of token requests.
+    if (!tokenValid && !options.path.endsWith('/oauth/token')) {
+      const auth = Core.toBase64(`${this.apiKey}:${this.apiSecret}`);
+      const token = await this.authentication.getBearerToken(
+        { grant_type: 'client_credentials' },
+        { headers: { authorization: `Basic ${auth}` } },
+      );
+
+      this.token = token.access_token;
+
+      // Store token expiry (minus 5 minutes) for automatic refreshing.
+      const now = new Date();
+      this.tokenExpiry = new Date(now.getTime() + token.expires_in * 1000 - 300000);
+    }
+
+    // Check if the request options show that we're making a POST request to the ingest submissions endpoint.
+    // If we are, prepend a corrected baseURL to the path so that the client's buildURL method doesn't prepend
+    // the standard API base URL.
+    if (options.method === 'post' && INGEST_SUBMISSIONS_PATH_REGEX.test(options.path)) {
+      options.path = `${this.baseURL.replace('api.', 'ingest.')}${options.path}`;
+    }
   }
 
   protected override authHeaders(opts: Core.FinalRequestOptions): Core.Headers {

@@ -23,10 +23,9 @@ The full API of this library can be found in [api.md](api.md).
 import M3ter from 'm3ter-sdk';
 
 const client = new M3ter({
-  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
-  apiKey: 'My API Key',
-  apiSecret: 'My API Secret',
-  orgId: 'My Org ID',
+  apiKey: process.env['M3TER_API_KEY'], // This is the default and can be omitted
+  apiSecret: process.env['M3TER_API_SECRET'], // This is the default and can be omitted
+  orgId: process.env['M3TER_ORG_ID'], // This is the default and can be omitted
 });
 
 async function main() {
@@ -48,10 +47,9 @@ This library includes TypeScript definitions for all request params and response
 import M3ter from 'm3ter-sdk';
 
 const client = new M3ter({
-  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
-  apiKey: 'My API Key',
-  apiSecret: 'My API Secret',
-  orgId: 'My Org ID',
+  apiKey: process.env['M3TER_API_KEY'], // This is the default and can be omitted
+  apiSecret: process.env['M3TER_API_SECRET'], // This is the default and can be omitted
+  orgId: process.env['M3TER_ORG_ID'], // This is the default and can be omitted
 });
 
 async function main() {
