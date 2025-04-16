@@ -23,10 +23,10 @@ The full API of this library can be found in [api.md](api.md).
 import M3ter from 'm3ter-sdk';
 
 const client = new M3ter({
-  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   orgId: 'My Org ID',
+  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
 });
 
 async function main() {
@@ -48,10 +48,10 @@ This library includes TypeScript definitions for all request params and response
 import M3ter from 'm3ter-sdk';
 
 const client = new M3ter({
-  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   orgId: 'My Org ID',
+  token: process.env['M3TER_API_TOKEN'], // This is the default and can be omitted
 });
 
 async function main() {
@@ -111,10 +111,10 @@ You can use the `maxRetries` option to configure or disable this:
 ```js
 // Configure the default for all requests:
 const client = new M3ter({
-  maxRetries: 0, // default is 2
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   orgId: 'My Org ID',
+  maxRetries: 0, // default is 2
 });
 
 // Or, configure per-request:
@@ -131,10 +131,10 @@ Requests time out after 1 minute by default. You can configure this with a `time
 ```ts
 // Configure the default for all requests:
 const client = new M3ter({
-  timeout: 20 * 1000, // 20 seconds (default is 1 minute)
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   orgId: 'My Org ID',
+  timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
 // Override per-request:
@@ -298,10 +298,10 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // Configure the default for all requests:
 const client = new M3ter({
-  httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
   apiKey: 'My API Key',
   apiSecret: 'My API Secret',
   orgId: 'My Org ID',
+  httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
 });
 
 // Override per-request:
