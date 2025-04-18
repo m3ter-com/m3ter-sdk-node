@@ -31,7 +31,15 @@ export class BillConfig extends APIResource {
    * with a service period end date on or before the set date will be locked and
    * cannot be updated or recalculated.
    */
-  update(params: BillConfigUpdateParams, options?: Core.RequestOptions): Core.APIPromise<BillConfigResponse> {
+  update(params?: BillConfigUpdateParams, options?: Core.RequestOptions): Core.APIPromise<BillConfigResponse>;
+  update(options?: Core.RequestOptions): Core.APIPromise<BillConfigResponse>;
+  update(
+    params: BillConfigUpdateParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillConfigResponse> {
+    if (isRequestOptions(params)) {
+      return this.update({}, params);
+    }
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/billconfig`, { body, ...options });
   }

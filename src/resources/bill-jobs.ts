@@ -37,7 +37,15 @@ export class BillJobs extends APIResource {
    *   many requests). When one of the existing BillJobs has completed, you'll be
    *   able to submit another job
    */
-  create(params: BillJobCreateParams, options?: Core.RequestOptions): Core.APIPromise<BillJobResponse> {
+  create(params?: BillJobCreateParams, options?: Core.RequestOptions): Core.APIPromise<BillJobResponse>;
+  create(options?: Core.RequestOptions): Core.APIPromise<BillJobResponse>;
+  create(
+    params: BillJobCreateParams | Core.RequestOptions = {},
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<BillJobResponse> {
+    if (isRequestOptions(params)) {
+      return this.create({}, params);
+    }
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.post(`/organizations/${orgId}/billjobs`, { body, ...options });
   }

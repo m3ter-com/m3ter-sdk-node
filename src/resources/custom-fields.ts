@@ -29,9 +29,17 @@ export class CustomFields extends APIResource {
    * Update Custom Fields added at Organization level to entities that support them.
    */
   update(
-    params: CustomFieldUpdateParams,
+    params?: CustomFieldUpdateParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<CustomFieldsResponse>;
+  update(options?: Core.RequestOptions): Core.APIPromise<CustomFieldsResponse>;
+  update(
+    params: CustomFieldUpdateParams | Core.RequestOptions = {},
     options?: Core.RequestOptions,
   ): Core.APIPromise<CustomFieldsResponse> {
+    if (isRequestOptions(params)) {
+      return this.update({}, params);
+    }
     const { orgId = this._client.orgId, ...body } = params;
     return this._client.put(`/organizations/${orgId}/customfields`, { body, ...options });
   }
